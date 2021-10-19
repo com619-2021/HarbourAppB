@@ -1,6 +1,8 @@
 # HarbourAppB
 The 'harbour master' application deals with sending pilots out to retrieve inbound ships and bring them into berths to be unloaded.
 
+More information (including diagrams) can be found on the [wiki](https://github.com/com619-2021/HarbourAppB/wiki).
+
 ## Required REST endpoints
 For our application to function, we require the following REST endpoints from other groups:
 
