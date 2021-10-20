@@ -20,7 +20,7 @@ Our application will expose the following REST endpoints:
 TODO: Consider other endpoints that may be needed by others.
 
 ## Required Database Tables
-You may refer to our [entity-relationship diagram](./documentation/entity-relationship.png) for a visual representation our database requirements.
+You may refer to our [entity-relationship diagram](./documentation/entity-relationship.png) for a visual representation of our database requirements.
 
 We require the following tables to be present in the shared database:
 
