@@ -6,11 +6,9 @@ More information (including diagrams) can be found on the [wiki](https://github.
 ## Required REST endpoints
 For our application to function, we require the following REST endpoints from other groups:
 
-1. /get_inbound_ship_id (*insert group here*): an endpoint that returns the ID of the ship that is currently awaiting piloting. The ID refers to a unique value in the 'ships' table of the database, which contains a list of ships and their properties (length, width, depth, etc.).
+1. /get_inbound_booking_id (*insert group here*): an endpoint that returns the booking ID of the ship that is currently awaiting piloting. The booking ID will be used to retrieve ship properties (length, width) from the 'ships' table using the 'ship ID', as well as coordinates of the reserved berth from the 'berths' table using the 'berth ID'.
 
-2. /get_inbound_booking_id (*insert group here*): an endpoint that returns the booking ID of the ship that is currently awaiting piloting. We will use the booking ID to lookup the berth that is reserved for the ship as well as the time to start leading them in. We may also use this ID to verify whether the current ship that is currently waiting is the expected one.
-
-The required endpoints **may** be inaccurate at this point and are absolutely subject to change. These two endpoints could be combined into one.
+TODO: Confirm which REST endpoints are required.
 
 ## Exposed REST endpoints
 Our application will expose the following REST endpoints:
