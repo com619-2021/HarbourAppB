@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Log
 @RestController
-public class HarbourMasterController { 
+public class HarbourMasterController {
 	/* Simple GET request for testing the REST API. */
 	@GetMapping(value = "/api/test")
 	public ResponseEntity<Object> getTest() {
