@@ -1,5 +1,8 @@
 package com.devops.groupb.harbourmaster.controller;
 
+import java.util.ArrayList;
+
+import com.devops.groupb.harbourmaster.model.ShipType;
 import com.devops.groupb.harbourmaster.model.Pilot;
 import com.devops.groupb.harbourmaster.model.Ship;
 
@@ -17,31 +20,28 @@ import org.springframework.web.bind.annotation.RestController;
 @Log
 @RestController
 public class HarbourMasterController {
-	/* Simple GET request for testing the REST API. */
+	/* /api/test: simple HTTP GET endpoint to test if REST is working. */
 	@GetMapping(value = "/api/test")
 	public ResponseEntity<Object> getTest() {
-		log.info("/api/test: entered.");
+		log.info("/api/test: called.");
 		return new ResponseEntity<>("REST is working.", HttpStatus.OK);
 	}
 
-	/* /api/bookPilot: REST endpoint called to book a pilot to handle a given ship.
-	   Example POST request for /api/bookPilot:
-	   {
-	   "id": "60",
-	   "length": "250",
-	   "width": "60",
-	   "weight": "5000"
-	   }
-	*/
+	/* /api/bookPilot: REST endpoint called to book a pilot to handle a given ship. */
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
 	public ResponseEntity<Object> book_pilot(@RequestBody Ship ship) {
-		log.info("/api/bookPilot: entered.");
+		log.info("/api/bookPilot: called.");
 		log.info("/api/bookPilot: retrieved " + ship + " from request body.");
 
-		// add valid checks as to whether all fields of the 'Ship' object has been given; not just id.
+		/* checks to see whether ship has any empty values */
 		if (ship.is_valid()) {
-			// real application would have checks regarding training_level here.
-			Pilot pilot = new Pilot(1, 5); // id: 1, training_level: 5
+			ArrayList<ShipType> allowed_to = new ArrayList<ShipType>();
+			allowed_to.add(ShipType.CARGO);
+			allowed_to.add(ShipType.PASSENGER);
+
+			Pilot pilot = new Pilot(1, allowed_to); /* id: 1, allowed_to: PASSENGER, CARGO */
+			log.info("/api/bookPilot: ship valid. Assigned pilot #" + pilot.get_id() + " to handle ship type '"
+					 + ship.get_type() + "'.");
 			return new ResponseEntity<>(String.format("Pilot #%d has successfully been booked.", pilot.get_id()), HttpStatus.OK);
 		}
 

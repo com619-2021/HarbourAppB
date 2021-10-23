@@ -1,16 +1,18 @@
 package com.devops.groupb.harbourmaster.model;
 
+import java.util.ArrayList;
+
 public class Pilot {
 	private int id;
-	private int training_level;
+	private ArrayList<ShipType> allowed_to;
 
 	public Pilot() {
 
 	}
 
-	public Pilot(int id, int training_level) {
+	public Pilot(int id, ArrayList<ShipType> allowed_to) {
 		this.id = id;
-		this.training_level = training_level;
+		this.allowed_to = allowed_to;
 	}
 
 	public int get_id() {
@@ -21,11 +23,11 @@ public class Pilot {
 		this.id = id;
 	}
 
-	public int get_training_level() {
-		return training_level;
+	public ArrayList<ShipType> get_allowed_to() {
+		return allowed_to;
 	}
 
-	public void set_training_level(int training_level) {
-		this.training_level = training_level;
+	public void set_allowed_to(ArrayList<ShipType> allowed_to) {
+		this.allowed_to = allowed_to;
 	}
 }

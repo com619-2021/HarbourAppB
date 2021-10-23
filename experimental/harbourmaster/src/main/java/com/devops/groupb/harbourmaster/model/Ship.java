@@ -2,24 +2,20 @@ package com.devops.groupb.harbourmaster.model;
 
 public class Ship {
 	private int id;
-	private int length;
-	private int width;
-	private int weight;
+	private ShipType type;
 
-	public Ship(int id, int length, int width, int weight) {
+	public Ship(int id, ShipType type) {
 		this.id = id;
-		this.length = length;
-		this.width = width;
-		this.weight = weight;
+		this.type = type;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ",length=" + length + ",width=" + width + ",weight=" + weight + "]";
+		return getClass().getSimpleName() + "[id=" + id + ",type=" + type + "]";
 	}
 
 	public Boolean is_valid() {
-		return id > 0 && length > 0 && width > 0 && weight > 0;
+		return id > 0 && (type == ShipType.PASSENGER || type == ShipType.CARGO);
 	}
 
 	public int get_id() {
@@ -30,27 +26,11 @@ public class Ship {
 		this.id = id;
 	}
 
-	public int get_length() {
-		return length;
+	public ShipType get_type() {
+		return type;
 	}
 
-	public void set_length(int length) {
-		this.length = length;
-	}
-
-	public int get_width() {
-		return width;
-	}
-
-	public void set_width(int width) {
-		this.width = width;
-	}
-
-	public int get_weight() {
-		return weight;
-	}
-
-	public void set_weight(int weight) {
-		this.weight = weight;
+	public void set_type(ShipType type) {
+		this.type = type;
 	}
 }
