@@ -15,7 +15,7 @@ public class Ship {
 	}
 
 	public Boolean is_valid() {
-		return id > 0 && (type == ShipType.PASSENGER || type == ShipType.CARGO);
+		return id >= 0 && (type == ShipType.PASSENGER || type == ShipType.CARGO);
 	}
 
 	public int get_id() {
