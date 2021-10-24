@@ -6,10 +6,6 @@ public class Pilot {
 	private int id;
 	private ArrayList<ShipType> allowed_to;
 
-	public Pilot() {
-
-	}
-
 	public Pilot(int id, ArrayList<ShipType> allowed_to) {
 		this.id = id;
 		this.allowed_to = allowed_to;
