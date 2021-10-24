@@ -10,4 +10,5 @@ in this directory.
 
 This project uses Swagger. Once running, you can view API details on the Swagger page at http://localhost:8080/swagger-ui/.
 
-TODO: include instructions regarding docker packaging.
+#### TODO: 
+- [] include instructions regarding docker packaging.

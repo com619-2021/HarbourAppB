@@ -6,10 +6,12 @@ More information (including diagrams) can be found on the [wiki](https://github.
 ## Required REST endpoints
 For our application to function, we require the following REST endpoints from other groups:
 
-TODO: Confirm which REST endpoints are required.
+#### TODO: 
+- [] Confirm which REST endpoints are required.
 
 ## Exposed REST endpoints
 Our application will expose the following REST endpoints:
 
-TODO: Consider other endpoints that may be needed by others.
+#### TODO: 
+- [] Consider other endpoints that may be needed by others.
 
