@@ -31,8 +31,6 @@ public class HarbourMasterController {
 	}
 
 	/* /api/bookPilot: REST endpoint called to book a pilot to handle a given ship. */
-	/* TODO: consider handling HttpMessageNotReadableException that is thrown when
-	   a ShipType is given that is not present in the enum */
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
 	    public ResponseEntity<Object> book_pilot(@RequestBody Ship ship) {
 		    log.info("/api/bookPilot: called.");
@@ -73,6 +71,7 @@ public class HarbourMasterController {
 
 	@ExceptionHandler({HttpMessageNotReadableException.class})
 	public ResponseEntity<Object> handleUnreadableBody() {
-	    return new ResponseEntity<>("Invalid data types give please ensure the ship type is support and the id is a uint32_t", HttpStatus.INTERNAL_SERVER_ERROR);
+	    log.info("/api/bookPilot: Exception encountered HttpMessageNotReadableException, This is likely due to the wrong data types being passed to this endpoint");
+            return new ResponseEntity<>("Invalid data types give please ensure the ship type is support and the id is a uint32_t", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
