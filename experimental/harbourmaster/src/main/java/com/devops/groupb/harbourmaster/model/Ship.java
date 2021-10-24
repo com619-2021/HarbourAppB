@@ -15,7 +15,9 @@ public class Ship {
 	}
 
 	public Boolean is_valid() {
-		return id >= 0 && (type == ShipType.PASSENGER || type == ShipType.CARGO);
+            //Changed this to be slightly more mathematically based so that if more ship types are added in the future.
+            //They will be automatically included in the check without changes needing to be made. - Caitlyn
+		return (id >= 0) && (type.ordinal() >= 0 && type.ordinal() < ShipType.values().length);
 	}
 
 	public int get_id() {

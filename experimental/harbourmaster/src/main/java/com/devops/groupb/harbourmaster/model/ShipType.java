@@ -2,5 +2,6 @@ package com.devops.groupb.harbourmaster.model;
 
 public enum ShipType {
 	CARGO,
-	PASSENGER
+	PASSENGER,
+        FERRY
 }
