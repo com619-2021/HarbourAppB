@@ -1,0 +1,51 @@
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [12pt]
+
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage[english]{isodate}
+#+LATEX_HEADER: \usepackage[left=2cm, right=2cm, top=2cm]{geometry}
+#+LATEX_HEADER: \usepackage{placeins}
+#+LATEX_HEADER: \def\code#1{\texttt{#1}}
+
+\newpage
+
+#+STARTUP: showeverything inlineimages latexpreview
+#+OPTIONS: 
+
+* Classes
+** Pilot
+\code{Pilot} is a class that is unique to our application. The current structure of the pilot class is as follows:
+- *pilot\under{}id*: Used to refer to each unique pilot.
+- *allowed\under{}to*: A list of \code{ShipType}s that the pilot is permitted to board.
+Other attributes for quality-of-life may include:
+- *forename*: To output their name to the dashboard.
+- *surname*: To output their name to the dashboard.
+** Tide
+As harbourmasters, we are solely responsible for analysing the current tide conditions to judge whether or not it is safe to bring a ship into port. The structure of a \code{Tide} object is as follows:
+- *tide\under{}id*: A unique identifier for the tide.
+- *until*: The time at which the current tide ends or changes height.
+- *height*: The height of the tide.
+- *type*: The type of tide (either HIGH or LOW); may not be needed.
+*** Collection and Storage of Tide Data
+Tide data will be stored in a simple MySQL database which is accessed via TideDAO. This concept applies to other classes, but it's important to focus on the tides specifically as it requires collection from an external source, i.e. the internet.
+
+If possible, we would like to make use of a free API to get the most up-to-date tide information with little manual effort on our end. There are many APIs available, notably the one from [[http://www.admirality.co.uk]] for all UK ports, though it is quite expensive. As finding a free API is quite difficult, we may have to suffice for either web-scraping tide information from public websites, or simply making up our values. Regardless of how the information is obtained, it wil be stored in a way similar to how the object is structured. Example:
+| *tide\under{}id*  | *until*          | *height* | *type* |
+|        74 | 2021-10-19 10:36 |     1.00 | LOW    |
+|        75 | 2021-10-19 13:36 |     4.39 | HIGH   |
+
+** Ship
+The design of the \code{Ship} class is to be agreed with the shipping line team. Currently, we have the following structure in mind:
+- *ship\under{}id*: A unique identifier for the ship.
+- *type*: The type of ship, given by the enumeration '\code{ShipType}'.
+- *minimum\under{}tide\under{}height*: The minimum tide height that the ship can be safely brought in at.
+- *maximum\under{}tide\under{}height*: The maximum tide height before it is deemed unsafe to be brought in and must wait.
+** ShipType (Enumeration)
+ShipType is not a class, but a simple enumeration. Similar to the \code{Ship} class, the design of this is also dependent on the shipping line team. We currently have:
+- *PASSENGER*: A ship whose primary function is to carry out passenger on the sea.
+- *FERRY*: Another type of passenger vessel.
+- *CARGO*: A very large ship that carries cargo, goods, and materials from one port to another.
+
+* Responsibilities
+
+* Requirements from others
