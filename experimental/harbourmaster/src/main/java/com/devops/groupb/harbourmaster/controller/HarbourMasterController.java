@@ -34,40 +34,45 @@ public class HarbourMasterController {
 	/* TODO: consider handling HttpMessageNotReadableException that is thrown when
 	   a ShipType is given that is not present in the enum */
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
-	public ResponseEntity<Object> book_pilot(@RequestBody Ship ship) {
-		log.info("/api/bookPilot: called.");
-		log.info("/api/bookPilot: retrieved " + ship + " from request body.");
+	    public ResponseEntity<Object> book_pilot(@RequestBody Ship ship) {
+		    log.info("/api/bookPilot: called.");
+		    log.info("/api/bookPilot: retrieved " + ship + " from request body.");
 
-		/* checks to see whether ship has any empty or invalid values. */
-		if (ship.is_valid()) {
-			log.info("/api/bookPilot: ship valid.");
-			/* in the actual program, a pilot with the correct ShipType
-			   will be queried for from the Pilots database. */
-			ArrayList<ShipType> allowed_to = new ArrayList<ShipType>();
-			allowed_to.add(ShipType.CARGO);
-			allowed_to.add(ShipType.PASSENGER);
+		    /* checks to see whether ship has any empty or invalid values. */
+		    if (ship.is_valid()) {
+			    log.info("/api/bookPilot: ship valid.");
+			    /* in the actual program, a pilot with the correct ShipType
+			       will be queried for from the Pilots database. */
+			    ArrayList<ShipType> allowed_to = new ArrayList<ShipType>();
+			    allowed_to.add(ShipType.CARGO);
+			    allowed_to.add(ShipType.PASSENGER);
 
-			Pilot pilot = new Pilot(1, allowed_to); /* sample pilot */
+			    Pilot pilot = new Pilot(1, allowed_to); /* sample pilot */
 
-			/* in the actual program, such an if statement won't be used.
-			   if the PilotDAO returns no records when querying for a record
-			   containing ship.get_type(), then an error is returned. */
-			if (pilot.get_allowed_to().contains(ship.get_type())) {
-				log.info("/api/bookPilot: pilot available. Assigned pilot #" + pilot.get_id()
-						 + " to handle ship type '" + ship.get_type() + "'.");
-				return new ResponseEntity<>(
-											String.format("Pilot #%d has successfully been booked.", pilot.get_id()), HttpStatus.OK);
-			} else {
-				/* consider more appropriate HTTP status codes for errors like these. */
-				log.info("/api/bookPilot: No pilots are available to handle ship type '" + ship.get_type()
-						 + "'. Exiting with " + HttpStatus.INTERNAL_SERVER_ERROR + '.');
-				return new ResponseEntity<>(
-											String.format("No pilots are available to handle ship type '%s'.", ship.get_type()),
-											HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
+			    /* in the actual program, such an if statement won't be used.
+			       if the PilotDAO returns no records when querying for a record
+			       containing ship.get_type(), then an error is returned. */
+			    if (pilot.get_allowed_to().contains(ship.get_type())) {
+				    log.info("/api/bookPilot: pilot available. Assigned pilot #" + pilot.get_id()
+						     + " to handle ship type '" + ship.get_type() + "'.");
+				    return new ResponseEntity<>(
+											    String.format("Pilot #%d has successfully been booked.", pilot.get_id()), HttpStatus.OK);
+			    } else {
+				    /* consider more appropriate HTTP status codes for errors like these. */
+				    log.info("/api/bookPilot: No pilots are available to handle ship type '" + ship.get_type()
+						     + "'. Exiting with " + HttpStatus.INTERNAL_SERVER_ERROR + '.');
+				    return new ResponseEntity<>(
+											    String.format("No pilots are available to handle ship type '%s'.", ship.get_type()),
+											    HttpStatus.INTERNAL_SERVER_ERROR);
+			    }
+		    }
 
-		log.info("/api/bookPilot: invalid ship retrieved. Exiting with " + HttpStatus.INTERNAL_SERVER_ERROR + '.');
-		return new ResponseEntity<>("Invalid ship given.", HttpStatus.INTERNAL_SERVER_ERROR);
+		    log.info("/api/bookPilot: invalid ship retrieved. Exiting with " + HttpStatus.INTERNAL_SERVER_ERROR + '.');
+		    return new ResponseEntity<>("Invalid ship given.", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+
+	@ExceptionHandler({HttpMessageNotReadableException.class})
+	public ResponseEntity<Object> handleUnreadableBody() {
+	    return new ResponseEntity<>("Invalid data types give please ensure the ship type is support and the id is a uint32_t", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
