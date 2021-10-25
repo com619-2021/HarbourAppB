@@ -76,7 +76,7 @@ public class HarbourMasterController {
 	@RequestMapping(value = "/api/requestPilot", method = RequestMethod.POST)
 	public ResponseEntity<Object> request_pilot(@RequestBody Ship ship) {
 		log.info("/api/requestPilot: entered.");
-		log.info("/api/bookPilot: retrieved " + ship + " from request body.");
+		log.info("/api/requestPilot: retrieved " + ship + " from request body.");
 
 		/* as explained in /api/bookPilot, we'll use PilotDAO to find the pilot
 		   responsible for this booking. */
@@ -85,7 +85,7 @@ public class HarbourMasterController {
 		allowed_to.add(ShipType.PASSENGER);
 
 		Pilot pilot = new Pilot(1, allowed_to);
-		log.info("/api/bookPilot: found pilot #" + pilot.get_id() + " to handle the ship.");
+		log.info("/api/requestPilot: found pilot #" + pilot.get_id() + " to handle the ship.");
 
 		/* here we'll query the SQL database for the current tide at the time
 		   using the TideDAO object. how dates are going to be handled depends
@@ -93,9 +93,9 @@ public class HarbourMasterController {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		Tide tide = new Tide(1, formatter.format(new Date()), 4.53, TideStage.HIGH);
 
-		log.info("/api/bookPilot: current tide height: " + tide.get_height() + ". ship minimum requirement: "
+		log.info("/api/requestPilot: current tide height: " + tide.get_height() + ". ship minimum requirement: "
 				 + ship.get_minimum_tide_height() + '.');
-		log.info("/api/bookPilot: ship safe to bring in?: " + Boolean.toString(tide.get_height() > ship.get_minimum_tide_height()) + '.');
+		log.info("/api/requestPilot: ship safe to bring in?: " + Boolean.toString(tide.get_height() > ship.get_minimum_tide_height()) + '.');
 
 		/* i'm not sure whether there's a 'maximum tide height' at which ships
 		   are not allowed to come into port, so this statement might not make
