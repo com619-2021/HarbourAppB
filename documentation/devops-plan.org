@@ -25,15 +25,18 @@ As harbourmasters, we are solely responsible for analysing the current tide cond
 - *tide\under{}id*: A unique identifier for the tide.
 - *until*: The time at which the current tide ends or changes height.
 - *height*: The height of the tide.
-- *type*: The type of tide (either HIGH or LOW); may not be needed.
+- *type*: The TideStage; may not be needed.
 *** Collection and Storage of Tide Data
 Tide data will be stored in a simple MySQL database which is accessed via TideDAO. This concept applies to other classes, but it's important to focus on the tides specifically as it requires collection from an external source, i.e. the internet.
 
-If possible, we would like to make use of a free API to get the most up-to-date tide information with little manual effort on our end. There are many APIs available, notably the one from [[http://www.admirality.co.uk]] for all UK ports, though it is quite expensive. As finding a free API is quite difficult, we may have to suffice for either web-scraping tide information from public websites, or simply making up our values. Regardless of how the information is obtained, it wil be stored in a way similar to how the object is structured. Example:
+If possible, we would like to make use of a free API to get the most up-to-date tide information with little manual effort on our end. There are many APIs available, notably the one from [[https://www.admiralty.co.uk/digital-services/data-solutions/uk-tidal-api][admiralty.co.uk]] for all UK ports, though it is quite expensive. As finding a free API is quite difficult, we may have to suffice for either web-scraping tide information from public websites, or simply making up our values. Regardless of how the information is obtained, it wil be stored in a way similar to how the object is structured. Example:
 | *tide\under{}id*  | *until*          | *height* | *type* |
 |        74 | 2021-10-19 10:36 |     1.00 | LOW    |
 |        75 | 2021-10-19 13:36 |     4.39 | HIGH   |
-
+** TideStage (Enumeration)
+A very simply enumeration that stores what stage the current tide is considered.
+- *LOW*: A low tide.
+- *HIGH*: A high tide.
 ** Ship
 The design of the \code{Ship} class is to be agreed with the shipping line team. Currently, we have the following structure in mind:
 - *ship\under{}id*: A unique identifier for the ship.
@@ -46,6 +49,16 @@ ShipType is not a class, but a simple enumeration. Similar to the \code{Ship} cl
 - *FERRY*: Another type of passenger vessel.
 - *CARGO*: A very large ship that carries cargo, goods, and materials from one port to another.
 
+** Class Diagram
+The DAOs have not yet been added to our experimental project, hence the absence of them from the diagram.
+[[./class-diagram.png]]
+
 * Responsibilities
+We are responsible for exposing the following REST endpoints:
+** /api/bookPilot (for the Shipping Line)
+\code{/api/bookPilot} is an endpoint that is needed by the shipping line team to book a pilot to bring in the ship when they arrive at the port. This endpoint will take in a \code{DateTime} and \code{Ship} object. From here, our system will perform checks regarding time availability and ability to board the given ship. Once a list of suitable pilots has been accumulated, a random one will be chosen and their ID returned to the shipping line team where they will continue their role. If no pilots are available that clear these conditions, then an error message will be returned along with the next time that a pilot is available.
+
+** /api/requestPilot (for the Shipping Line)
+\code{/api/requestPilot} is needed by the shipping line when the time comes for a pilot to be sent out and retrieve ships that have arrived to port.
 
 * Requirements from others
