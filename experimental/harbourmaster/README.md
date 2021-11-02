@@ -16,6 +16,6 @@ If you wish to use docker to run this program, build the docker image with:
 
 If it's your first time building a docker image, it may take a few minutes to download dependencies. Once you have successfully built the image, simply run:
 
-`$ docker run -p 8080:8080 -t harbourmaster:1.0-SNAPSHOT `
+    `$ docker run -p 8080:8080 -t harbourmaster:1.0-SNAPSHOT `
 
 The program will then be available at http://localhost:8080/. You can substitue the ports in the above command with whichever ones you wish to use.
