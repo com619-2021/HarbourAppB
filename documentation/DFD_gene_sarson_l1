@@ -1,0 +1,100 @@
+<mxfile host="app.diagrams.net" modified="2021-11-02T23:39:07.809Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36" etag="3Dx176wBX33jh3bgvpyQ" version="15.6.6" type="github">
+  <diagram id="mcdA3Tg_aCDRkGSdXo_Q" name="Page-1">
+    <mxGraphModel dx="19" dy="2043" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-9" value="Details about arrival" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontColor=default;strokeColor=default;labelBackgroundColor=default;" parent="1" source="XGO9NRh9ggqHyFukTi_9-4" target="XGO9NRh9ggqHyFukTi_9-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-22" value="Details on stay" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" parent="1" source="XGO9NRh9ggqHyFukTi_9-4" target="XGO9NRh9ggqHyFukTi_9-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object label="&#xa;&#xa;1&#xa;Port Schedule/&#xa;Harbour Master" placeholders="1" process="" id="XGO9NRh9ggqHyFukTi_9-4">
+          <mxCell style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=20;fillColor=#ffffff;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;swimlaneFillColor=#ffffff;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+            <mxGeometry x="2033" y="-285" width="100" height="50" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-6" value="Ship details" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=default;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;labelBackgroundColor=default;" parent="1" source="XGO9NRh9ggqHyFukTi_9-12" target="XGO9NRh9ggqHyFukTi_9-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1920" y="-260" />
+              <mxPoint x="1920" y="-260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-5" value="Port Stevedores" style="ellipse;whiteSpace=wrap;html=1;fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2280" y="-555" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-6" value="Time Available" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" edge="1" parent="1" source="XGO9NRh9ggqHyFukTi_9-7" target="XGO9NRh9ggqHyFukTi_9-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-8" value="Ship ready to&lt;br&gt;be brought in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" edge="1" parent="1" source="XGO9NRh9ggqHyFukTi_9-7" target="XGO9NRh9ggqHyFukTi_9-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object label="&#xa;&#xa;1&#xa;Ship arrival &#xa;process" placeholders="1" process="" id="XGO9NRh9ggqHyFukTi_9-7">
+          <mxCell style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=20;fillColor=#ffffff;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;swimlaneFillColor=#ffffff;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+            <mxGeometry x="2033" y="-540" width="100" height="50" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-21" value="Notify" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=default;fontColor=default;strokeColor=default;" parent="1" source="XGO9NRh9ggqHyFukTi_9-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2083" y="-235" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2083" y="-235" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <object label="&#xa;&#xa;1&#xa;Ship departure &#xa;process" placeholders="1" process="" id="XGO9NRh9ggqHyFukTi_9-8">
+          <mxCell style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=20;fillColor=#ffffff;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;swimlaneFillColor=#ffffff;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+            <mxGeometry x="2033" y="-135" width="100" height="50" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" edge="1" parent="1" source="XGO9NRh9ggqHyFukTi_9-11" target="XGO9NRh9ggqHyFukTi_9-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-11" value="Port Pilots" style="ellipse;whiteSpace=wrap;html=1;fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="-555" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-20" value="Ship ID" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" parent="1" source="XGO9NRh9ggqHyFukTi_9-12" target="XGO9NRh9ggqHyFukTi_9-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1790" y="-110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-12" value="Shipping Line" style="ellipse;whiteSpace=wrap;html=1;fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="-300" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" edge="1" parent="1" source="XGO9NRh9ggqHyFukTi_9-15" target="XGO9NRh9ggqHyFukTi_9-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XGO9NRh9ggqHyFukTi_9-15" value="D&lt;span style=&quot;white-space: pre&quot;&gt; &lt;/span&gt;&amp;nbsp;&lt;span style=&quot;white-space: pre&quot;&gt; &lt;/span&gt;List of Available Pilots" style="html=1;dashed=0;whitespace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1705" y="-420" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" edge="1" parent="1" source="5MHJLpd3PySGxuC1fj1I-1" target="5MHJLpd3PySGxuC1fj1I-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1910" y="-649" />
+              <mxPoint x="1910" y="-649" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-1" value="GPS API" style="ellipse;whiteSpace=wrap;html=1;fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="-689" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=default;fontColor=default;strokeColor=default;" edge="1" parent="1" source="5MHJLpd3PySGxuC1fj1I-2" target="XGO9NRh9ggqHyFukTi_9-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2083" y="-650" />
+              <mxPoint x="2350" y="-650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5MHJLpd3PySGxuC1fj1I-2" value="D&lt;span style=&quot;white-space: pre&quot;&gt; &lt;/span&gt;&amp;nbsp;&lt;span style=&quot;white-space: pre&quot;&gt;  Ship cordinates&lt;/span&gt;" style="html=1;dashed=0;whitespace=wrap;shape=mxgraph.dfd.dataStoreID;align=left;spacingLeft=3;points=[[0,0],[0.5,0],[1,0],[0,0.5],[1,0.5],[0,1],[0.5,1],[1,1]];fillColor=default;strokeColor=default;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+          <mxGeometry x="1998" y="-664" width="170" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
