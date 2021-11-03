@@ -11,7 +11,7 @@ public class exampleDB {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "newuser", "password");
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("IF NOT EXISTS CREATE TABLE EXAMPLE(ID = PRIMARY KEY AUTO INCREMENT, NAME1 VARCHAR(256), NAME2 VARCHAR(256), NAME3 VARCHAR(256)); ");
-            createExample("test", "test", "test");
+            //createExample("test", "test", "test");
         } catch (
                 Exception e) {
             System.out.println(e);
