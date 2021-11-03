@@ -47,7 +47,7 @@ public class HarbourMasterController {
 	// /api/requestPilot: REST endpoint that is called by the shipping team when a ship requires
 	// piloting in to port. Pilot must be booked beforehand.
 	@RequestMapping(value = "/api/requestPilot", method = RequestMethod.POST)
-	public ResponseEntity<Object> requestPilot(@RequestBody String pilotId) {
+	public ResponseEntity<Object> requestPilot(@RequestBody long pilotId) {
 		log.info("/api/requestPilot: entered.");
 		log.info("/api/requestPilot: pilot #" + pilotId + " requested.");
 
@@ -55,7 +55,7 @@ public class HarbourMasterController {
 		allowedTo.add(ShipType.CARGO);
 		allowedTo.add(ShipType.FERRY);
 
-		Pilot pilot = new Pilot(Long.parseLong(pilotId), allowedTo, "John", "Smith", "01-01-1970");
+		Pilot pilot = new Pilot(pilotId, allowedTo, "John", "Smith", "01-01-1970");
 
 		return new ResponseEntity<>(String.format("Pilot #%d has been called and is now en route.", pilot.getId()), HttpStatus.OK);
 	}
