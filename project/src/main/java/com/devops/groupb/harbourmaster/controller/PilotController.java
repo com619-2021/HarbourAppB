@@ -39,7 +39,7 @@ public class PilotController {
 		allowedTo.add(ShipType.CARGO);
 		allowedTo.add(ShipType.FERRY);
 
-		Pilot pilot = new Pilot(1L, allowedTo, "John", "Smith", "01-01-1970");
+		Pilot pilot = new Pilot(1, allowedTo, "John", "Smith", "01-01-1970");
 
 		return new ResponseEntity<>(String.format("Pilot #%d has successfully been booked.", pilot.getId()), HttpStatus.OK);
 	}
@@ -47,7 +47,7 @@ public class PilotController {
 	// /api/requestPilot: REST endpoint that is called by the shipping team when a ship requires
 	// piloting in to port. Pilot must be booked beforehand.
 	@RequestMapping(value = "/api/requestPilot", method = RequestMethod.POST)
-	public ResponseEntity<Object> requestPilot(@RequestBody long pilotId) {
+	public ResponseEntity<Object> requestPilot(@RequestBody int pilotId) {
 		log.info("/api/requestPilot: entered.");
 		log.info("/api/requestPilot: pilot #" + pilotId + " requested.");
 

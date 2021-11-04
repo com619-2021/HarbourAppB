@@ -14,14 +14,14 @@ import javax.persistence.Table;
 public class Pilot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private int id;
 	private String href = null;
 	private ArrayList<ShipType> allowedTo;
 	private String firstName;
 	private String lastName;
 	private String dateOfBirth; // change to Date
 
-	public Pilot(long id, ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
+	public Pilot(int id, ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
 		this.id = id;
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
@@ -29,11 +29,11 @@ public class Pilot {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
