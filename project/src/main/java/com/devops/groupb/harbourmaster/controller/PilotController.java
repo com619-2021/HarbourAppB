@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestController
-public class HarbourMasterController {
+public class PilotController {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
 	// /api/test: a simple REST endpoint for testing.
