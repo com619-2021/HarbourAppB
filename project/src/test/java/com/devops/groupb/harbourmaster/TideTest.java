@@ -45,24 +45,16 @@ public class TideTest {
 
 	@Test
 	public void addTide() {
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00));
+		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
+		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
 
 		Tide tide = new Tide(1, 4.53, testStart, testEnd);
 		log.info("Attempting to save " + tide + " to the database.");
+
 		tideRepository.save(tide);
 
-		Tide storedTide = tideRepository.findById("1").get();
-		assertEquals(4.53, storedTide.getHeight());
-	}
+		Tide storedTide = tideRepository.findById(1).get();
 
-	@Test
-	public void getAllTides() {
-		log.info("Testing if any tides are present in the database.");
-		List<Tide> tides = tideRepository.findAll();
-
-		log.info("Got tides " + Arrays.toString(tides.toArray()) + ".");
-
-		assertFalse(tides.isEmpty());
+		assertEquals(tide.getHeight(), storedTide.getHeight());
 	}
 }

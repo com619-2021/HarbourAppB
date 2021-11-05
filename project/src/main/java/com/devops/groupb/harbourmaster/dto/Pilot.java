@@ -21,6 +21,11 @@ public class Pilot {
 	private String lastName;
 	private String dateOfBirth; // change to Date
 
+	// Empty default constructor needed for H2 in-memory testing DB
+	public Pilot() {
+
+	}
+
 	public Pilot(int id, ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
 		this.id = id;
 		this.allowedTo = allowedTo;

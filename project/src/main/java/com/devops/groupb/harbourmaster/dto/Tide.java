@@ -5,6 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import java.sql.Timestamp;
+
+import javax.persistence.Lob;
+import javax.persistence.Basic;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,11 +24,16 @@ public class Tide {
 	private int id;
 	private double height;
 
-	@Column(name="start")
+	@Column(name="start", columnDefinition="TIMESTAMP")
 	private LocalDateTime start;
 
-	@Column(name="end")
+	@Column(name="end", columnDefinition="TIMESTAMP")
 	private LocalDateTime end;
+
+	// Empty default constructor needed for H2 in-memory testing DB
+	public Tide() {
+
+	}
 
 	public Tide(int id, double height, LocalDateTime start, LocalDateTime end) {
 		this.id = id;
