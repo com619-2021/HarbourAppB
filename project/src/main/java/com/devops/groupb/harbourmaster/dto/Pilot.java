@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import java.util.List;
+
 import java.util.ArrayList;
 import java.util.StringJoiner;
 
@@ -8,6 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.ElementCollection;
+import javax.persistence.CollectionTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +28,11 @@ public class Pilot {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String href = null;
-	private ArrayList<ShipType> allowedTo;
+
+	@ElementCollection
+	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "id"))
+	@Enumerated(EnumType.STRING)
+	private List<ShipType> allowedTo = new ArrayList();
 	private String firstName;
 	private String lastName;
 	private LocalDate dateOfBirth;
@@ -30,14 +43,14 @@ public class Pilot {
 	}
 
 	// Constructor for saving a Pilot without giving an explicit ID.
-	public Pilot(ArrayList<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
+	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public Pilot(int id, ArrayList<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
+	public Pilot(int id, List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
 		this.id = id;
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
@@ -53,11 +66,11 @@ public class Pilot {
 		this.id = id;
 	}
 
-	public ArrayList<ShipType> getAllowedTo() {
+	public List<ShipType> getAllowedTo() {
 		return allowedTo;
 	}
 
-	public void setAllowedTo(ArrayList<ShipType> allowedTo) {
+	public void setAllowedTo(List<ShipType> allowedTo) {
 		this.allowedTo = allowedTo;
 	}
 

@@ -38,13 +38,13 @@ public class PilotRepositoryTest {
 	}
 
 	@Test
-	public void addPilot() {
+	public void savePilot() {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.PASSENGER);
 		allowedTo.add(ShipType.CARGO);
 
 		Pilot pilot = new Pilot(allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
-		log.info("Attempting to save " + pilot + " to the database.");
+		log.info("Attempting to save " + pilot + " to the database using PilotRepository.");
 
 		int savedId = pilotRepository.save(pilot).getId();
 

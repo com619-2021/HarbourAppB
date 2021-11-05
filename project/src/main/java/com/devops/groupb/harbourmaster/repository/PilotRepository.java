@@ -1,6 +1,7 @@
 package com.devops.groupb.harbourmaster.repository;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.ShipType;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface PilotRepository extends JpaRepository<Pilot, Integer> {
 	@Query(value = "SELECT * FROM pilots WHERE firstName = :firstName AND lastName = :lastName", nativeQuery = true)
 	public List<Pilot> findByFullName(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
-	@Query(value = "SELECT * FROM pilots WHERE allowedTo LIKE '%{$:shipType}%'", nativeQuery = true)
-	public List<Pilot> findByAllowedTo(@Param("shipType") String shipType);
+	// Query needs verifying when allowedTo is to be implemented properly.
+	@Query(value = "SELECT * FROM pilots INNER JOIN allowed_to ON pilots.id = allowed_to.id LIKE '%{$:shipType}%'", nativeQuery = true)
+	public List<Pilot> findByAllowedTo(@Param("shipType") ShipType shipType);
 }

@@ -4,10 +4,12 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.repository.TideRepository;
 
+@Repository
 public class TideDAO {
 	@Autowired
 	private TideRepository tideRepository;

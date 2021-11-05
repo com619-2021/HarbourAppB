@@ -3,10 +3,13 @@ package com.devops.groupb.harbourmaster.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.repository.PilotRepository;
 
+@Repository
 public class PilotDAO {
 	@Autowired
 	private PilotRepository pilotRepository;
@@ -39,7 +42,7 @@ public class PilotDAO {
 		return pilotRepository.findByFullName(firstName, secondName);
 	}
 
-	public List<Pilot> findByAllowedTo(String shipType) {
+	public List<Pilot> findByAllowedTo(ShipType shipType) {
 		return pilotRepository.findByAllowedTo(shipType);
 	}
 }

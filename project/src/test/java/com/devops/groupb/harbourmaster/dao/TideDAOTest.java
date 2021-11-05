@@ -1,4 +1,4 @@
-package com.devops.groupb.harbourmaster.test.repository;
+package com.devops.groupb.harbourmaster.test.dao;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Tide;
+import com.devops.groupb.harbourmaster.dao.TideDAO;
 import com.devops.groupb.harbourmaster.repository.TideRepository;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -22,19 +23,19 @@ import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-@SpringBootTest(classes=HarbourMaster.class)
+@SpringBootTest(classes = HarbourMaster.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-public class TideRepositoryTest {
+public class TideDAOTest {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
 	@Autowired
-	private TideRepository tideRepository;
+	private TideDAO tideDAO;
 
 	@BeforeAll
-	public void repositoryCheck() {
-		log.info("Checking whether tideRepository is null.");
-		assertNotNull(tideRepository);
+	public void daoCheck() {
+		log.info("Checking whether tideDAO is null.");
+		assertNotNull(tideDAO);
 	}
 
 	@Test
@@ -45,10 +46,31 @@ public class TideRepositoryTest {
 		Tide tide = new Tide(4.53, testStart, testEnd);
 		log.info("Attempting to save " + tide + " to the database.");
 
-		int savedId = tideRepository.save(tide).getId();
+		int savedId = tideDAO.save(tide).getId();
 
-		Tide storedTide = tideRepository.findById(savedId).get();
+		Tide storedTide = tideDAO.findById(savedId);
 
 		assertEquals(tide.getHeight(), storedTide.getHeight());
+	}
+
+	@Test
+	public void testCurrentTide() {
+		LocalDateTime tideStart = LocalDateTime.now();
+		LocalDateTime tideEnd = LocalDateTime.now().plusHours(5L);
+
+		Tide tideOfCurrentTime = new Tide(6.36, tideStart, tideEnd);
+		log.info("Created example tide: " + tideOfCurrentTime);
+
+		tideDAO.save(tideOfCurrentTime);
+
+		log.info("Attempting to get the current tide.");
+		LocalDateTime currentTime = LocalDateTime.now();
+		Tide tide = tideDAO.getTideAt(currentTime);
+
+		log.info("Got tide " + tide + ".");
+
+		int compareToStart = currentTime.compareTo(tide.getStart());
+		int compareToEnd = currentTime.compareTo(tide.getEnd());
+		assertTrue(compareToStart > 0 && compareToEnd < 0);
 	}
 }

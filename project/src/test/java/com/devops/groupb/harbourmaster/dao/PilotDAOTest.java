@@ -7,9 +7,9 @@ import org.junit.jupiter.api.TestInstance;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
+import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
-import com.devops.groupb.harbourmaster.repository.TideRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,4 +39,42 @@ public class PilotDAOTest {
 		log.info("Checking whether pilotDAO is null.");
 		assertNotNull(pilotDAO);
 	}
+
+	@Test
+	public void savePilot() {
+		ArrayList<ShipType> allowedTo = new ArrayList();
+		allowedTo.add(ShipType.PASSENGER);
+		allowedTo.add(ShipType.CARGO);
+
+		Pilot pilot = new Pilot(allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
+		log.info("Attempting to save " + pilot + " to the database using PilotDAO.");
+
+		int savedId = pilotDAO.save(pilot).getId();
+
+		Pilot storedPilot = pilotDAO.findById(savedId);
+
+		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
+	}
+
+	// To be implemented once prototype without allowedTo is running.
+	/*
+	  @Test
+	  public void getLegiblePilots() {
+	  ShipType ship = ShipType.CARGO;
+
+	  ArrayList<ShipType> allowedTo = new ArrayList();
+	  allowedTo.add(ShipType.CARGO);
+
+	  Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22));
+	  log.info("Saving example pilot " + pilot + " to the database using PilotDAO.");
+
+	  pilotDAO.save(pilot);
+
+	  List<Pilot> pilotsRetrieved = pilotDAO.findByAllowedTo(ship);
+
+	  log.info("Retrieved legible pilots '" + Arrays.toString(pilotsRetrieved.toArray()) + "' to handle ShipType " + ship + ".");
+
+	  assertFalse(pilotsRetrieved.isEmpty());
+	  }
+	*/
 }
