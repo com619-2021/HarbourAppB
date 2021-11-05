@@ -18,6 +18,10 @@ public class PilotDAO {
 		return pilotRepository.findById(id).isPresent() ? pilotRepository.findById(id).get() : null;
 	}
 
+	public Boolean existsById(int id) {
+		return pilotRepository.existsById(id);
+	}
+	
 	public Pilot save(Pilot pilot) {
 		return pilotRepository.save(pilot);
 	}

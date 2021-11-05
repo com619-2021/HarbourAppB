@@ -1,28 +1,31 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.util.ArrayList;
+import java.util.Random;
+import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.repository.PilotRepository;
+import com.devops.groupb.harbourmaster.dao.PilotDAO;
+import com.devops.groupb.harbourmaster.dto.ShipType;
 
 @Service
 public class PilotService {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
 	@Autowired
-	private PilotRepository pilotRepository;
+	private PilotDAO pilotDAO;
 
-	public void addPilot(Pilot pilot) {
-		pilotRepository.save(pilot);
-	}
+	public Pilot selectPilotFromList(ShipType shipType) {
+		List<Pilot> eligiblePilots = pilotDAO.findByAllowedTo(shipType);
+		log.info("Selecting random Pilot from " + Arrays.toString(eligiblePilots.toArray()) + ".");
+		Random rand = new Random();
+		Pilot electedPilot = eligiblePilots.get(rand.nextInt(eligiblePilots.size()));
 
-	public ArrayList<Pilot> getAllPilots() {
-		ArrayList<Pilot> pilots = new ArrayList<>();
-		pilotRepository.findAll().forEach(pilots::add);
+		log.info("Selected " + electedPilot + " to handle " + shipType.name() + ".");
 
-		return pilots;
+		return electedPilot;
 	}
 }

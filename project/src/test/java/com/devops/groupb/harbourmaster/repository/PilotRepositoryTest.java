@@ -38,7 +38,7 @@ public class PilotRepositoryTest {
 	}
 
 	@Test
-	public void savePilot() {
+	public void createAndReadPilot() {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.PASSENGER);
 		allowedTo.add(ShipType.CARGO);
@@ -51,5 +51,33 @@ public class PilotRepositoryTest {
 		Pilot storedPilot = pilotRepository.findById(savedId).get();
 
 		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
+	}
+
+	@Test
+	public void updatePilot() {
+		ArrayList<ShipType> allowedTo = new ArrayList();
+		allowedTo.add(ShipType.PASSENGER);
+
+		Pilot pilot = new Pilot(allowedTo, "Will", "Eastwood", LocalDate.of(1966, Month.AUGUST, 21));
+		Pilot savedPilot = pilotRepository.save(pilot);
+
+		savedPilot.setLastName("Wheatley");
+		int savedPilotId = pilotRepository.save(savedPilot).getId();
+
+		assertEquals(pilotRepository.findById(savedPilotId).get().getLastName(), "Wheatley");
+	}
+
+	@Test
+	public void deletePilot() {
+		ArrayList<ShipType> allowedTo = new ArrayList();
+		allowedTo.add(ShipType.PASSENGER);
+
+		Pilot pilot = new Pilot(allowedTo, "Wilbert", "James", LocalDate.of(1963, Month.OCTOBER, 8));
+
+		int savedId = pilotRepository.save(pilot).getId();
+
+		pilotRepository.deleteById(savedId);
+
+		assertFalse(pilotRepository.existsById(savedId));
 	}
 }
