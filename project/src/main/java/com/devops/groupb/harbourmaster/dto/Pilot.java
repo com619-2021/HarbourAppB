@@ -26,6 +26,15 @@ public class Pilot {
 
 	}
 
+	// Constructor for saving a Pilot without giving an explicit ID.
+	public Pilot(ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
+		this.allowedTo = allowedTo;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+	}
+
+
 	public Pilot(int id, ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
 		this.id = id;
 		this.allowedTo = allowedTo;

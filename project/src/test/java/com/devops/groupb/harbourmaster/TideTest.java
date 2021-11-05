@@ -48,7 +48,7 @@ public class TideTest {
 		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
 		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
 
-		Tide tide = new Tide(1, 4.53, testStart, testEnd);
+		Tide tide = new Tide(4.53, testStart, testEnd);
 		log.info("Attempting to save " + tide + " to the database.");
 
 		tideRepository.save(tide);

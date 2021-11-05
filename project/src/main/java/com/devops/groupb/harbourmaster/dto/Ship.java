@@ -16,6 +16,17 @@ public class Ship {
 	private ShipType type;
 	private double draft;
 
+	// Empty default constructor needed for H2 in-memory testing DB
+	public Ship() {
+
+	}
+
+	// Constructor for saving a Ship without giving an explicit ID.
+	public Ship(ShipType type, double draft) {
+		this.type = type;
+		this.draft = draft;
+	}
+
 	public Ship(int id, ShipType type, double draft) {
 		this.id = id;
 		this.type = type;

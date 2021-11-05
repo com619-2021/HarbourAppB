@@ -35,6 +35,13 @@ public class Tide {
 
 	}
 
+	// Constructor for saving a Tide without giving an explicit ID.
+	public Tide(double height, LocalDateTime start, LocalDateTime end) {
+		this.height = height;
+		this.start = start;
+		this.end = end;
+	}
+
 	public Tide(int id, double height, LocalDateTime start, LocalDateTime end) {
 		this.id = id;
 		this.height = height;
