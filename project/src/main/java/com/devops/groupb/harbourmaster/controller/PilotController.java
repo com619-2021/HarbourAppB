@@ -1,6 +1,8 @@
 package com.devops.groupb.harbourmaster.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -39,7 +41,7 @@ public class PilotController {
 		allowedTo.add(ShipType.CARGO);
 		allowedTo.add(ShipType.FERRY);
 
-		Pilot pilot = new Pilot(1, allowedTo, "John", "Smith", "01-01-1970");
+		Pilot pilot = new Pilot(1, allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
 
 		return new ResponseEntity<>(String.format("Pilot #%d has successfully been booked.", pilot.getId()), HttpStatus.OK);
 	}
@@ -55,7 +57,7 @@ public class PilotController {
 		allowedTo.add(ShipType.CARGO);
 		allowedTo.add(ShipType.FERRY);
 
-		Pilot pilot = new Pilot(pilotId, allowedTo, "John", "Smith", "01-01-1970");
+		Pilot pilot = new Pilot(1, allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
 
 		return new ResponseEntity<>(String.format("Pilot #%d has been called and is now en route.", pilot.getId()), HttpStatus.OK);
 	}

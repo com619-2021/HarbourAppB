@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @Table(name = "pilots")
 public class Pilot {
@@ -19,23 +22,22 @@ public class Pilot {
 	private ArrayList<ShipType> allowedTo;
 	private String firstName;
 	private String lastName;
-	private String dateOfBirth; // change to Date
+	private LocalDate dateOfBirth;
 
-	// Empty default constructor needed for H2 in-memory testing DB
+	// Empty default constructor needed for H2 in-memory testing DB.
 	public Pilot() {
 
 	}
 
 	// Constructor for saving a Pilot without giving an explicit ID.
-	public Pilot(ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
+	public Pilot(ArrayList<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
 	}
 
-
-	public Pilot(int id, ArrayList<ShipType> allowedTo, String firstName, String lastName, String dateOfBirth) {
+	public Pilot(int id, ArrayList<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
 		this.id = id;
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
@@ -75,16 +77,18 @@ public class Pilot {
 		this.lastName = lastName;
 	}
 
-	public String getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=*WIP*, firstName=%s, lastName=%s, dateOfBirth=%s]", id, firstName, lastName, dateOfBirth);
+		String dobString = dateOfBirth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=*WIP*, firstName=%s, lastName=%s, dateOfBirth=%s]", id, firstName, lastName, dobString);
 	}
 }

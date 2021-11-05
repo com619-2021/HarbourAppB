@@ -2,25 +2,44 @@ package com.devops.groupb.harbourmaster.dao;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.repository.PilotRepository;
 
-public interface PilotDAO {
+public class PilotDAO {
+	@Autowired
+	private PilotRepository pilotRepository;
 
-    public Pilot findById(Long id);
+	public Pilot findById(int id) {
+		return pilotRepository.findById(id).isPresent() ? pilotRepository.findById(id).get() : null;
+	}
 
-    public Pilot save(Pilot pilot);
+	public Pilot save(Pilot pilot) {
+		return pilotRepository.save(pilot);
+	}
 
-    public List<Pilot> findAll();
+	public List<Pilot> findAll() {
+		return pilotRepository.findAll();
+	}
 
-    public void deleteById(long id);
+	public void deleteById(int id) {
+		pilotRepository.deleteById(id);
+	}
 
-    public void delete(Pilot pilot);
+	public void delete(Pilot pilot) {
+		pilotRepository.delete(pilot);
+	}
 
-    public void deleteAll();
+	public void deleteAll() {
+		pilotRepository.deleteAll();
+	}
 
-	// public List<Pilot> findByPilotRole(PilotRole pilotRole);
+	public List<Pilot> findByFullName(String firstName, String secondName) {
+		return pilotRepository.findByFullName(firstName, secondName);
+	}
 
-    public List<Pilot> findByName(String firstName, String secondName);
-    
-    public Pilot findByUuid(String uuid);
+	public List<Pilot> findByAllowedTo(String shipType) {
+		return pilotRepository.findByAllowedTo(shipType);
+	}
 }

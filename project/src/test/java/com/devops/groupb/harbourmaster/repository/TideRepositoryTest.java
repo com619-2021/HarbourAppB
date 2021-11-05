@@ -1,16 +1,13 @@
-package com.devops.groupb.harbourmaster.test;
+package com.devops.groupb.harbourmaster.test.repository;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
-import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.Tide;
-import com.devops.groupb.harbourmaster.repository.PilotRepository;
 import com.devops.groupb.harbourmaster.repository.TideRepository;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -19,19 +16,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.Arrays;
-import java.util.Calendar;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-//@TestPropertySource(locations = "classpath:application.properties")
 @SpringBootTest(classes=HarbourMaster.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
-public class TideTest {
+public class TideRepositoryTest {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
 	@Autowired
@@ -51,9 +45,9 @@ public class TideTest {
 		Tide tide = new Tide(4.53, testStart, testEnd);
 		log.info("Attempting to save " + tide + " to the database.");
 
-		tideRepository.save(tide);
+		int savedId = tideRepository.save(tide).getId();
 
-		Tide storedTide = tideRepository.findById(1).get();
+		Tide storedTide = tideRepository.findById(savedId).get();
 
 		assertEquals(tide.getHeight(), storedTide.getHeight());
 	}
