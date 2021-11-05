@@ -56,25 +56,23 @@ public class PilotDAOTest {
 		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
 	}
 
-	// To be implemented once prototype without allowedTo is running.
-	/*
-	  @Test
-	  public void getLegiblePilots() {
-	  ShipType ship = ShipType.CARGO;
 
-	  ArrayList<ShipType> allowedTo = new ArrayList();
-	  allowedTo.add(ShipType.CARGO);
+	@Test
+	public void getLegiblePilots() {
+		ShipType ship = ShipType.FERRY;
 
-	  Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22));
-	  log.info("Saving example pilot " + pilot + " to the database using PilotDAO.");
+		ArrayList<ShipType> allowedTo = new ArrayList();
+		allowedTo.add(ShipType.FERRY);
 
-	  pilotDAO.save(pilot);
+		Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22));
+		log.info("Saving example pilot " + pilot + " to the database using PilotDAO.");
 
-	  List<Pilot> pilotsRetrieved = pilotDAO.findByAllowedTo(ship);
+		log.info(pilotDAO.save(pilot));
 
-	  log.info("Retrieved legible pilots '" + Arrays.toString(pilotsRetrieved.toArray()) + "' to handle ShipType " + ship + ".");
+		List<Pilot> pilotsRetrieved = pilotDAO.findByAllowedTo(ship);
 
-	  assertFalse(pilotsRetrieved.isEmpty());
-	  }
-	*/
+		log.info("Retrieved legible pilots '" + Arrays.toString(pilotsRetrieved.toArray()) + "' to handle ShipType " + ship + ".");
+
+		assertFalse(pilotsRetrieved.isEmpty());
+	}
 }

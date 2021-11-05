@@ -16,7 +16,6 @@ public interface PilotRepository extends JpaRepository<Pilot, Integer> {
 	@Query(value = "SELECT * FROM pilots WHERE firstName = :firstName AND lastName = :lastName", nativeQuery = true)
 	public List<Pilot> findByFullName(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
-	// Query needs verifying when allowedTo is to be implemented properly.
-	@Query(value = "SELECT * FROM pilots INNER JOIN allowed_to ON pilots.id = allowed_to.id LIKE '%{$:shipType}%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM pilots JOIN allowed_to ON pilots.id = allowed_to.id WHERE allowed_to.allowed_to LIKE %:shipType%", nativeQuery = true)
 	public List<Pilot> findByAllowedTo(@Param("shipType") ShipType shipType);
 }
