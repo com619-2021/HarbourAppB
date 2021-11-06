@@ -18,8 +18,13 @@ public class PilotService {
 	@Autowired
 	private PilotDAO pilotDAO;
 
-	public Pilot selectPilotFromList(ShipType shipType) {
+	public Pilot findSuitablePilot(ShipType shipType) {
 		List<Pilot> eligiblePilots = pilotDAO.findByAllowedTo(shipType);
+
+		if (eligiblePilots.isEmpty()) {
+			return null;
+		}
+
 		log.info("Selecting random Pilot from " + Arrays.toString(eligiblePilots.toArray()) + ".");
 		Random rand = new Random();
 		Pilot electedPilot = eligiblePilots.get(rand.nextInt(eligiblePilots.size()));

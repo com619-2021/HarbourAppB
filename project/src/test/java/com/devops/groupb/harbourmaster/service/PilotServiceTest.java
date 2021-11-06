@@ -45,6 +45,7 @@ public class PilotServiceTest {
 		Pilot pilot = new Pilot(allowedTo, "Russell", "Tillman", LocalDate.of(1994, Month.NOVEMBER, 13));
 		pilotDAO.save(pilot);
 
-		assertNotNull(pilotService.selectPilotFromList(ShipType.CARGO));
+		assertNull(pilotService.findSuitablePilot(ShipType.FERRY));
+		assertNotNull(pilotService.findSuitablePilot(ShipType.CARGO));
 	}
 }
