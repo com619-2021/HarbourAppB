@@ -21,6 +21,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
 
 @Entity

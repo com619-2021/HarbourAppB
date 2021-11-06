@@ -5,6 +5,7 @@ import com.devops.groupb.harbourmaster.dto.Ship;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -16,26 +17,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-@Entity
 public class PilotBookingRequest {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@ApiModelProperty(hidden = true)
-	private int id;
-
-	@OneToOne
 	private Ship ship;
-
-	@Column(name="date", columnDefinition="TIMESTAMP")
 	private LocalDate date;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public Ship getShip() {
 		return ship;
@@ -55,6 +39,8 @@ public class PilotBookingRequest {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[date=" + date + ", id=" + id + ", ship=" + ship + "]";
+		String dateString = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		return getClass().getSimpleName() + "[date=" + dateString + ", ship=" + ship + "]";
 	}
 }

@@ -78,7 +78,7 @@ public class OrderRepositoryTest {
 
 		Order updatedOrder = orderRepository.save(order);
 
-		assertNotEquals(updatedOrder.getBerth().getId(), originalBerth.getId());
+		assertNotEquals(updatedOrder.getBerth().getBerthId(), originalBerth.getBerthId());
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class OrderRepositoryTest {
 
 		Ship ship = new Ship(ShipType.FERRY, 6.3);
 		Pilot pilot = new Pilot(allowedTo, "Andy", "Hopper", LocalDate.of(1993, Month.DECEMBER, 19));
-		Berth berth = new Berth(8, 51.86, -1.9);
+		Berth berth = new Berth(99, 51.86, -1.9);
 
 		Order order = new Order(ship, pilot, berth);
 		int savedId = orderRepository.save(order).getId();

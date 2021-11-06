@@ -16,6 +16,8 @@ public class Berth {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
+	private int berthId;
+
 	private double xPos;
 	private double yPos;
 
@@ -24,8 +26,8 @@ public class Berth {
 
 	}
 
-	public Berth(int id, double xPos, double yPos) {
-		this.id = id;
+	public Berth(int berthId, double xPos, double yPos) {
+		this.berthId = berthId;
 		this.xPos = xPos;
 		this.yPos = yPos;
 	}
@@ -37,6 +39,15 @@ public class Berth {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public int getBerthId() {
+		return berthId;
+	}
+
+	public void setBerthId(int berthId) {
+		this.berthId = berthId;
+	}
+
 
 	public double getxPos() {
 		return xPos;
