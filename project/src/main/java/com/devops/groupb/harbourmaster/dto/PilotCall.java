@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 
+@Entity
 public class PilotCall {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,8 +20,6 @@ public class PilotCall {
 	private int xPos;
 	private int yPos;
 
-	@ManyToOne
-	@JoinColumn(name = "called_pilot", referencedColumnName = "pilot_id")
 	private int pilotId;
 
 	public int getId() {
@@ -55,5 +54,8 @@ public class PilotCall {
 		this.pilotId = pilotId;
 	}
 
-
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "[id=" + id + ", pilotId=" + pilotId + ", xPos=" + xPos + ", yPos=" + yPos + "]";
+	}
 }

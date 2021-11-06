@@ -16,7 +16,7 @@ public class Ship {
 	private ShipType type;
 	private double draft;
 
-	// Empty default constructor needed for H2 in-memory testing DB
+	// Empty default constructor needed for H2 in-memory testing DB.
 	public Ship() {
 
 	}
@@ -72,5 +72,4 @@ public class Ship {
 	public String toString() {
 		return getClass().getSimpleName() + String.format("[id=%d, type=%s, draft=%f]", id, type, draft);
 	}
-
 }

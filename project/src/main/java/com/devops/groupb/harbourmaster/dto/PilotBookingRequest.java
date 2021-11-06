@@ -14,12 +14,16 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
+@Entity
 public class PilotBookingRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
 	private int id;
+
+	@OneToOne
 	private Ship ship;
 
 	@Column(name="date", columnDefinition="TIMESTAMP")
