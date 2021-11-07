@@ -21,8 +21,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+
 
 @Entity
 @Table(name="orders")
@@ -31,10 +31,10 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Ship ship;
 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Pilot pilot;
 
 	@Column(name="orderDate", columnDefinition="TIMESTAMP")
@@ -46,7 +46,7 @@ public class Order {
 	@Column(name="allocatedTime", columnDefinition="TIMESTAMP")
 	private LocalDateTime allocatedTime;
 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
 	private OrderStatus status;
 
@@ -61,6 +61,7 @@ public class Order {
 		this.berth = berth;
 		this.requestedDate = requestedDate;
 		this.allocatedTime = allocatedTime;
+		orderDate = LocalDateTime.now();
 	}
 
 	public int getId() {

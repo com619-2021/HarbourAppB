@@ -4,6 +4,8 @@ import java.util.List;
 
 import java.util.ArrayList;
 import java.util.StringJoiner;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -101,7 +103,10 @@ public class Pilot {
 	@Override
 	public String toString() {
 		String dobString = dateOfBirth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		List<String> allowedToStrings = Stream.of(ShipType.values())
+			.map(ShipType::name)
+			.collect(Collectors.toList());
 
-		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=*WIP*, firstName=%s, lastName=%s, dateOfBirth=%s]", id, firstName, lastName, dobString);
+		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", id, allowedToStrings, firstName, lastName, dobString);
 	}
 }

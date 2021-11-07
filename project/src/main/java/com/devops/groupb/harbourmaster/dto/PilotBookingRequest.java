@@ -23,6 +23,17 @@ public class PilotBookingRequest {
 	private LocalDate date;
 	private Berth berth;
 
+	// Empty default constructor needed for H2 in-memory testing DB.
+	public PilotBookingRequest() {
+
+	}
+
+	public PilotBookingRequest(Ship ship, LocalDate date, Berth berth) {
+		this.ship = ship;
+		this.date = date;
+		this.berth = berth;
+	}
+
 	public Ship getShip() {
 		return ship;
 	}
