@@ -44,57 +44,38 @@ public class OrderRepositoryTest {
 	}
 
 	@Test
-	public void createAndReadOrder() {
-		log.debug("Testing placement of an example order.");
+	public void CRUDTest() {
+		log.debug("Testing CRUD capabilities of orderRepository.");
+		/* CREATE */
+		log.debug("Testing CREATE of an example order.");
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 
 		Ship ship = new Ship(ShipType.CARGO, 5.4);
 		Pilot pilot = new Pilot(allowedTo, "Cain", "Guy", LocalDate.of(1993, Month.JUNE, 15));
 		Berth berth = new Berth(4, 54.5, -2.3);
-
 		Order order = new Order(ship, pilot, berth, LocalDate.now().plusDays(1L), LocalDateTime.now().plusDays(1L));
 
 		int savedId = orderRepository.save(order).getId();
+
+		/* READ */
+		log.debug("Testing READ of an example order.");
 		Order savedOrder = orderRepository.findById(savedId).get();
 
 		assertEquals(savedOrder.getShip(), order.getShip());
-	}
 
-	@Test
-	public void updateOrder() {
-		log.debug("Testing UPDATE of an existing order.");
-
-		List<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.PASSENGER);
-
-		Ship ship = new Ship(ShipType.PASSENGER, 4.9);
-		Pilot pilot = new Pilot(allowedTo, "Zac", "Francis", LocalDate.of(2000, Month.FEBRUARY, 12));
-		Berth originalBerth = new Berth(2, 54.262, -2.4);
-
-		Order order = new Order(ship, pilot, originalBerth, LocalDate.now().plusDays(1L), LocalDateTime.now().plusDays(1L));
+		/* UPDATE */
+		log.debug("Testing UPDATE of an example order.");
 
 		Berth newBerth = new Berth(3, 54.376, -2.3);
 		order.setBerth(newBerth);
 
 		Order updatedOrder = orderRepository.save(order);
 
-		assertNotEquals(updatedOrder.getBerth().getBerthId(), originalBerth.getBerthId());
-	}
+		assertNotEquals(updatedOrder.getBerth().getBerthId(), berth.getBerthId());
 
-	@Test
-	public void deleteOrder() {
-		List<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.FERRY);
-
-		Ship ship = new Ship(ShipType.FERRY, 6.3);
-		Pilot pilot = new Pilot(allowedTo, "Andy", "Hopper", LocalDate.of(1993, Month.DECEMBER, 19));
-		Berth berth = new Berth(99, 51.86, -1.9);
-
-		Order order = new Order(ship, pilot, berth, LocalDate.now().plusDays(1L), LocalDateTime.now().plusDays(1L));
-
-		int savedId = orderRepository.save(order).getId();
-
+		/* DELETE */
+		log.debug("Testing DELETE of an example order.");
 		orderRepository.deleteById(savedId);
 
 		assertFalse(orderRepository.existsById(savedId));

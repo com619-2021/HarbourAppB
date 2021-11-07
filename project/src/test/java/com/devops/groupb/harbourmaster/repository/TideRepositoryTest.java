@@ -38,43 +38,35 @@ public class TideRepositoryTest {
 	}
 
 	@Test
-	public void createAndReadTide() {
+	public void CRUDTest() {
+		log.debug("Testing CRUD capabilities of tideRepository.");
+		/* CREATE */
+		log.debug("Testing CREATE of an example tide.");
 		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
 		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
 
-		Tide tide = new Tide(4.53, testStart, testEnd);
-		log.info("Attempting to save " + tide + " to the database.");
+		double tideHeight = 4.53;
+
+		Tide tide = new Tide(tideHeight, testStart, testEnd);
 
 		int savedId = tideRepository.save(tide).getId();
 
+		/* READ */
+		log.debug("Testing READ of an example tide.");
 		Tide storedTide = tideRepository.findById(savedId).get();
 
 		assertEquals(tide.getHeight(), storedTide.getHeight());
-	}
 
-	@Test
-	public void updateTide() {
-		double originalDepth = 3.93;
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
+		/* UPDATE */
+		log.debug("Testing UPDATE of an example tide.");
+		tide.setHeight(5.26);
 
-		Tide originalTide = tideRepository.save(new Tide(originalDepth, testStart, testEnd));
+		Tide updatedTide = tideRepository.save(tide);
 
-		double newDepth = 4.78;
-		originalTide.setHeight(newDepth);
-		int savedTideId = tideRepository.save(originalTide).getId();
+		assertNotEquals(updatedTide.getHeight(), tideHeight);
 
-		assertNotEquals(tideRepository.findById(savedTideId).get().getHeight(), originalDepth);
-	}
-
-	@Test
-	public void deleteTide() {
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
-
-		Tide tide = new Tide(5.87, testStart, testEnd);
-
-		int savedId = tideRepository.save(tide).getId();
+		/* DELETE */
+		log.debug("Testing DELETE of an example tide.");
 
 		tideRepository.deleteById(savedId);
 

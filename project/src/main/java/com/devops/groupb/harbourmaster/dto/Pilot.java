@@ -29,7 +29,6 @@ public class Pilot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String href = null;
 
 	@ElementCollection
 	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "id"))
@@ -103,6 +102,7 @@ public class Pilot {
 	@Override
 	public String toString() {
 		String dobString = dateOfBirth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		// TO FIX: collects all values of the ShipType enum; doesn't use allowedTo!
 		List<String> allowedToStrings = Stream.of(ShipType.values())
 			.map(ShipType::name)
 			.collect(Collectors.toList());

@@ -38,44 +38,37 @@ public class PilotRepositoryTest {
 	}
 
 	@Test
-	public void createAndReadPilot() {
+	public void CRUDTest() {
+		log.debug("Testing CRUD capabilities of pilotRepository.");
+		/* CREATE */
+		log.debug("Testing CREATE of an example pilot.");
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.PASSENGER);
 		allowedTo.add(ShipType.CARGO);
 
-		Pilot pilot = new Pilot(allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
+		String lastName = "Smith";
+
+		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1));
 		log.info("Attempting to save " + pilot + " to the database using PilotRepository.");
 
 		int savedId = pilotRepository.save(pilot).getId();
 
+		/* READ */
+		log.debug("Testing READ of an example pilot.");
 		Pilot storedPilot = pilotRepository.findById(savedId).get();
 
 		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
-	}
 
-	@Test
-	public void updatePilot() {
-		ArrayList<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.PASSENGER);
+		/* UPDATE */
+		log.debug("Testing UPDATE of an example pilot.");
+		storedPilot.setLastName("Wheatley");
 
-		Pilot pilot = new Pilot(allowedTo, "Will", "Eastwood", LocalDate.of(1966, Month.AUGUST, 21));
-		Pilot savedPilot = pilotRepository.save(pilot);
+		Pilot updatedPilot = pilotRepository.save(pilot);
 
-		savedPilot.setLastName("Wheatley");
-		int savedPilotId = pilotRepository.save(savedPilot).getId();
+		assertNotEquals(updatedPilot.getLastName(), lastName);
 
-		assertEquals(pilotRepository.findById(savedPilotId).get().getLastName(), "Wheatley");
-	}
-
-	@Test
-	public void deletePilot() {
-		ArrayList<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.PASSENGER);
-
-		Pilot pilot = new Pilot(allowedTo, "Wilbert", "James", LocalDate.of(1963, Month.OCTOBER, 8));
-
-		int savedId = pilotRepository.save(pilot).getId();
-
+		/* DELETE */
+		log.debug("Testing DELETE of an example pilot.");
 		pilotRepository.deleteById(savedId);
 
 		assertFalse(pilotRepository.existsById(savedId));
