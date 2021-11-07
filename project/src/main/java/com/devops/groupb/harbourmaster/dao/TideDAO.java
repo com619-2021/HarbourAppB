@@ -18,6 +18,10 @@ public class TideDAO {
 		return tideRepository.findById(id).get();
 	}
 
+	public Boolean existsById(int id) {
+		return tideRepository.existsById(id);
+	}
+
 	public Tide save(Tide tide) {
 		return tideRepository.save(tide);
 	}

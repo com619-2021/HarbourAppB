@@ -65,7 +65,7 @@ public class TideDAOTest {
 		originalTide.setHeight(newDepth);
 		int savedTideId = tideDAO.save(originalTide).getId();
 
-		assertNotEquals(tideDAO.findById(savedTideId).get().getHeight(), originalDepth);
+		assertNotEquals(tideDAO.findById(savedTideId).getHeight(), originalDepth);
 	}
 
 	@Test
