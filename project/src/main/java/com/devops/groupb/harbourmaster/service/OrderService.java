@@ -38,6 +38,21 @@ public class OrderService {
 		return true;
 	}
 
+	public Boolean cancelOrder(int orderId) {
+		Order order = orderDAO.findById(orderId);
+		if (order == null) {
+			return false;
+		}
+
+		log.info("Found matching order: " + order + ".");
+		order.setStatus(OrderStatus.CANCELLED);
+
+		// Free up the time from the pilot's schedule.
+
+		orderDAO.save(order);
+		return true;
+	}
+
 	public Boolean requestOrderChange(int orderId) {
 		return true;
 	}
