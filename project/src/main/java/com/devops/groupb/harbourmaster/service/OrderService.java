@@ -26,6 +26,10 @@ public class OrderService {
 	@Autowired
 	private OrderDAO orderDAO;
 
+	public Order retrieveOrder(int id) {
+		return orderDAO.findById(id);
+	}
+
 	public Boolean placeOrder(Order order) {
 		order.setStatus(OrderStatus.PLACED);
 
@@ -36,8 +40,6 @@ public class OrderService {
 	}
 
 	public Boolean requestOrderChange(int orderId) {
-
 		return true;
 	}
-
 }

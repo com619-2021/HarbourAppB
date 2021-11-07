@@ -18,6 +18,11 @@ public class PilotService {
 	@Autowired
 	private PilotDAO pilotDAO;
 
+	public Boolean createNewPilot(Pilot pilot) {
+		pilotDAO.save(pilot);
+		return true;
+	}
+
 	public Pilot findSuitablePilot(ShipType shipType) {
 		List<Pilot> eligiblePilots = pilotDAO.findByAllowedTo(shipType);
 
