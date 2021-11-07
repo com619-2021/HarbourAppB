@@ -13,7 +13,10 @@ import com.devops.groupb.harbourmaster.dto.PilotCall;
 import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
+import com.devops.groupb.harbourmaster.dto.Order;
+
 import com.devops.groupb.harbourmaster.service.PilotService;
+import com.devops.groupb.harbourmaster.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,9 @@ public class PilotController {
 
 	@Autowired
 	PilotService pilotService;
+
+	@Autowired
+	OrderService orderService;
 
 	// /api/test: a simple REST endpoint for testing.
 	@GetMapping(value = "/api/test")
@@ -61,16 +67,21 @@ public class PilotController {
 		   that we have to deal with on our end. */
 
 		if (pilot != null) {
-			LocalDateTime bookedTime = pilotBookingRequest.getDate().atTime(03, 00);
-			String bookedTimeStr = bookedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			LocalDateTime allocatedTime = pilotBookingRequest.getDate().atTime(03, 00);
+			String allocatedTimeStr = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-			// Add booking using (future) OrderService or something; idk..
-			return new ResponseEntity<>(String.format("Pilot #%s has successfully been booked for %s.", pilot, bookedTimeStr),
-										HttpStatus.OK);
+
+			Order order = new Order(pilotBookingRequest.getShip(), pilot, pilotBookingRequest.getBerth(),
+									pilotBookingRequest.getDate(), allocatedTime);
+
+			if (orderService.placeOrder(order)) {
+				return new ResponseEntity<>(String.format("Order for handling of Ship '%s' has been placed.\nOrder Details: %s", pilotBookingRequest.getShip(), order), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("Unable to place order.", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		} else {
 			String requestDate = pilotBookingRequest.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-			return new ResponseEntity<>(String.format("No pilots are available to handle ship type '%s' of ship on %s.", pilotBookingRequest.getShip().getType().name(), requestDate),
-										HttpStatus.OK);
+			return new ResponseEntity<>(String.format("No pilots are available to handle ship type '%s' of ship on %s.", pilotBookingRequest.getShip().getType().name(), requestDate), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

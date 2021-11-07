@@ -40,8 +40,11 @@ public class Order {
 	@Column(name="orderDate", columnDefinition="TIMESTAMP")
 	private LocalDateTime orderDate;
 
-	@Column(name="start", columnDefinition="TIMESTAMP")
-	private LocalDateTime start;
+	@Column(name="requestedDate", columnDefinition="TIMESTAMP")
+	private LocalDate requestedDate;
+
+	@Column(name="allocatedTime", columnDefinition="TIMESTAMP")
+	private LocalDateTime allocatedTime;
 
 	@OneToOne
 	private Berth berth;
@@ -52,12 +55,13 @@ public class Order {
 
 	}
 
-	public Order(Ship ship, Pilot pilot, Berth berth) {
+	public Order(Ship ship, Pilot pilot, Berth berth, LocalDate requestedDate, LocalDateTime allocatedTime) {
 		this.ship = ship;
 		this.pilot = pilot;
 		this.berth = berth;
+		this.requestedDate = requestedDate;
+		this.allocatedTime = allocatedTime;
 	}
-
 
 	public int getId() {
 		return id;
@@ -83,12 +87,28 @@ public class Order {
 		this.pilot = pilot;
 	}
 
-	public LocalDateTime getStart() {
-		return start;
+	public LocalDate getRequestedDate() {
+		return requestedDate;
 	}
 
-	public void setStart(LocalDateTime start) {
-		this.start = start;
+	public void setRequestedDate(LocalDate requestedDate) {
+		this.requestedDate = requestedDate;
+	}
+
+	public LocalDateTime getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(LocalDateTime orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public LocalDateTime getAllocatedTime() {
+		return allocatedTime;
+	}
+
+	public void setAllocatedTime(LocalDateTime allocatedTime) {
+		this.allocatedTime = allocatedTime;
 	}
 
 	public Berth getBerth() {
@@ -110,9 +130,11 @@ public class Order {
 	@Override
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-		String startString = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		String requestedDateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String allocatedTimeString = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-		return getClass().getSimpleName() + "[berth=" + berth + ", start=" + startString + ", id=" + id + ", orderDate=" + orderDateString + "pilot=" + pilot + ", ship="
-			+ ship + ", status=" + status.name() + "]";
+		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", id=" + id
+			+ ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
+			+ ", ship=" + ship + ", status=" + status.name() + "]";
 	}
 }

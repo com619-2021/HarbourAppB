@@ -1,6 +1,7 @@
 package com.devops.groupb.harbourmaster.dto;
 
 import com.devops.groupb.harbourmaster.dto.Ship;
+import com.devops.groupb.harbourmaster.dto.Berth;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -20,6 +21,7 @@ import javax.persistence.OneToOne;
 public class PilotBookingRequest {
 	private Ship ship;
 	private LocalDate date;
+	private Berth berth;
 
 	public Ship getShip() {
 		return ship;
@@ -37,9 +39,17 @@ public class PilotBookingRequest {
 		this.date = date;
 	}
 
+	public Berth getBerth() {
+		return berth;
+	}
+
+	public void setBerth(Berth berth) {
+		this.berth = berth;
+	}
+
 	@Override
 	public String toString() {
-		String dateString = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		String dateString = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 		return getClass().getSimpleName() + "[date=" + dateString + ", ship=" + ship + "]";
 	}

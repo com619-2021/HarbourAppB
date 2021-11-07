@@ -4,6 +4,9 @@ import java.util.Random;
 import java.util.List;
 import java.util.Arrays;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +26,7 @@ public class OrderService {
 	@Autowired
 	private OrderDAO orderDAO;
 
-	public Boolean placeOrder(Ship ship, Pilot pilot, Berth berth) {
-		Order order = new Order(ship, pilot, berth);
+	public Boolean placeOrder(Order order) {
 		order.setStatus(OrderStatus.PLACED);
 
 		orderDAO.save(order);

@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Lob;
 import javax.persistence.Basic;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ import javax.persistence.Column;
 public class Berth {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@ApiModelProperty(hidden = true)
 	private int id;
 
 	private int berthId;
