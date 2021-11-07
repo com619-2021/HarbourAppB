@@ -15,13 +15,13 @@ public class EntityModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; //Data type 
+    private Integer id; //Data type 
 
-    public int getId() {
+    public Integer getId() {
         return this.id; //return ID as type int 
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id; //set class id to passed input id
     }
 }

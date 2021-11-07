@@ -14,8 +14,25 @@
   </parent>
 
   <dependencies>
+	<!-- JavaX -->
+	<dependency>
+		<groupId>javax.persistence</groupId>
+		<artifactId>javax.persistence-api</artifactId>
+		<version>2.2</version>
+	</dependency>
+	<dependency>
+    	<groupId>javax.validation</groupId>
+    	<artifactId>validation-api</artifactId>
+    	<version>2.0.1.Final</version>
+	</dependency>
 
 	<!-- Spring -->
+	<dependency>
+    	<groupId>org.springframework.security</groupId>
+    	<artifactId>spring-security-crypto</artifactId>
+    	<version>5.5.3</version>
+	</dependency>
+
 	<dependency>
 	  <groupId>org.springframework.boot</groupId>
 	  <artifactId>spring-boot-starter-web</artifactId>
@@ -48,6 +65,7 @@
 	  <artifactId>spring-boot-starter-data-jpa</artifactId>
 	  <version>2.5.5</version>
 	</dependency>
+	
 	<dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
@@ -102,11 +120,23 @@
 	  <version>5.8.1</version>
 	  <scope>test</scope>
 	</dependency>
-
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+      <version>2.5.5</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 
   <build>
-	<plugins>
+	  <plugins>
+		  <plugin>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <configuration>
+    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+  </configuration>
+</plugin>
+
 	  <plugin>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-maven-plugin</artifactId>
