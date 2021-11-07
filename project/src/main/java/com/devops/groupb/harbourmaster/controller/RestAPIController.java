@@ -75,7 +75,7 @@ public class RestAPIController {
 									pilotBookingRequest.getDate(), allocatedTime);
 
 			if (orderService.placeOrder(order)) {
-				return new ResponseEntity<>(String.format("Order for handling of Ship '%s' has been placed.\nOrder Details: %s", pilotBookingRequest.getShip(), order), HttpStatus.OK);
+				return new ResponseEntity<>(String.format("Your order (ID: %d) for handling of Ship '%s' has been placed.\nOrder Details: %s", order.getId(), pilotBookingRequest.getShip(), order), HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("Unable to place order.", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
