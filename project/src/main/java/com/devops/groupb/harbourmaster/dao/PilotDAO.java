@@ -42,8 +42,8 @@ public class PilotDAO {
 		pilotRepository.deleteAll();
 	}
 
-	public List<Pilot> findByFullName(String firstName, String secondName) {
-		return pilotRepository.findByFullName(firstName, secondName);
+	public List<Pilot> findByFullName(String firstName, String lastName) {
+		return pilotRepository.findByFullName(firstName, lastName);
 	}
 
 	public List<Pilot> findByAllowedTo(ShipType shipType) {

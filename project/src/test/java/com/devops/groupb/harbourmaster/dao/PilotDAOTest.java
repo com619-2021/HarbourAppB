@@ -85,19 +85,33 @@ public class PilotDAOTest {
 
 	@Test
 	public void getLegiblePilots() {
-		ShipType ship = ShipType.FERRY;
-
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
 
 		Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22));
 		log.info("Saving example pilot " + pilot + " to the database using PilotDAO.");
 
-		log.info(pilotDAO.save(pilot));
+		pilotDAO.save(pilot);
 
-		List<Pilot> pilotsRetrieved = pilotDAO.findByAllowedTo(ship);
+		List<Pilot> pilotsRetrieved = pilotDAO.findByAllowedTo(ShipType.FERRY);
 
-		log.info("Retrieved legible pilots '" + Arrays.toString(pilotsRetrieved.toArray()) + "' to handle ShipType " + ship + ".");
+		log.info("Retrieved legible pilots '" + Arrays.toString(pilotsRetrieved.toArray()) + ".");
+
+		assertFalse(pilotsRetrieved.isEmpty());
+	}
+
+	@Test
+	public void findByFullName() {
+		ArrayList<ShipType> allowedTo = new ArrayList();
+		allowedTo.add(ShipType.FERRY);
+
+		Pilot pilot = new Pilot(allowedTo, "Arthur", "Lane", LocalDate.of(1978, Month.MAY, 5));
+
+		pilotDAO.save(pilot);
+
+		List<Pilot> pilotsRetrieved = pilotDAO.findByFullName("Arthur", "Lane");
+
+		log.info("Retrieved pilots '" + Arrays.toString(pilotsRetrieved.toArray()) + "' by full name.");
 
 		assertFalse(pilotsRetrieved.isEmpty());
 	}

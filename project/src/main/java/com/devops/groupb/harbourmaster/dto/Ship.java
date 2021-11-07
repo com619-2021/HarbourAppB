@@ -12,7 +12,6 @@ public class Ship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	private String href = null;
 	private ShipType type;
 	private double draft;
 
@@ -43,14 +42,6 @@ public class Ship {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getHref() {
-		return href;
-	}
-
-	public void setHref(String href) {
-		this.href = href;
 	}
 
 	public ShipType getType() {

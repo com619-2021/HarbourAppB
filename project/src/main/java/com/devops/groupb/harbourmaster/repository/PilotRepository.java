@@ -12,8 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface PilotRepository extends JpaRepository<Pilot, Integer> {
-
-	@Query(value = "SELECT * FROM pilots WHERE firstName = :firstName AND lastName = :lastName", nativeQuery = true)
+	@Query(value = "SELECT * FROM pilots WHERE first_name = :firstName AND last_name = :lastName", nativeQuery = true)
 	public List<Pilot> findByFullName(@Param("firstName") String firstName, @Param("lastName") String lastName);
 
 	@Query(value = "SELECT * FROM pilots JOIN allowed_to ON pilots.id = allowed_to.id WHERE allowed_to.allowed_to LIKE %:shipType%", nativeQuery = true)

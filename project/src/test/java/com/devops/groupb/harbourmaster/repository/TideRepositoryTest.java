@@ -38,7 +38,7 @@ public class TideRepositoryTest {
 	}
 
 	@Test
-	public void saveTide() {
+	public void createAndReadTide() {
 		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
 		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
 
@@ -50,5 +50,34 @@ public class TideRepositoryTest {
 		Tide storedTide = tideRepository.findById(savedId).get();
 
 		assertEquals(tide.getHeight(), storedTide.getHeight());
+	}
+
+	@Test
+	public void updateTide() {
+		double originalDepth = 3.93;
+		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
+		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
+
+		Tide originalTide = tideRepository.save(new Tide(originalDepth, testStart, testEnd));
+
+		double newDepth = 4.78;
+		originalTide.setHeight(newDepth);
+		int savedTideId = tideRepository.save(originalTide).getId();
+
+		assertNotEquals(tideRepository.findById(savedTideId).get().getHeight(), originalDepth);
+	}
+
+	@Test
+	public void deleteTide() {
+		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
+		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
+
+		Tide tide = new Tide(5.87, testStart, testEnd);
+
+		int savedId = tideRepository.save(tide).getId();
+
+		tideRepository.deleteById(savedId);
+
+		assertFalse(tideRepository.existsById(savedId));
 	}
 }
