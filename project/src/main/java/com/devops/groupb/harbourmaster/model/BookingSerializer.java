@@ -4,7 +4,7 @@ import com.devops.groupb.harbourmaster.dto.Booking;
 import com.devops.groupb.harbourmaster.dto.BookingStatus;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvide;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.io.IOException;
@@ -24,10 +24,10 @@ public class BookingSerializer extends StdSerializer<Booking> {
     public void serialize(Booking appointment, JsonGenerator jsonGen, SerializerProvider prov) throws IOException {
         jsonGen.writeStartObject();
         jsonGen.writeNumberField("id", appointment.getId());
-        gen.writeStringField("title", appointment.getWork().getName());
-        gen.writeNumberField("start", appointment.getStart().toInstant(ZoneOffset.UTC).toEpochMilli());
-        gen.writeNumberField("end", appointment.getEnd().toInstant(ZoneOffset.UTC).toEpochMilli());
-        gen.writeStringField("url", "/bookings/" + appointment.getId());
-        gen.writeStringField("color", appointment.getStatus().equals(AppointmentStatus.SCHEDULED) ? "#28a745" : "grey");
+        jsonGen.writeStringField("title", appointment.getWork().getName());
+        jsonGen.writeNumberField("start", appointment.getStart().toInstant(ZoneOffset.UTC).toEpochMilli());
+        jsonGen.writeNumberField("end", appointment.getEnd().toInstant(ZoneOffset.UTC).toEpochMilli());
+        jsonGen.writeStringField("url", "/bookings/" + appointment.getId());
+        jsonGen.writeStringField("color", appointment.getStatus().equals(BookingStatus.SCHEDULED) ? "#28a745" : "grey");
     }
 }
