@@ -39,50 +39,6 @@ public class TideDAOTest {
 	}
 
 	@Test
-	public void createAndReadTide() {
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
-
-		Tide tide = new Tide(4.53, testStart, testEnd);
-		log.info("Attempting to save " + tide + " to the database.");
-
-		int savedId = tideDAO.save(tide).getId();
-
-		Tide storedTide = tideDAO.findById(savedId);
-
-		assertEquals(tide.getHeight(), storedTide.getHeight());
-	}
-
-	@Test
-	public void updateTide() {
-		double originalDepth = 3.93;
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
-
-		Tide originalTide = tideDAO.save(new Tide(originalDepth, testStart, testEnd));
-
-		double newDepth = 4.78;
-		originalTide.setHeight(newDepth);
-		int savedTideId = tideDAO.save(originalTide).getId();
-
-		assertNotEquals(tideDAO.findById(savedTideId).getHeight(), originalDepth);
-	}
-
-	@Test
-	public void deleteTide() {
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
-
-		Tide tide = new Tide(5.87, testStart, testEnd);
-
-		int savedId = tideDAO.save(tide).getId();
-
-		tideDAO.deleteById(savedId);
-
-		assertFalse(tideDAO.existsById(savedId));
-	}
-
-	@Test
 	public void testCurrentTide() {
 		LocalDateTime tideStart = LocalDateTime.now();
 		LocalDateTime tideEnd = LocalDateTime.now().plusHours(5L);

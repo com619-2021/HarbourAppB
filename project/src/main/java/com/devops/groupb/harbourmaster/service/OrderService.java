@@ -18,7 +18,6 @@ import com.devops.groupb.harbourmaster.dto.OrderStatus;
 
 import com.devops.groupb.harbourmaster.dao.OrderDAO;
 
-
 @Service
 public class OrderService {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());

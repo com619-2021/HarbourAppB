@@ -30,12 +30,20 @@ import java.time.Month;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
 public class PilotServiceTest {
+	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
 	@Autowired
 	PilotService pilotService;
 
 	@Autowired
 	PilotDAO pilotDAO;
+
+	@BeforeAll
+	public void daoServiceCheck() {
+		log.debug("Checking whether pilotService or pilotDAO are null.");
+		assertNotNull(pilotService);
+		assertNotNull(pilotDAO);
+	}
 
 	@Test
 	public void electPilot() {

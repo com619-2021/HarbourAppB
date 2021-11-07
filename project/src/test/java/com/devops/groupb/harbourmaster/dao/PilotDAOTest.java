@@ -41,49 +41,6 @@ public class PilotDAOTest {
 	}
 
 	@Test
-	public void createAndReadPilot() {
-		ArrayList<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.PASSENGER);
-		allowedTo.add(ShipType.CARGO);
-
-		Pilot pilot = new Pilot(allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
-		log.info("Attempting to save " + pilot + " to the database using PilotDAO.");
-
-		int savedId = pilotDAO.save(pilot).getId();
-
-		Pilot storedPilot = pilotDAO.findById(savedId);
-
-		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
-	}
-
-	@Test
-	public void updatePilot() {
-		ArrayList<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.PASSENGER);
-
-		Pilot pilot = new Pilot(allowedTo, "Gray", "Woodrow", LocalDate.of(1966, Month.AUGUST, 21));
-		Pilot savedPilot = pilotDAO.save(pilot);
-
-		savedPilot.setLastName("White");
-		int savedPilotId = pilotDAO.save(savedPilot).getId();
-
-		assertEquals(pilotDAO.findById(savedPilotId).getLastName(), "White");
-	}
-
-	@Test
-	public void deletePilot() {
-		ArrayList<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.PASSENGER);
-
-		Pilot pilot = new Pilot(allowedTo, "Gray", "Woodrow", LocalDate.of(1966, Month.AUGUST, 21));
-		int savedId = pilotDAO.save(pilot).getId();
-
-		pilotDAO.deleteById(savedId);
-
-		assertFalse(pilotDAO.existsById(savedId));
-	}
-
-	@Test
 	public void getLegiblePilots() {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
