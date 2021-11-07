@@ -6,6 +6,7 @@ import org.junit.jupiter.api.TestInstance;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.repository.UserRepository;
 
 import org.springframework.transaction.annotation.Transactional;
