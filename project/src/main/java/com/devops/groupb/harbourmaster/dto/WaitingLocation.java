@@ -12,27 +12,23 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 
 @Entity
-@Table(name="berths")
-public class Berth {
+public class WaitingLocation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
 	private int id;
 
-	private int berthId;
-
-	private double xPos;
-	private double yPos;
+	private double lat;
+	private double lon;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
-	public Berth() {
+	public WaitingLocation() {
 
 	}
 
-	public Berth(int berthId, double xPos, double yPos) {
-		this.berthId = berthId;
-		this.xPos = xPos;
-		this.yPos = yPos;
+	public WaitingLocation(double lat, double lon) {
+		this.lat = lat;
+		this.lon = lon;
 	}
 
 	public int getId() {
@@ -43,33 +39,24 @@ public class Berth {
 		this.id = id;
 	}
 
-	public int getBerthId() {
-		return berthId;
+	public double getLat() {
+		return lat;
 	}
 
-	public void setBerthId(int berthId) {
-		this.berthId = berthId;
+	public void setLat(double lat) {
+		this.lat = lat;
 	}
 
-
-	public double getxPos() {
-		return xPos;
+	public double getLon() {
+		return lon;
 	}
 
-	public void setxPos(double xPos) {
-		this.xPos = xPos;
-	}
-
-	public double getyPos() {
-		return yPos;
-	}
-
-	public void setyPos(double yPos) {
-		this.yPos = yPos;
+	public void setLon(double lon) {
+		this.lon = lon;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", berthId=" + berthId + ", xPos=" + xPos + ", yPos=" + yPos + "]";
+		return getClass().getSimpleName() + "[id=" + id + ", lat=" + lat + ", lon=" + lon + "]";
 	}
 }

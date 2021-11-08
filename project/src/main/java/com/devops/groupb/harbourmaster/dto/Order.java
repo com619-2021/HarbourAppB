@@ -23,7 +23,6 @@ import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
 
-
 @Entity
 @Table(name="orders")
 public class Order {
