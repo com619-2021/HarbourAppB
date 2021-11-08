@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
@@ -41,12 +42,14 @@ public class TideDAOTest {
 	@Test
 	public void testCurrentTide() {
 		log.info("Attempting to get the current tide.");
-		LocalDateTime currentTime = LocalDateTime.now();
+		LocalDate currentDate = LocalDate.now();
+		LocalTime currentTime = LocalTime.now();
 		/* must changes tides in the database to use only
 		   time and not date; these tests will fail if tides
 		   up to the day of testing are not added!! */
-		Tide tide = tideDAO.getTideAt(currentTime);
+		Tide tide = tideDAO.getTideAt(currentDate.getDayOfWeek(), currentTime);
 
+		log.info("Time: " + currentTime);
 		log.info("Got tide " + tide + ".");
 
 		int compareToStart = currentTime.compareTo(tide.getStart());

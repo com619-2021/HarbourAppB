@@ -21,18 +21,18 @@ public class Berth {
 
 	private int berthId;
 
-	private double xPos;
-	private double yPos;
+	private double lat;
+	private double lon;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
 	public Berth() {
 
 	}
 
-	public Berth(int berthId, double xPos, double yPos) {
+	public Berth(int berthId, double lat, double lon) {
 		this.berthId = berthId;
-		this.xPos = xPos;
-		this.yPos = yPos;
+		this.lat = lat;
+		this.lon = lon;
 	}
 
 	public int getId() {
@@ -52,24 +52,24 @@ public class Berth {
 	}
 
 
-	public double getxPos() {
-		return xPos;
+	public double getLat() {
+		return lat;
 	}
 
-	public void setxPos(double xPos) {
-		this.xPos = xPos;
+	public void setLat(double lat) {
+		this.lat = lat;
 	}
 
-	public double getyPos() {
-		return yPos;
+	public double getLon() {
+		return lon;
 	}
 
-	public void setyPos(double yPos) {
-		this.yPos = yPos;
+	public void setLon(double lon) {
+		this.lon = lon;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", berthId=" + berthId + ", xPos=" + xPos + ", yPos=" + yPos + "]";
+		return getClass().getSimpleName() + "[id=" + id + ", berthId=" + berthId + ", lat=" + lat + ", lon=" + lon + "]";
 	}
 }
