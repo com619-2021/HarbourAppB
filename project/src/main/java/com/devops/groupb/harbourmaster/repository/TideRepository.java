@@ -13,4 +13,7 @@ import com.devops.groupb.harbourmaster.dto.Tide;
 public interface TideRepository extends JpaRepository<Tide, Integer> {
 	@Query(value = "SELECT * FROM tides WHERE :time BETWEEN start AND end", nativeQuery = true)
 	public Tide getTideAt(@Param("time") LocalDateTime time);
+
+	@Query(value = "SELECT * FROM tides WHERE height > :draft", nativeQuery = true)
+	public LocalDateTime getNextSafeTide(@Param("draft") double draft);
 }

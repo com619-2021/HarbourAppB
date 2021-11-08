@@ -45,4 +45,8 @@ public class TideDAO {
 	public Tide getTideAt(LocalDateTime time) {
 		return tideRepository.getTideAt(time);
 	}
+
+	public LocalDateTime getNextSafeTide(double draft) {
+		return tideRepository.getNextSafeTide(draft);
+	}
 }

@@ -15,4 +15,12 @@ public class TideService {
 
 	@Autowired
 	private TideDAO tideDAO;
+
+	public Boolean getTideSafety(LocalDateTime time, int draft) {
+		return tideDAO.getTideAt(time).getHeight() > draft;
+	}
+
+	public LocalDateTime getNextSafeTide(int draft) {
+		return tideDAO.getNextSafeTide(draft);
+	}
 }

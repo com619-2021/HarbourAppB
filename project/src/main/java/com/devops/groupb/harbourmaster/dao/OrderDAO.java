@@ -40,4 +40,8 @@ public class OrderDAO {
 	public void deleteAll() {
 		orderRepository.deleteAll();
 	}
+
+	public Order findByShipId(int shipId) {
+		return orderRepository.findByShipId(shipId);
+	}
 }

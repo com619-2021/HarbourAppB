@@ -14,7 +14,7 @@ import javax.persistence.Column;
 @Entity
 public class WaitingLocation {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
 	private int id;
 

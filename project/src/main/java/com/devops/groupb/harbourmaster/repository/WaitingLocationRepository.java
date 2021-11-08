@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.WaitingLocation;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
-	public Order findByShipId(int shipId);
+public interface WaitingLocationRepository extends JpaRepository<WaitingLocation, Integer> {
+
 }

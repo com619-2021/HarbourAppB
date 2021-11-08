@@ -40,16 +40,11 @@ public class TideDAOTest {
 
 	@Test
 	public void testCurrentTide() {
-		LocalDateTime tideStart = LocalDateTime.now();
-		LocalDateTime tideEnd = LocalDateTime.now().plusHours(5L);
-
-		Tide tideOfCurrentTime = new Tide(6.36, tideStart, tideEnd);
-		log.info("Created example tide: " + tideOfCurrentTime);
-
-		tideDAO.save(tideOfCurrentTime);
-
 		log.info("Attempting to get the current tide.");
 		LocalDateTime currentTime = LocalDateTime.now();
+		/* must changes tides in the database to use only
+		   time and not date; these tests will fail if tides
+		   up to the day of testing are not added!! */
 		Tide tide = tideDAO.getTideAt(currentTime);
 
 		log.info("Got tide " + tide + ".");
