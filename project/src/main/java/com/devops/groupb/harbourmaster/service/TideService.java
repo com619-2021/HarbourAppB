@@ -1,7 +1,8 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.time.LocalTime;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,12 @@ public class TideService {
 	@Autowired
 	private TideDAO tideDAO;
 
-	public Boolean getTideSafety(LocalDateTime time, int draft) {
-		return tideDAO.getTideAt(time).getHeight() > draft;
+	public Boolean getTideSafety(LocalDate date, LocalTime time, int draft) {
+		DayOfWeek day = date.getDayOfWeek();
+		return tideDAO.getTideAt(day, time).getHeight() > draft;
 	}
 
-	public LocalDateTime getNextSafeTide(int draft) {
+	public LocalTime getNextSafeTide(int draft) {
 		return tideDAO.getNextSafeTide(draft);
 	}
 }

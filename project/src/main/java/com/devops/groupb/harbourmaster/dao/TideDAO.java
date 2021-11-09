@@ -1,7 +1,8 @@
 package com.devops.groupb.harbourmaster.dao;
 
 import java.util.List;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -42,11 +43,12 @@ public class TideDAO {
 		tideRepository.deleteAll();
 	}
 
-	public Tide getTideAt(LocalDateTime time) {
-		return tideRepository.getTideAt(time);
+	public Tide getTideAt(DayOfWeek day, LocalTime time) {
+		int dayInt = day.getValue() - 1;
+		return tideRepository.getTideAt(dayInt, time);
 	}
 
-	public LocalDateTime getNextSafeTide(double draft) {
+	public LocalTime getNextSafeTide(double draft) {
 		return tideRepository.getNextSafeTide(draft);
 	}
 }

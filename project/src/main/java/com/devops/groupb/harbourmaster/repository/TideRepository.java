@@ -5,15 +5,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 
 import com.devops.groupb.harbourmaster.dto.Tide;
 
 @Repository
 public interface TideRepository extends JpaRepository<Tide, Integer> {
-	@Query(value = "SELECT * FROM tides WHERE :time BETWEEN start AND end", nativeQuery = true)
-	public Tide getTideAt(@Param("time") LocalDateTime time);
+	@Query(value = "SELECT * FROM tides WHERE day = :day AND :time BETWEEN start AND end", nativeQuery = true)
+	public Tide getTideAt(@Param("day") int day, @Param("time") LocalTime time);
 
 	@Query(value = "SELECT * FROM tides WHERE height > :draft", nativeQuery = true)
-	public LocalDateTime getNextSafeTide(@Param("draft") double draft);
+	public LocalTime getNextSafeTide(@Param("draft") double draft);
 }

@@ -1,8 +1,8 @@
 package com.devops.groupb.harbourmaster.dto;
 
 import java.util.ArrayList;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 
 import java.sql.Timestamp;
@@ -15,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 @Entity
 @Table(name = "tides")
@@ -24,26 +26,30 @@ public class Tide {
 	private int id;
 	private double height;
 
-	@Column(name="start", columnDefinition="TIMESTAMP")
-	private LocalDateTime start;
+	@Enumerated(EnumType.ORDINAL)
+	private DayOfWeek day;
 
-	@Column(name="end", columnDefinition="TIMESTAMP")
-	private LocalDateTime end;
+	@Column(name="start", columnDefinition="time")
+	private LocalTime start;
+
+	@Column(name="end", columnDefinition="time")
+	private LocalTime end;
 
 	// Empty default constructor needed for H2 in-memory testing DB
 	public Tide() {
 
 	}
 
-	// Constructor for saving a Tide without giving an explicit ID.
-	public Tide(double height, LocalDateTime start, LocalDateTime end) {
+	public Tide(DayOfWeek day, double height, LocalTime start, LocalTime end) {
+		this.day = day;
 		this.height = height;
 		this.start = start;
 		this.end = end;
 	}
 
-	public Tide(int id, double height, LocalDateTime start, LocalDateTime end) {
+	public Tide(int id, DayOfWeek day, double height, LocalTime start, LocalTime end) {
 		this.id = id;
+		this.day = day;
 		this.height = height;
 		this.start = start;
 		this.end = end;
@@ -65,27 +71,32 @@ public class Tide {
 		this.height = height;
 	}
 
-	public LocalDateTime getStart() {
+	public LocalTime getStart() {
 		return start;
 	}
 
-	public void setStart(LocalDateTime start) {
+	public void setStart(LocalTime start) {
 		this.start = start;
 	}
 
-	public LocalDateTime getEnd() {
+	public LocalTime getEnd() {
 		return end;
 	}
 
-	public void setEnd(LocalDateTime end) {
+	public void setEnd(LocalTime end) {
 		this.end = end;
+	}
+
+	public DayOfWeek getDay() {
+		return day;
+	}
+
+	public void setDay(DayOfWeek day) {
+		this.day = day;
 	}
 
 	@Override
 	public String toString() {
-		String startString = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-		String endString = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-
-		return getClass().getSimpleName() + String.format("[id=%d, height=%f start=%s, end=%s]", id, height, startString, endString);
+		return getClass().getSimpleName() + String.format("[id=%d, height=%f, day=%s, start=%s, end=%s]", id, height, day.name(), start.toString(), end.toString());
 	}
 }
