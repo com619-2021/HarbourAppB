@@ -48,10 +48,21 @@ public class Order {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
 	private OrderStatus status;
+	private String reason;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
 	public Order() {
 
+	}
+
+	// Constructor for order requests with no available pilots.
+	public Order(Ship ship, Berth berth, LocalDate requestedDate, OrderStatus status, String reason) {
+		this.ship = ship;
+		this.berth = berth;
+		this.requestedDate = requestedDate;
+		this.status = status;
+		this.reason = reason;
+		orderDate = LocalDateTime.now();
 	}
 
 	public Order(Ship ship, Pilot pilot, Berth berth, LocalDate requestedDate, LocalDateTime allocatedTime) {
@@ -127,6 +138,14 @@ public class Order {
 		this.status = status;
 	}
 
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
 	@Override
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -135,6 +154,6 @@ public class Order {
 
 		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", id=" + id
 			+ ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
-			+ ", ship=" + ship + ", status=" + status.name() + "]";
+			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + "]";
 	}
 }
