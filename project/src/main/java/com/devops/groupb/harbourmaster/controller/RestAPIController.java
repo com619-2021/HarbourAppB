@@ -14,6 +14,7 @@ import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
 
 import com.devops.groupb.harbourmaster.service.PilotService;
 import com.devops.groupb.harbourmaster.service.OrderService;
@@ -70,18 +71,18 @@ public class RestAPIController {
 			LocalDateTime allocatedTime = pilotBookingRequest.getDate().atTime(03, 00);
 			String allocatedTimeStr = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-
 			Order order = new Order(pilotBookingRequest.getShip(), pilot, pilotBookingRequest.getBerth(),
 									pilotBookingRequest.getDate(), allocatedTime);
 
 			if (orderService.placeOrder(order)) {
-				return new ResponseEntity<>(String.format("Your order (ID: %d) for handling of Ship '%s' has been placed.\nOrder Details: %s", order.getId(), pilotBookingRequest.getShip(), order), HttpStatus.OK);
+				return new ResponseEntity<>(order, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("Unable to place order.", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} else {
-			String requestDate = pilotBookingRequest.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-			return new ResponseEntity<>(String.format("No pilots are available to handle ship type '%s' of ship on %s.", pilotBookingRequest.getShip().getType().name(), requestDate), HttpStatus.INTERNAL_SERVER_ERROR);
+			Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(),
+									pilotBookingRequest.getDate(), OrderStatus.DENIED, "No qualified pilots available.");
+			return new ResponseEntity<>(order, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

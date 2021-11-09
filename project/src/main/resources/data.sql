@@ -20,7 +20,7 @@ INSERT INTO tides (day, height, start, end) VALUES (0, 0.8, '18:43:00.000000', '
 INSERT INTO tides (day, height, start, end) VALUES (1, 0.8, '00:00:00.000000', '01:28:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (1, 4.6, '01:29:00.000000', '03:38:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (1, 4.5, '03:39:00.000000', '07:05:59.999999');
-INSERT INTO tides (day, height, start, end) VALUES (1, 1.1, '07:06:00.000000', '13:45:59.999999');
+INSERT INTO tides (day, height, start, end) VALUES (1, 1.1, '07:06:00.000000', '13:54:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (1, 4.5, '13:55:00.000000', '15:19:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (1, 4.4, '15:20:00.000000', '19:29:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (1, 1.1, '19:30:00.000000', '23:59:59.999999');
@@ -36,7 +36,7 @@ INSERT INTO tides (day, height, start, end) VALUES (2, 1.5, '20:29:00.000000', '
 INSERT INTO tides (day, height, start, end) VALUES (3, 1.5, '00:00:00.000000', '03:00:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (3, 4.0, '03:01:00.000000', '05:45:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (3, 4.1, '05:46:00.000000', '09:08:59.999999');
-INSERT INTO tides (day, height, start, end) VALUES (3, 1.9, '09:08:00.000000', '15:25:59.999999');
+INSERT INTO tides (day, height, start, end) VALUES (3, 1.9, '09:09:00.000000', '15:25:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (3, 3.9, '15:26:00.000000', '18:15:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (3, 3.8, '18:16:00.000000', '21:47:59.999999');
 INSERT INTO tides (day, height, start, end) VALUES (3, 1.8, '21:48:00.000000', '23:59:59.999999');
