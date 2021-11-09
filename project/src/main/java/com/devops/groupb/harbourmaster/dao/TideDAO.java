@@ -44,7 +44,8 @@ public class TideDAO {
 	}
 
 	public Tide getTideAt(DayOfWeek day, LocalTime time) {
-		return tideRepository.getTideAt(day.getValue(), time);
+		int dayInt = day.getValue() - 1;
+		return tideRepository.getTideAt(dayInt, time);
 	}
 
 	public LocalTime getNextSafeTide(double draft) {

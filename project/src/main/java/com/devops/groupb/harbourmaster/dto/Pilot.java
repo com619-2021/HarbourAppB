@@ -2,6 +2,7 @@ package com.devops.groupb.harbourmaster.dto;
 
 import java.util.List;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
@@ -102,11 +103,10 @@ public class Pilot {
 	@Override
 	public String toString() {
 		String dobString = dateOfBirth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		// TO FIX: collects all values of the ShipType enum; doesn't use allowedTo!
-		List<String> allowedToStrings = Stream.of(ShipType.values())
-			.map(ShipType::name)
-			.collect(Collectors.toList());
+		String allowedToStr = allowedTo.stream()
+			.map(type -> String.valueOf(type))
+			.collect(Collectors.joining(", ", "[", "]"));
 
-		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", id, allowedToStrings, firstName, lastName, dobString);
+		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", id, allowedToStr, firstName, lastName, dobString);
 	}
 }

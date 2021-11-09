@@ -40,16 +40,22 @@ public class TideDAOTest {
 	}
 
 	@Test
+	public void checkTidesOfWeek() {
+		log.info("Checking to see if all tides of the week can be retrieved from the database.");
+
+		for (DayOfWeek day : DayOfWeek.values()) {
+			Tide tide = tideDAO.getTideAt(day, LocalTime.now());
+			assertEquals(day, tide.getDay());
+		}
+	}
+
+	@Test
 	public void testCurrentTide() {
 		log.info("Attempting to get the current tide.");
 		LocalDate currentDate = LocalDate.now();
 		LocalTime currentTime = LocalTime.now();
-		/* must changes tides in the database to use only
-		   time and not date; these tests will fail if tides
-		   up to the day of testing are not added!! */
 		Tide tide = tideDAO.getTideAt(currentDate.getDayOfWeek(), currentTime);
 
-		log.info("Time: " + currentTime);
 		log.info("Got tide " + tide + ".");
 
 		int compareToStart = currentTime.compareTo(tide.getStart());
