@@ -42,4 +42,4 @@ jobs:
           token: ${{ secrets.REPO_TOKEN }}
           repository:  com619-2021/IntegrationB 
           event-type: deploy
-          client-payload: '{"image": "ghcr.io/${{ github.repository_owner }}/test:${{ env.RELEASE_VERSION }}"}'
+          client-payload: '{"image": "ghcr.io/${{ github.repository_owner }}/harbourmasterb:${{ env.RELEASE_VERSION }}"}'
