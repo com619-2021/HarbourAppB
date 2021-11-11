@@ -16,6 +16,8 @@ import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.OrderStatus;
 
+import com.devops.groupb.harbourmaster.dao.PilotDAO;
+
 import com.devops.groupb.harbourmaster.service.PilotService;
 import com.devops.groupb.harbourmaster.service.OrderService;
 
@@ -36,6 +38,9 @@ public class RestAPIController {
 
 	@Autowired
 	PilotService pilotService;
+
+	@Autowired
+	PilotDAO pilotDAO;
 
 	@Autowired
 	OrderService orderService;
@@ -67,23 +72,10 @@ public class RestAPIController {
 		   time of the day that a pilot is booked, and is something
 		   that we have to deal with on our end. */
 
-		if (pilot != null) {
-			LocalDateTime allocatedTime = pilotBookingRequest.getDate().atTime(03, 00);
-			String allocatedTimeStr = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(), pilotBookingRequest.getDate());
 
-			Order order = new Order(pilotBookingRequest.getShip(), pilot, pilotBookingRequest.getBerth(),
-									pilotBookingRequest.getDate(), allocatedTime);
-
-			if (orderService.placeOrder(order)) {
-				return new ResponseEntity<>(order, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>("Unable to place order.", HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		} else {
-			Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(),
-									pilotBookingRequest.getDate(), OrderStatus.DENIED, "No qualified pilots available.");
-			return new ResponseEntity<>(order, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		return orderService.placeOrder(order, pilot) ? new ResponseEntity<>(order, HttpStatus.OK)
+			: new ResponseEntity<>(order, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	/* /api/callPilot: A possible REST endpoint that is to be called when a
@@ -93,14 +85,14 @@ public class RestAPIController {
 	@RequestMapping(value = "/api/callPilot", method = RequestMethod.POST)
 	public ResponseEntity<Object> callPilot(@RequestBody PilotCall pilotCall) {
 		log.info("/api/callPilot: entered.");
-		log.info("/api/callPilot: pilot #" + pilotCall.getPilotId() + " called.");
+		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");
 
-		ArrayList<ShipType> allowedTo = new ArrayList();
-		allowedTo.add(ShipType.CARGO);
-		allowedTo.add(ShipType.FERRY);
+		Pilot pilot = pilotDAO.findByUUID(pilotCall.getPilotUUID());
 
-		Pilot pilot = new Pilot(pilotCall.getId(), allowedTo, "John", "Smith", LocalDate.of(1970, Month.JANUARY, 1));
-
-		return new ResponseEntity<>(String.format("Pilot #%d has been called and is now en route. They will arrive at .", pilot.getId()), HttpStatus.OK);
+		if (pilot != null) {
+			return new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at .", pilot.getUUID()), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(String.format("Pilot '%s' not found in the database.", pilotCall.getPilotUUID()), HttpStatus.NOT_FOUND);
+		}
 	}
 }

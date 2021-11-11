@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import java.util.UUID;
+
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Lob;
@@ -17,10 +19,9 @@ public class Berth {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
-	private int id;
+	private int pk;
 
-	private int berthId;
-
+	private UUID uuid = null;
 	private double lat;
 	private double lon;
 
@@ -29,28 +30,28 @@ public class Berth {
 
 	}
 
-	public Berth(int berthId, double lat, double lon) {
-		this.berthId = berthId;
+	// Constructor used for testing; NOT to be called in the main program.
+	public Berth(double lat, double lon) {
+		this.uuid = UUID.randomUUID();
 		this.lat = lat;
 		this.lon = lon;
 	}
 
-	public int getId() {
-		return id;
+	public int getPk() {
+		return pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
-	public int getBerthId() {
-		return berthId;
+	public UUID getUUID() {
+		return uuid;
 	}
 
-	public void setBerthId(int berthId) {
-		this.berthId = berthId;
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
-
 
 	public double getLat() {
 		return lat;
@@ -70,6 +71,6 @@ public class Berth {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", berthId=" + berthId + ", lat=" + lat + ", lon=" + lon + "]";
+		return getClass().getSimpleName() + "[pk=" + pk + ", uuid=" + uuid + ", lat=" + lat + ", lon=" + lon + "]";
 	}
 }

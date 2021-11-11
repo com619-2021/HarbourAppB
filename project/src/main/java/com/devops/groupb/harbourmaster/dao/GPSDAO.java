@@ -1,5 +1,6 @@
 package com.devops.groupb.harbourmaster.dao;
 
+import java.util.UUID;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class GPSDAO {
 		GPSRepository.deleteAll();
 	}
 
-	public GPS findByShipId(int shipId) {
-		return GPSRepository.findByShipId(shipId);
+	public GPS findByShipUUID(UUID uuid) {
+		return GPSRepository.findByShipUUID(uuid);
 	}
 }

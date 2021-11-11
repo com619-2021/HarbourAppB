@@ -1,6 +1,9 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.ArrayList;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.UUID;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,13 +31,14 @@ import javax.persistence.CascadeType;
 public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@ApiModelProperty(hidden = true)
+	private int pk;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	private Ship ship;
+	@GeneratedValue(generator = "UUID")
+	private UUID uuid;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	private Pilot pilot;
+	private OrderStatus status;
+	private String reason;
 
 	@Column(name="orderDate", columnDefinition="TIMESTAMP")
 	private LocalDateTime orderDate;
@@ -46,40 +50,41 @@ public class Order {
 	private LocalDateTime allocatedTime;
 
 	@OneToOne(cascade = {CascadeType.ALL})
+	private Ship ship;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Pilot pilot;
+
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
-	private OrderStatus status;
-	private String reason;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
 	public Order() {
 
 	}
 
-	// Constructor for order requests with no available pilots.
-	public Order(Ship ship, Berth berth, LocalDate requestedDate, OrderStatus status, String reason) {
+	public Order(Ship ship, Berth berth, LocalDate requestedDate) {
+		this.uuid = UUID.randomUUID();
 		this.ship = ship;
 		this.berth = berth;
 		this.requestedDate = requestedDate;
-		this.status = status;
-		this.reason = reason;
 		orderDate = LocalDateTime.now();
 	}
 
-	public Order(Ship ship, Pilot pilot, Berth berth, LocalDate requestedDate, LocalDateTime allocatedTime) {
-		this.ship = ship;
-		this.pilot = pilot;
-		this.berth = berth;
-		this.requestedDate = requestedDate;
-		this.allocatedTime = allocatedTime;
-		orderDate = LocalDateTime.now();
+	public int getPk() {
+		return pk;
 	}
 
-	public int getId() {
-		return id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public Ship getShip() {
@@ -150,10 +155,14 @@ public class Order {
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		String requestedDateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		String allocatedTimeString = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		String allocatedTimeString = "";
 
-		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", id=" + id
-			+ ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
+		if (allocatedTime != null) {
+			allocatedTimeString = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		}
+
+		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", pk=" + pk
+			+ ", uuid=" + uuid + ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
 			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + "]";
 	}
 }

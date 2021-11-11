@@ -1,5 +1,6 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.util.UUID;
 import java.util.Random;
 import java.util.List;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ public class GPSService {
 	public GPS pingPresence(Ship ship) {
 		/* checks to see whether the location of this ship has already
 		   been found. */
-		GPS existingGPS = GPSDao.findByShipId(ship.getId());
+		GPS existingGPS = GPSDao.findByShipUUID(ship.getUUID());
 		if (existingGPS != null) {
 			return existingGPS;
 		}
@@ -46,7 +47,7 @@ public class GPSService {
 		LocalDateTime time = LocalDateTime.now();
 		LocalDateTime earliestTime = time.minusHours(2L);
 
-		Order order = orderDAO.findByShipId(ship.getId());
+		Order order = orderDAO.findByShipUUID(ship.getUUID());
 		LocalDateTime allocatedTime = order.getAllocatedTime();
 
 		/* checks to see whether the current time is between the time that

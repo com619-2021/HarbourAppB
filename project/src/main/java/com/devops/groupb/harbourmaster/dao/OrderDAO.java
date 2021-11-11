@@ -1,5 +1,6 @@
 package com.devops.groupb.harbourmaster.dao;
 
+import java.util.UUID;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,11 @@ public class OrderDAO {
 		orderRepository.deleteAll();
 	}
 
-	public Order findByShipId(int shipId) {
-		return orderRepository.findByShipId(shipId);
+	public Order findByUUID(UUID uuid) {
+		return orderRepository.findOneByUuid(uuid);
+	}
+
+	public Order findByShipUUID(UUID uuid) {
+		return orderRepository.findOneByShipUuid(uuid);
 	}
 }

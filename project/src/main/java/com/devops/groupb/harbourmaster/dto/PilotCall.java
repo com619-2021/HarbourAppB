@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import java.util.UUID;
+
 import io.swagger.annotations.ApiModelProperty;
 
 import com.devops.groupb.harbourmaster.dto.Berth;
@@ -20,26 +22,26 @@ public class PilotCall {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
-	private int id;
-	private int pilotId;
+	private int pk;
+	private UUID pilotUUID;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
 
-	public int getId() {
-		return id;
+	public int getPk() {
+		return pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
-	public int getPilotId() {
-		return pilotId;
+	public UUID getPilotUUID() {
+		return pilotUUID;
 	}
 
-	public void setPilotId(int pilotId) {
-		this.pilotId = pilotId;
+	public void setPilotUUID(UUID pilotUUID) {
+		this.pilotUUID = pilotUUID;
 	}
 
 	public Berth getBerth() {
@@ -52,6 +54,6 @@ public class PilotCall {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", pilotId=" + pilotId + ", berth=" + berth + "]";
+		return getClass().getSimpleName() + "[pk=" + pk + ", pilotUUID=" + pilotUUID + ", berth=" + berth + "]";
 	}
 }

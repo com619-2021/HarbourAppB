@@ -1,21 +1,16 @@
 package com.devops.groupb.harbourmaster.controller;
 
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dto.PilotCall;
-import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.OrderStatus;
-import com.devops.groupb.harbourmaster.service.PilotService;
 import com.devops.groupb.harbourmaster.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,24 +28,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestController
 public class OrderController {
-	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory
-		.getLog(this.getClass());
+	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
 	@Autowired
 	OrderService orderService;
 
 	@GetMapping(value = "/api/order/find")
 	@ResponseBody
-	public ResponseEntity<Object> findOrder(@RequestParam int id) {
-		log.info("/api/order: entered.");
-		log.info("/api/order: order #" + id + " requested.");
+	public ResponseEntity<Object> findOrder(@RequestParam UUID uuid) {
+		log.info("/api/order/find: entered.");
+		log.info("/api/order/find: order '" + uuid + "' requested.");
 
-		Order order = orderService.retrieveOrder(id);
+		Order order = orderService.retrieveOrder(uuid);
 
 		if (order == null) {
-			return new ResponseEntity<>(
-										String.format("ERROR: Order #%d not found. This order may not exist in the database.", id),
-										HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid),	HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(order, HttpStatus.OK);
 		}
@@ -58,14 +50,14 @@ public class OrderController {
 
 	@GetMapping(value = "/api/order/cancel")
 	@ResponseBody
-	public ResponseEntity<Object> cancelOrder(@RequestParam int id) {
-		log.info("/api/order: entered.");
-		log.info("/api/order: cancellation of order #" + id + " requested.");
+	public ResponseEntity<Object> cancelOrder(@RequestParam UUID uuid, @RequestParam(required = false) String reason) {
+		log.info("/api/order/cancel: entered.");
+		log.info("/api/order/cancel: cancellation of order #" + uuid + " requested.");
 
-		if (orderService.cancelOrder(id)) {
-			return new ResponseEntity<>(String.format("Order #%d has been set to %s.", id, OrderStatus.CANCELLED.name()), HttpStatus.OK);
+		if (orderService.cancelOrder(uuid, reason)) {
+			return new ResponseEntity<>(String.format("Order '%s' has been set to %s.\nReason: '%s'", uuid, OrderStatus.CANCELLED.name(), reason), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(String.format("ERROR: Order #%d not found. This order may not exist in the database.", id), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 		}
 	}
 }

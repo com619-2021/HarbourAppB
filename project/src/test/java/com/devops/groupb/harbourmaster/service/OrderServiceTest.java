@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.Arrays;
 import java.util.ArrayList;
 
@@ -52,12 +53,12 @@ public class OrderServiceTest {
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 		Pilot pilot = new Pilot(allowedTo, "Brim", "Rock", LocalDate.of(1969, Month.DECEMBER, 2));
-		Berth berth = new Berth(9, 53.25, -2.6);
+		Berth berth = new Berth(53.25, -2.6);
 
-		Order order = new Order(ship, pilot, berth, LocalDate.now().plusDays(1L), LocalDateTime.now().plusDays(1L));
+		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
 
-		orderService.placeOrder(order);
-		orderService.cancelOrder(order.getId());
+		orderService.placeOrder(order, pilot);
+		orderService.cancelOrder(order.getUUID(), "Test");
 
 		assertEquals(order.getStatus(), OrderStatus.CANCELLED);
 	}

@@ -1,8 +1,7 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.util.Random;
+import java.util.UUID;
 import java.util.List;
-import java.util.Arrays;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,27 +24,37 @@ public class OrderService {
 	@Autowired
 	private OrderDAO orderDAO;
 
-	public Order retrieveOrder(int id) {
-		return orderDAO.findById(id);
+	public Order retrieveOrder(UUID uuid) {
+		return orderDAO.findByUUID(uuid);
 	}
 
-	public Boolean placeOrder(Order order) {
+	public Boolean placeOrder(Order order, Pilot pilot) {
+		if (pilot == null) {
+			order.setStatus(OrderStatus.DENIED);
+			order.setReason("No pilots available.");
+			orderDAO.save(order);
+			return false;
+		}
+
+		LocalDateTime allocatedTime = order.getRequestedDate().atTime(03, 00);
+		order.setPilot(pilot);
+		order.setAllocatedTime(allocatedTime);
 		order.setStatus(OrderStatus.PLACED);
 
 		orderDAO.save(order);
-		// Any additional checks to go here.
 
 		return true;
 	}
 
-	public Boolean cancelOrder(int orderId) {
-		Order order = orderDAO.findById(orderId);
+	public Boolean cancelOrder(UUID uuid, String reason) {
+		Order order = orderDAO.findByUUID(uuid);
 		if (order == null) {
 			return false;
 		}
 
 		log.info("Found matching order: " + order + ".");
 		order.setStatus(OrderStatus.CANCELLED);
+		order.setReason(reason);
 
 		// Free up the time from the pilot's schedule.
 
@@ -53,7 +62,7 @@ public class OrderService {
 		return true;
 	}
 
-	public Boolean requestOrderChange(int orderId) {
+	public Boolean requestOrderChange(UUID uuid) {
 		return true;
 	}
 }

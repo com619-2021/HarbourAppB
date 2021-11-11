@@ -1,8 +1,9 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.List;
+import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
@@ -29,7 +30,12 @@ import java.time.format.DateTimeFormatter;
 public class Pilot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@ApiModelProperty(hidden = true)
+	private int pk;
+
+	@GeneratedValue(generator = "UUID")
+	@ApiModelProperty(hidden = true)
+	private UUID uuid = UUID.randomUUID();
 
 	@ElementCollection
 	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "id"))
@@ -46,26 +52,27 @@ public class Pilot {
 
 	// Constructor for saving a Pilot without giving an explicit ID.
 	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
+		this.uuid = UUID.randomUUID();
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public Pilot(int id, List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
-		this.id = id;
-		this.allowedTo = allowedTo;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.dateOfBirth = dateOfBirth;
+	public int getPk() {
+		return pk;
 	}
 
-	public int getId() {
-		return id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public List<ShipType> getAllowedTo() {
@@ -107,6 +114,6 @@ public class Pilot {
 			.map(type -> String.valueOf(type))
 			.collect(Collectors.joining(", ", "[", "]"));
 
-		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", id, allowedToStr, firstName, lastName, dobString);
+		return getClass().getSimpleName() + String.format("[pk=%d, uuid=%s, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", pk, uuid, allowedToStr, firstName, lastName, dobString);
 	}
 }
