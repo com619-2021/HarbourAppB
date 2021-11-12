@@ -23,7 +23,7 @@ import javax.persistence.EnumType;
 public class Tide {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private int pk;
 	private double height;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -47,20 +47,12 @@ public class Tide {
 		this.end = end;
 	}
 
-	public Tide(int id, DayOfWeek day, double height, LocalTime start, LocalTime end) {
-		this.id = id;
-		this.day = day;
-		this.height = height;
-		this.start = start;
-		this.end = end;
+	public int getPk() {
+		return pk;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public double getHeight() {
@@ -97,6 +89,6 @@ public class Tide {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + String.format("[id=%d, height=%f, day=%s, start=%s, end=%s]", id, height, day.name(), start.toString(), end.toString());
+		return getClass().getSimpleName() + String.format("[pk=%d, height=%f, day=%s, start=%s, end=%s]", pk, height, day.name(), start.toString(), end.toString());
 	}
 }

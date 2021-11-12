@@ -46,11 +46,9 @@ public class OrderController {
 
 		Order order = orderService.retrieveOrder(uuid);
 
-		if (order == null) {
-			return new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid),	HttpStatus.NOT_FOUND);
-		} else {
-			return new ResponseEntity<>(order, HttpStatus.OK);
-		}
+		return order != null
+			? new ResponseEntity<>(order, HttpStatus.OK)
+			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 
 	@GetMapping(value = "/api/order/cancel")
@@ -60,10 +58,8 @@ public class OrderController {
 		log.info("/api/order/cancel: entered.");
 		log.info("/api/order/cancel: cancellation of order #" + uuid + " requested.");
 
-		if (orderService.cancelOrder(uuid, reason)) {
-			return new ResponseEntity<>(String.format("Order '%s' has been set to %s.\nReason: '%s'", uuid, OrderStatus.CANCELLED.name(), reason), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
-		}
+		return orderService.cancelOrder(uuid, reason)
+			? new ResponseEntity<>(String.format("Order '%s' has been set to %s.\nReason: '%s'", uuid, OrderStatus.CANCELLED.name(), reason), HttpStatus.OK)
+			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }

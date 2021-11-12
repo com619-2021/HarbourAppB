@@ -59,10 +59,10 @@ public class TideRepositoryTest {
 
 		/* DELETE */
 		log.debug("Testing DELETE of an example tide.");
-		int updatedTideId = updatedTide.getId();
+		int updatedTidePk = updatedTide.getPk();
 
-		tideRepository.deleteById(updatedTideId);
+		tideRepository.deleteById(updatedTidePk);
 
-		assertFalse(tideRepository.existsById(updatedTideId));
+		assertFalse(tideRepository.existsById(updatedTidePk));
 	}
 }
