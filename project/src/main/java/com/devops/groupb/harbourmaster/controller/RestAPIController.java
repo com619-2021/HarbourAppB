@@ -87,12 +87,9 @@ public class RestAPIController {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");
 
-		Pilot pilot = pilotDAO.findByUUID(pilotCall.getPilotUUID());
+		Boolean pilotRequest = pilotService.callPilot(pilotCall.getPilotUUID(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
 
-		if (pilot != null) {
-			return new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at .", pilot.getUUID()), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(String.format("Pilot '%s' not found in the database.", pilotCall.getPilotUUID()), HttpStatus.NOT_FOUND);
-		}
+		return !pilotRequest ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilotCall.getPilotUUID()), HttpStatus.OK)
+			: new ResponseEntity<>(String.format("Pilot '%s' not found in the database.", pilotCall.getPilotUUID()), HttpStatus.NOT_FOUND);
 	}
 }

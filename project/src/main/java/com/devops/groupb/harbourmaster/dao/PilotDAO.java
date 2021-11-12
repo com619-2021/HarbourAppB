@@ -54,4 +54,11 @@ public class PilotDAO {
 	public Pilot findByUUID(UUID uuid) {
 		return pilotRepository.findOneByUuid(uuid);
 	}
+	public Boolean deleteByUUID(UUID uuid) {
+		if (pilotRepository.findOneByUuid(uuid) != null) {
+			pilotRepository.deleteByUuid(uuid);
+			return true;
+		}
+		return false;
+	}
 }
