@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,15 +52,14 @@ public class OrderController {
 			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping(value = "/api/order/cancel")
-	@ResponseBody
+	@PutMapping(value = "/api/order/cancel")
 	@ApiOperation("Cancels an order with an optional reason. 404 if the order is not found.")
 	public ResponseEntity<Object> cancelOrder(@RequestParam UUID uuid, @RequestParam(required = false) String reason) {
 		log.info("/api/order/cancel: entered.");
 		log.info("/api/order/cancel: cancellation of order #" + uuid + " requested.");
 
 		return orderService.cancelOrder(uuid, reason)
-			? new ResponseEntity<>(String.format("Order '%s' has been set to %s.\nReason: '%s'", uuid, OrderStatus.CANCELLED.name(), reason), HttpStatus.OK)
+			? new ResponseEntity<>(String.format("Order '%s' has been set to %s.\nReason: '%s'", uuid, OrderStatus.CANCELLED.name(), reason), HttpStatus.CREATED)
 			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }

@@ -55,7 +55,7 @@ public class RestAPIController {
 	}
 
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
-	@ApiOperation("Creates a booking using the given request. 500 if the booking fails due to a lack of pilot availability.")
+	@ApiOperation("Creates a booking using the given request. 400 if the booking fails.")
 	public ResponseEntity<Object> bookPilot(@RequestBody PilotBookingRequest pilotBookingRequest) {
 		log.info("/api/bookPilot: entered.");
 		log.info("/api/bookPilot: retrieved " + pilotBookingRequest + " from request body.");
@@ -74,8 +74,8 @@ public class RestAPIController {
 
 		Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(), pilotBookingRequest.getDate());
 
-		return orderService.placeOrder(order, pilot) ? new ResponseEntity<>(order, HttpStatus.OK)
-			: new ResponseEntity<>(order, HttpStatus.INTERNAL_SERVER_ERROR);
+		return orderService.placeOrder(order, pilot) ? new ResponseEntity<>(order, HttpStatus.CREATED)
+			: new ResponseEntity<>(order, HttpStatus.BAD_REQUEST);
 	}
 
 	/* /api/callPilot: A possible REST endpoint that is to be called when a
@@ -88,9 +88,10 @@ public class RestAPIController {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");
 
+		/* likely to be changed to not require a pilot uuid and instead just find a random available one */
 		Boolean pilotRequest = pilotService.callPilot(pilotCall.getPilotUUID(), pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
 
-		return !pilotRequest ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilotCall.getPilotUUID()), HttpStatus.OK)
+		return pilotRequest ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilotCall.getPilotUUID()), HttpStatus.OK)
 			: new ResponseEntity<>(String.format("Pilot '%s' not found in the database.", pilotCall.getPilotUUID()), HttpStatus.NOT_FOUND);
 	}
 }

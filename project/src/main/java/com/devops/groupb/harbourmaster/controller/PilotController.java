@@ -32,15 +32,15 @@ public class PilotController {
 	PilotService pilotService;
 
 	@RequestMapping(value = "/api/pilot/create", method = RequestMethod.POST)
-	@ApiOperation("Creates a pilot using the given pilot object. 500 if creation fails.")
+	@ApiOperation("Creates a pilot using the given pilot object. 400 if creation fails.")
 	public ResponseEntity<Object> createPilot(@RequestBody Pilot pilot) {
 		log.info("/api/pilot/create: entered.");
 		log.info("/api/pilot/create: creation of " + pilot + " requested.");
 
 		pilotService.createNewPilot(pilot);
 
-		return pilotService.createNewPilot(pilot) ? new ResponseEntity<>(pilot, HttpStatus.OK)
-			: new ResponseEntity<>("Unable to create new pilot.", HttpStatus.INTERNAL_SERVER_ERROR);
+		return pilotService.createNewPilot(pilot) ? new ResponseEntity<>(pilot, HttpStatus.CREATED)
+			: new ResponseEntity<>("Unable to create new pilot.", HttpStatus.BAD_REQUEST);
 	}
 
 	@GetMapping(value = "/api/pilot/{uuid}")
@@ -62,7 +62,7 @@ public class PilotController {
 		log.info("(DELETE) /api/pilot: entered.");
 		log.info("(DELETE) /api/pilot: deletion of pilot '" + uuid + "' requested.");
 
-		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(String.format("Pilot '%s' successfully deleted.", uuid), HttpStatus.OK)
+		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(String.format("Pilot '%s' successfully deleted.", uuid), HttpStatus.NO_CONTENT)
 			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }

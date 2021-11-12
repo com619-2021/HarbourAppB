@@ -85,6 +85,6 @@ public class RestTest {
 		HttpEntity<PilotBookingRequest> entity = new HttpEntity<PilotBookingRequest>(bookingRequest, headers);
 		ResponseEntity<String> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, String.class);
 
-		assertEquals(response.getStatusCode(), HttpStatus.OK);
+		assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 	}
 }

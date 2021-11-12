@@ -49,18 +49,22 @@ public class PilotService {
 		return electedPilot;
 	}
 
+	/* WIP */
 	public Boolean callPilot(UUID pilotUUID, ShipType shiptype, double lat, double lon) {
+		/* might just find a random pilot that is capable of handling the ship to deal
+		   with it instead of hunting down the same one. */
 		Pilot pilot = pilotDAO.findByUUID(pilotUUID);
 
 		/* use GPS system to calculate the ETA of the pilot to the
 		   berth */
 
+		if (pilot == null) {
+			return false;
+		}
+
 		/* implement some way of finding out whether the pilot being called is the
 		   same one / someone capable of leading the ship out */
 		//Basic way to check if pilot can pilot ship as per above comment
-		if(pilot.getAllowedTo().contains(shiptype)) {
-			return pilot != null;
-		}
-		return pilot != null;
+		return pilot.getAllowedTo().contains(shiptype);
 	}
 }

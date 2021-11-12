@@ -54,7 +54,7 @@ public class TideController {
 			parsedTime = LocalDateTime.parse(datetime, formatter);
 			tide = tideService.getTideAt(parsedTime);
 		} catch (DateTimeParseException e) {
-			return new ResponseEntity<>(String.format("Unable to parse '%s'. Make sure you are using the format 'yyyy-MM-dd HH:mm:ss' for your request.", datetime), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(String.format("Unable to parse '%s'. Make sure you are using the format 'yyyy-MM-dd HH:mm:ss' for your request.", datetime), HttpStatus.BAD_REQUEST);
 		}
 
 		return tide != null
