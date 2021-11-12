@@ -1,5 +1,8 @@
 package com.devops.groupb.harbourmaster.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestController
+@Api(description = "Controller for the major REST endpoints.")
 public class RestAPIController {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
@@ -40,22 +44,18 @@ public class RestAPIController {
 	PilotService pilotService;
 
 	@Autowired
-	PilotDAO pilotDAO;
-
-	@Autowired
 	OrderService orderService;
 
 	// /api/test: a simple REST endpoint for testing.
 	@GetMapping(value = "/api/test")
+	@ApiOperation("A simple REST test.")
 	public ResponseEntity<Object> getTest() {
 		log.info("/api/test: called.");
 		return new ResponseEntity<>("REST is working.", HttpStatus.OK);
 	}
 
-	/* /api/bookPilot: REST endpoint called to book a pilot to handle a given ship.
-	   This may be more suitable for the 'OrderController' class that is likely to
-	   be used in the future. */
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
+	@ApiOperation("Creates a booking using the given request. 500 if the booking fails due to a lack of pilot availability.")
 	public ResponseEntity<Object> bookPilot(@RequestBody PilotBookingRequest pilotBookingRequest) {
 		log.info("/api/bookPilot: entered.");
 		log.info("/api/bookPilot: retrieved " + pilotBookingRequest + " from request body.");
@@ -83,6 +83,7 @@ public class RestAPIController {
 	   is to make use of this endpoint, though we still need some further
 	   clarifaction. */
 	@RequestMapping(value = "/api/callPilot", method = RequestMethod.POST)
+	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port. 404 if the request pilot is not found.")
 	public ResponseEntity<Object> callPilot(@RequestBody PilotCall pilotCall) {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");

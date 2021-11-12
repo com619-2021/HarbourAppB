@@ -1,5 +1,8 @@
 package com.devops.groupb.harbourmaster.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.UUID;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Api(description = "Controller for the CRUD operations of pilots.")
 public class PilotController {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
@@ -28,6 +32,7 @@ public class PilotController {
 	PilotService pilotService;
 
 	@RequestMapping(value = "/api/pilot/create", method = RequestMethod.POST)
+	@ApiOperation("Creates a pilot using the given pilot object. 500 if creation fails.")
 	public ResponseEntity<Object> createPilot(@RequestBody Pilot pilot) {
 		log.info("/api/pilot/create: entered.");
 		log.info("/api/pilot/create: creation of " + pilot + " requested.");
@@ -39,23 +44,25 @@ public class PilotController {
 	}
 
 	@GetMapping(value = "/api/pilot/{uuid}")
+	@ApiOperation("Returns the pilot of the given UUID. 404 if pilot is not found.")
 	public ResponseEntity<Object> findPilot(@PathVariable UUID uuid) {
-		log.info("(GET) /api/pilot/: entered.");
-		log.info("(GET) /api/pilot/: query of pilot '" + uuid + "' requested.");
+		log.info("(GET) /api/pilot: entered.");
+		log.info("(GET) /api/pilot: query of pilot '" + uuid + "' requested.");
 
 		Pilot pilot = pilotService.findPilot(uuid);
 
 		return pilot != null ? new ResponseEntity<>(pilot, HttpStatus.OK)
-			: new ResponseEntity<>(String.format("Unable to find pilot '%s' in the database.", uuid), HttpStatus.INTERNAL_SERVER_ERROR);
+			: new ResponseEntity<>(String.format("Unable to find pilot '%s' in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 
 	@DeleteMapping(value = "/api/pilot/{uuid}")
 	@Transactional
+	@ApiOperation("Deletes the pilot of the given UUID. 404 if the pilot is not found.")
 	public ResponseEntity<Object> deletePilot(@PathVariable UUID uuid) {
-		log.info("(DELETE) /api/pilot/: entered.");
-		log.info("(DELETE) /api/pilot/: deletion of pilot '" + uuid + "' requested.");
+		log.info("(DELETE) /api/pilot: entered.");
+		log.info("(DELETE) /api/pilot: deletion of pilot '" + uuid + "' requested.");
 
 		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(String.format("Pilot '%s' successfully deleted.", uuid), HttpStatus.OK)
-			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.INTERNAL_SERVER_ERROR);
+			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }
