@@ -1,7 +1,5 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.UUID;
-
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Lob;
@@ -14,43 +12,31 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 
 @Entity
-@Table(name="berths")
-public class Berth {
+public class WaitingLocation {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
-	private int pk;
+	private int id;
 
-	private UUID uuid = null;
 	private double lat;
 	private double lon;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
-	public Berth() {
+	public WaitingLocation() {
 
 	}
 
-	// Constructor used for testing; NOT to be called in the main program.
-	public Berth(double lat, double lon) {
-		this.uuid = UUID.randomUUID();
+	public WaitingLocation(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
 	}
 
-	public int getPk() {
-		return pk;
+	public int getId() {
+		return id;
 	}
 
-	public void setPk(int pk) {
-		this.pk = pk;
-	}
-
-	public UUID getUUID() {
-		return uuid;
-	}
-
-	public void setUUID(UUID uuid) {
-		this.uuid = uuid;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public double getLat() {
@@ -71,6 +57,6 @@ public class Berth {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[pk=" + pk + ", uuid=" + uuid + ", lat=" + lat + ", lon=" + lon + "]";
+		return getClass().getSimpleName() + "[id=" + id + ", lat=" + lat + ", lon=" + lon + "]";
 	}
 }

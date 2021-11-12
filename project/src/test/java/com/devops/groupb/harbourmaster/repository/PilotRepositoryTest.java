@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -51,11 +52,11 @@ public class PilotRepositoryTest {
 		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1));
 		log.info("Attempting to save " + pilot + " to the database using PilotRepository.");
 
-		int savedId = pilotRepository.save(pilot).getId();
+		int savedPk = pilotRepository.save(pilot).getPk();
 
 		/* READ */
 		log.debug("Testing READ of an example pilot.");
-		Pilot storedPilot = pilotRepository.findById(savedId).get();
+		Pilot storedPilot = pilotRepository.findById(savedPk).get();
 
 		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
 
@@ -69,8 +70,8 @@ public class PilotRepositoryTest {
 
 		/* DELETE */
 		log.debug("Testing DELETE of an example pilot.");
-		pilotRepository.deleteById(savedId);
+		pilotRepository.deleteById(savedPk);
 
-		assertFalse(pilotRepository.existsById(savedId));
+		assertFalse(pilotRepository.existsById(savedPk));
 	}
 }

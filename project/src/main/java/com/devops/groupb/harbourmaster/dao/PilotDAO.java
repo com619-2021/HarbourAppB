@@ -1,5 +1,6 @@
 package com.devops.groupb.harbourmaster.dao;
 
+import java.util.UUID;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,16 @@ public class PilotDAO {
 
 	public List<Pilot> findByAllowedTo(ShipType shipType) {
 		return pilotRepository.findByAllowedTo(shipType);
+	}
+
+	public Pilot findByUUID(UUID uuid) {
+		return pilotRepository.findOneByUuid(uuid);
+	}
+	public Boolean deleteByUUID(UUID uuid) {
+		if (pilotRepository.findOneByUuid(uuid) != null) {
+			pilotRepository.deleteByUuid(uuid);
+			return true;
+		}
+		return false;
 	}
 }

@@ -34,6 +34,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -77,7 +78,7 @@ public class RestTest {
 
 		Ship ship = new Ship(ShipType.FERRY, 6.52);
 		LocalDate date = LocalDate.now();
-		Berth berth = new Berth(14, 51.25, -1.53);
+		Berth berth = new Berth(51.25, -1.53);
 
 		PilotBookingRequest bookingRequest = new PilotBookingRequest(ship, date, berth);
 

@@ -7,11 +7,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.GPS;
 
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Integer> {
-	public Order findOneByUuid(@Param("uuid") UUID uuid);
-
-	public Order findOneByShipUuid(@Param("uuid") UUID uuid);
+public interface GPSRepository extends JpaRepository<GPS, Integer> {
+	@Query(value = "SELECT * FROM gps JOIN ships ON ships.uuid = gps.ship_uuid WHERE gps.ship_uuid = :uuid", nativeQuery = true)
+	public GPS findByShipUUID(@Param("uuid") UUID uuid);
 }

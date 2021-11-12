@@ -1,5 +1,9 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.UUID;
+
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +15,10 @@ import javax.persistence.Table;
 public class Ship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@ApiModelProperty(hidden = true)
+	private int pk;
+
+	private UUID uuid = null;
 	private ShipType type;
 	private double draft;
 
@@ -20,28 +27,31 @@ public class Ship {
 
 	}
 
-	// Constructor for saving a Ship without giving an explicit ID.
+	// Constructor used for testing; NOT to be called in the main program.
 	public Ship(ShipType type, double draft) {
-		this.type = type;
-		this.draft = draft;
-	}
-
-	public Ship(int id, ShipType type, double draft) {
-		this.id = id;
+		this.uuid = UUID.randomUUID();
 		this.type = type;
 		this.draft = draft;
 	}
 
 	public Boolean isValid() {
-		return (id >= 0) && (draft >= 0.0) && (type.ordinal() >= 0 && type.ordinal() < ShipType.values().length);
+		return (pk >= 0) && (draft >= 0.0) && (type.ordinal() >= 0 && type.ordinal() < ShipType.values().length);
 	}
 
-	public int getId() {
-		return id;
+	public UUID getUUID() {
+		return uuid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public int getPk() {
+		return pk;
+	}
+
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public ShipType getType() {
@@ -61,6 +71,6 @@ public class Ship {
 	}
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + String.format("[id=%d, type=%s, draft=%f]", id, type, draft);
+		return getClass().getSimpleName() + String.format("[pk=%d, uuid=%s, type=%s, draft=%f]", pk, uuid, type, draft);
 	}
 }

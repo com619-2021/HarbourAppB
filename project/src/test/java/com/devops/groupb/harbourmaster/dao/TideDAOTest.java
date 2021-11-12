@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
@@ -39,18 +40,21 @@ public class TideDAOTest {
 	}
 
 	@Test
+	public void checkTidesOfWeek() {
+		log.info("Checking to see if all tides of the week can be retrieved from the database.");
+
+		for (DayOfWeek day : DayOfWeek.values()) {
+			Tide tide = tideDAO.getTideAt(day, LocalTime.now());
+			assertEquals(day, tide.getDay());
+		}
+	}
+
+	@Test
 	public void testCurrentTide() {
-		LocalDateTime tideStart = LocalDateTime.now();
-		LocalDateTime tideEnd = LocalDateTime.now().plusHours(5L);
-
-		Tide tideOfCurrentTime = new Tide(6.36, tideStart, tideEnd);
-		log.info("Created example tide: " + tideOfCurrentTime);
-
-		tideDAO.save(tideOfCurrentTime);
-
 		log.info("Attempting to get the current tide.");
-		LocalDateTime currentTime = LocalDateTime.now();
-		Tide tide = tideDAO.getTideAt(currentTime);
+		LocalDate currentDate = LocalDate.now();
+		LocalTime currentTime = LocalTime.now();
+		Tide tide = tideDAO.getTideAt(currentDate.getDayOfWeek(), currentTime);
 
 		log.info("Got tide " + tide + ".");
 

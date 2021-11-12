@@ -16,21 +16,21 @@
   <dependencies>
 	<!-- JavaX -->
 	<dependency>
-		<groupId>javax.persistence</groupId>
-		<artifactId>javax.persistence-api</artifactId>
-		<version>2.2</version>
+	  <groupId>javax.persistence</groupId>
+	  <artifactId>javax.persistence-api</artifactId>
+	  <version>2.2</version>
 	</dependency>
 	<dependency>
-    	<groupId>javax.validation</groupId>
-    	<artifactId>validation-api</artifactId>
-    	<version>2.0.1.Final</version>
+	  <groupId>javax.validation</groupId>
+	  <artifactId>validation-api</artifactId>
+	  <version>2.0.1.Final</version>
 	</dependency>
 	<!-- Spring -->
 	<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 	<dependency>
-    	<groupId>org.springframework.security</groupId>
-    	<artifactId>spring-security-crypto</artifactId>
-    	<version>5.5.3</version>
+	  <groupId>org.springframework.security</groupId>
+	  <artifactId>spring-security-crypto</artifactId>
+	  <version>5.5.3</version>
 	</dependency>
 
 	<dependency>
@@ -65,11 +65,11 @@
 	  <artifactId>spring-boot-starter-data-jpa</artifactId>
 	  <version>2.5.5</version>
 	</dependency>
-	
+
 	<dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-jpa</artifactId>
-      <version>2.5.5</version>
+	  <groupId>org.springframework.data</groupId>
+	  <artifactId>spring-data-jpa</artifactId>
+	  <version>2.5.5</version>
 	</dependency>
 
 	<!-- Logging -->
@@ -81,7 +81,7 @@
 	  <type>jar</type>
 	</dependency>
 
-	<!-- Swagger UI -->
+	<!-- SpringFox (Swagger UI) -->
 	<dependency>
 	  <groupId>io.springfox</groupId>
 	  <artifactId>springfox-boot-starter</artifactId>
@@ -92,6 +92,11 @@
 	  <artifactId>springfox-spi</artifactId>
 	  <version>3.0.0</version>
 	  <type>jar</type>
+	</dependency>
+	<dependency>
+	  <groupId>io.springfox</groupId>
+	  <artifactId>springfox-bean-validators</artifactId>
+	  <version>3.0.0</version>
 	</dependency>
 
 	<!-- Java DB connector for MySQL / MariaDB -->
@@ -120,12 +125,12 @@
 	  <version>5.8.1</version>
 	  <scope>test</scope>
 	</dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
-      <version>2.5.5</version>
-      <type>jar</type>
-    </dependency>
+	<dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot</artifactId>
+	  <version>2.5.5</version>
+	  <type>jar</type>
+	</dependency>
   </dependencies>
 
   <build>

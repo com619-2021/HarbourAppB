@@ -18,9 +18,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+// may be worth making this an @entity for receipts.
 public class PilotBookingRequest {
-	private Ship ship;
 	private LocalDate date;
+	private Ship ship;
 	private Berth berth;
 
 	// Empty default constructor needed for H2 in-memory testing DB.

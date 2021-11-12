@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
@@ -40,36 +41,28 @@ public class TideRepositoryTest {
 	@Test
 	public void CRUDTest() {
 		log.debug("Testing CRUD capabilities of tideRepository.");
-		/* CREATE */
-		log.debug("Testing CREATE of an example tide.");
-		LocalDateTime testStart = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(03, 00, 00));
-		LocalDateTime testEnd = LocalDate.of(2021, Month.NOVEMBER, 4).atTime(LocalTime.of(07, 00, 00));
-
-		double tideHeight = 4.53;
-
-		Tide tide = new Tide(tideHeight, testStart, testEnd);
-
-		int savedId = tideRepository.save(tide).getId();
-
+		/* CREATE not needed as tides will be prepopulated. */
 		/* READ */
 		log.debug("Testing READ of an example tide.");
-		Tide storedTide = tideRepository.findById(savedId).get();
+		Tide storedTide = tideRepository.findById(1).get();
 
-		assertEquals(tide.getHeight(), storedTide.getHeight());
+		assertNotNull(storedTide);
 
 		/* UPDATE */
 		log.debug("Testing UPDATE of an example tide.");
-		tide.setHeight(5.26);
+		double originalHeight = storedTide.getHeight();
+		storedTide.setHeight(5.26);
 
-		Tide updatedTide = tideRepository.save(tide);
+		Tide updatedTide = tideRepository.save(storedTide);
 
-		assertNotEquals(updatedTide.getHeight(), tideHeight);
+		assertNotEquals(updatedTide.getHeight(), originalHeight);
 
 		/* DELETE */
 		log.debug("Testing DELETE of an example tide.");
+		int updatedTidePk = updatedTide.getPk();
 
-		tideRepository.deleteById(savedId);
+		tideRepository.deleteById(updatedTidePk);
 
-		assertFalse(tideRepository.existsById(savedId));
+		assertFalse(tideRepository.existsById(updatedTidePk));
 	}
 }
