@@ -24,6 +24,7 @@ public class PilotCall {
 	@ApiModelProperty(hidden = true)
 	private int pk;
 	private UUID pilotUUID;
+	private ShipType shipType;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
@@ -50,6 +51,14 @@ public class PilotCall {
 
 	public void setBerth(Berth berth) {
 		this.berth = berth;
+	}
+	
+	public ShipType getShipType() {
+		return shipType;
+	}
+
+	public void setShipType(ShipType shipType) {
+		this.shipType = shipType;
 	}
 
 	@Override

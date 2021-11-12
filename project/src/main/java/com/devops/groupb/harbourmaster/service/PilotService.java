@@ -49,7 +49,7 @@ public class PilotService {
 		return electedPilot;
 	}
 
-	public Boolean callPilot(UUID pilotUUID, double lat, double lon) {
+	public Boolean callPilot(UUID pilotUUID, ShipType shiptype, double lat, double lon) {
 		Pilot pilot = pilotDAO.findByUUID(pilotUUID);
 
 		/* use GPS system to calculate the ETA of the pilot to the
@@ -57,7 +57,10 @@ public class PilotService {
 
 		/* implement some way of finding out whether the pilot being called is the
 		   same one / someone capable of leading the ship out */
-
+		//Basic way to check if pilot can pilot ship as per above comment
+		if(pilot.getAllowedTo().contains(shiptype)) {
+			return pilot != null;
+		}
 		return pilot != null;
 	}
 }

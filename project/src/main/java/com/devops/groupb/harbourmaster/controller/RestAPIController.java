@@ -88,7 +88,7 @@ public class RestAPIController {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");
 
-		Boolean pilotRequest = pilotService.callPilot(pilotCall.getPilotUUID(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
+		Boolean pilotRequest = pilotService.callPilot(pilotCall.getPilotUUID(), pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
 
 		return !pilotRequest ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilotCall.getPilotUUID()), HttpStatus.OK)
 			: new ResponseEntity<>(String.format("Pilot '%s' not found in the database.", pilotCall.getPilotUUID()), HttpStatus.NOT_FOUND);
