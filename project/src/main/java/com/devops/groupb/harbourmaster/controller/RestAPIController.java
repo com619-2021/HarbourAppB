@@ -55,7 +55,7 @@ public class RestAPIController {
 	}
 
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
-	@ApiOperation("Creates a booking using the given request. 400 if the booking fails.")
+	@ApiOperation("Creates a booking using the given request.")
 	public ResponseEntity<Object> bookPilot(@RequestBody PilotBookingRequest pilotBookingRequest) {
 		log.info("/api/bookPilot: entered.");
 		log.info("/api/bookPilot: retrieved " + pilotBookingRequest + " from request body.");
@@ -73,9 +73,9 @@ public class RestAPIController {
 		   that we have to deal with on our end. */
 
 		Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(), pilotBookingRequest.getDate());
+		orderService.placeOrder(order, pilot);
 
-		return orderService.placeOrder(order, pilot) ? new ResponseEntity<>(order, HttpStatus.CREATED)
-			: new ResponseEntity<>(order, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(order, HttpStatus.CREATED);
 	}
 
 	/* /api/callPilot: A possible REST endpoint that is to be called when a
@@ -83,7 +83,7 @@ public class RestAPIController {
 	   is to make use of this endpoint, though we still need some further
 	   clarifaction. */
 	@RequestMapping(value = "/api/callPilot", method = RequestMethod.POST)
-	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port. 404 if the request pilot is not found.")
+	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port.")
 	public ResponseEntity<Object> callPilot(@RequestBody PilotCall pilotCall) {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");

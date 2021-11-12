@@ -40,7 +40,7 @@ public class OrderController {
 	OrderService orderService;
 
 	@GetMapping(value = "/api/order/{uuid}")
-	@ApiOperation("Returns an order by its UUID. 404 if the order is not found.")
+	@ApiOperation("Returns an order by its UUID.")
 	public ResponseEntity<Object> findOrder(@PathVariable UUID uuid) {
 		log.info("(GET) /api/order: entered.");
 		log.info("(GET) /api/order: order '" + uuid + "' requested.");
@@ -53,13 +53,13 @@ public class OrderController {
 	}
 
 	@PutMapping(value = "/api/order/cancel")
-	@ApiOperation("Cancels an order with an optional reason. 404 if the order is not found.")
+	@ApiOperation("Cancels an order with an optional reason.")
 	public ResponseEntity<Object> cancelOrder(@RequestParam UUID uuid, @RequestParam(required = false) String reason) {
 		log.info("/api/order/cancel: entered.");
 		log.info("/api/order/cancel: cancellation of order #" + uuid + " requested.");
 
 		return orderService.cancelOrder(uuid, reason)
-			? new ResponseEntity<>(String.format("Order '%s' has been set to %s.\nReason: '%s'", uuid, OrderStatus.CANCELLED.name(), reason), HttpStatus.CREATED)
+			? new ResponseEntity<>(orderService.retrieveOrder(uuid), HttpStatus.CREATED)
 			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }

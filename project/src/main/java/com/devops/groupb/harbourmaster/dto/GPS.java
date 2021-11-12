@@ -17,7 +17,7 @@ public class GPS {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
-	private int id;
+	private int pk;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Ship ship;
@@ -35,12 +35,12 @@ public class GPS {
 		this.location = location;
 	}
 
-	public int getId() {
-		return id;
+	public int getPk() {
+		return pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public Ship getShip() {
@@ -61,6 +61,6 @@ public class GPS {
 
 	@Override
 	public String toString() {
-		return "GPS [id=" + id + ", location=" + location + ", ship=" + ship + "]";
+		return "GPS [pk=" + pk + ", location=" + location + ", ship=" + ship + "]";
 	}
 }

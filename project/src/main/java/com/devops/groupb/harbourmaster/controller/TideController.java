@@ -39,7 +39,7 @@ public class TideController {
 	TideService tideService;
 
 	@GetMapping(value = "/api/tide/{datetime}")
-	@ApiOperation("Returns the tide at the given LocalDateTime (yyyy-MM-dd HH:mm:ss). 404 if the tide is not found.")
+	@ApiOperation("Returns the tide at the given LocalDateTime (yyyy-MM-dd HH:mm:ss).")
 	public ResponseEntity<Object> findTideAt(@PathVariable String datetime) {
 		log.info("(GET) /api/tide: entered.");
 		log.info("(GET) /api/tide: tide at time '" + datetime + "' requested.");

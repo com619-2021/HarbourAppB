@@ -16,7 +16,7 @@ public class WaitingLocation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
-	private int id;
+	private int pk;
 
 	private double lat;
 	private double lon;
@@ -31,12 +31,12 @@ public class WaitingLocation {
 		this.lon = lon;
 	}
 
-	public int getId() {
-		return id;
+	public int getPk() {
+		return pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public double getLat() {
@@ -57,6 +57,6 @@ public class WaitingLocation {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", lat=" + lat + ", lon=" + lon + "]";
+		return getClass().getSimpleName() + "[pk=" + pk + ", lat=" + lat + ", lon=" + lon + "]";
 	}
 }

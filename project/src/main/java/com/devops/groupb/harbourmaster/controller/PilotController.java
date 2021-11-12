@@ -32,19 +32,18 @@ public class PilotController {
 	PilotService pilotService;
 
 	@RequestMapping(value = "/api/pilot/create", method = RequestMethod.POST)
-	@ApiOperation("Creates a pilot using the given pilot object. 400 if creation fails.")
+	@ApiOperation("Creates a pilot using the given pilot object.")
 	public ResponseEntity<Object> createPilot(@RequestBody Pilot pilot) {
 		log.info("/api/pilot/create: entered.");
 		log.info("/api/pilot/create: creation of " + pilot + " requested.");
 
 		pilotService.createNewPilot(pilot);
 
-		return pilotService.createNewPilot(pilot) ? new ResponseEntity<>(pilot, HttpStatus.CREATED)
-			: new ResponseEntity<>("Unable to create new pilot.", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(pilot, HttpStatus.CREATED);
 	}
 
 	@GetMapping(value = "/api/pilot/{uuid}")
-	@ApiOperation("Returns the pilot of the given UUID. 404 if pilot is not found.")
+	@ApiOperation("Returns the pilot of the given UUID.")
 	public ResponseEntity<Object> findPilot(@PathVariable UUID uuid) {
 		log.info("(GET) /api/pilot: entered.");
 		log.info("(GET) /api/pilot: query of pilot '" + uuid + "' requested.");
@@ -57,12 +56,12 @@ public class PilotController {
 
 	@DeleteMapping(value = "/api/pilot/{uuid}")
 	@Transactional
-	@ApiOperation("Deletes the pilot of the given UUID. 404 if the pilot is not found.")
+	@ApiOperation("Deletes the pilot of the given UUID.")
 	public ResponseEntity<Object> deletePilot(@PathVariable UUID uuid) {
 		log.info("(DELETE) /api/pilot: entered.");
 		log.info("(DELETE) /api/pilot: deletion of pilot '" + uuid + "' requested.");
 
-		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(String.format("Pilot '%s' successfully deleted.", uuid), HttpStatus.NO_CONTENT)
+		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
 			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }

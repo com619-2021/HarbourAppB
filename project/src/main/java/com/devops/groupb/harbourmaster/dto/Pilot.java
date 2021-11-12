@@ -38,7 +38,7 @@ public class Pilot {
 	private UUID uuid = UUID.randomUUID();
 
 	@ElementCollection
-	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "id"))
+	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "pk"))
 	@Enumerated(EnumType.STRING)
 	private List<ShipType> allowedTo = new ArrayList();
 	private String firstName;
@@ -50,7 +50,7 @@ public class Pilot {
 
 	}
 
-	// Constructor for saving a Pilot without giving an explicit ID.
+	// Constructor for testing.
 	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
 		this.uuid = UUID.randomUUID();
 		this.allowedTo = allowedTo;
