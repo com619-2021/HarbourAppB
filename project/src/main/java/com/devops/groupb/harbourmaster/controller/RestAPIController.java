@@ -60,6 +60,9 @@ public class RestAPIController {
 		log.info("/api/bookPilot: entered.");
 		log.info("/api/bookPilot: retrieved " + pilotBookingRequest + " from request body.");
 
+		/* write sanity checks for pilotBookingRequest values; i.e. "lat" must
+		   be provided and "la" = auto denial. */
+
 		Pilot pilot = pilotService.findSuitablePilot(pilotBookingRequest.getShip().getType());
 
 		/* Add checks to see whether the pilot is available at this time.
@@ -86,12 +89,11 @@ public class RestAPIController {
 	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port.")
 	public ResponseEntity<Object> callPilot(@RequestBody PilotCall pilotCall) {
 		log.info("/api/callPilot: entered.");
-		log.info("/api/callPilot: pilot '" + pilotCall.getPilotUUID() + "' called.");
+		log.info("/api/callPilot: pilot for ship type '" + pilotCall.getShipType() + "' called.");
 
-		/* likely to be changed to not require a pilot uuid and instead just find a random available one */
-		Boolean pilotRequest = pilotService.callPilot(pilotCall.getPilotUUID(), pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
+		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
 
-		return pilotRequest ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilotCall.getPilotUUID()), HttpStatus.OK)
-			: new ResponseEntity<>(String.format("Pilot '%s' not found in the database.", pilotCall.getPilotUUID()), HttpStatus.NOT_FOUND);
+		return pilot != null ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilot.getUUID()), HttpStatus.OK)
+			: new ResponseEntity<>("No pilots are available to handle this ship.", HttpStatus.BAD_REQUEST);
 	}
 }

@@ -23,7 +23,6 @@ public class PilotCall {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
 	private int pk;
-	private UUID pilotUUID;
 	private ShipType shipType;
 
 	@OneToOne(cascade = {CascadeType.ALL})
@@ -35,14 +34,6 @@ public class PilotCall {
 
 	public void setPk(int pk) {
 		this.pk = pk;
-	}
-
-	public UUID getPilotUUID() {
-		return pilotUUID;
-	}
-
-	public void setPilotUUID(UUID pilotUUID) {
-		this.pilotUUID = pilotUUID;
 	}
 
 	public Berth getBerth() {
@@ -63,6 +54,6 @@ public class PilotCall {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[pk=" + pk + ", pilotUUID=" + pilotUUID + ", berth=" + berth + "]";
+		return getClass().getSimpleName() + "[pk=" + pk + ", shipType=" + shipType + ", berth=" + berth + "]";
 	}
 }

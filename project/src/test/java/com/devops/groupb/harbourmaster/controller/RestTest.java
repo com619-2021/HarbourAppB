@@ -43,6 +43,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.Month;
 
+import org.json.JSONObject;
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -67,7 +69,7 @@ public class RestTest {
 		RestTemplate restTemplate = new RestTemplate();
 		String endpoint = "http://localhost:8080/api/bookPilot";
 		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		headers.put("Content-Type",  Arrays.asList("application/json"));
 
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
@@ -82,7 +84,33 @@ public class RestTest {
 
 		PilotBookingRequest bookingRequest = new PilotBookingRequest(ship, date, berth);
 
-		HttpEntity<PilotBookingRequest> entity = new HttpEntity<PilotBookingRequest>(bookingRequest, headers);
+		/* demonstration of how a request json would be made. other parties won't have the same
+		   'ship' or 'berth' objects as us, so they can't directly pass them into a 'HttpEntity'
+		   object. */
+		JSONObject request = new JSONObject();
+		JSONObject berthJson = new JSONObject();
+		JSONObject shipJson = new JSONObject();
+
+		try {
+			berthJson.put("lat", bookingRequest.getBerth().getLat());
+			berthJson.put("lon", bookingRequest.getBerth().getLon());
+			berthJson.put("uuid", bookingRequest.getBerth().getUUID());
+
+			shipJson.put("draft", bookingRequest.getShip().getDraft());
+			shipJson.put("type", bookingRequest.getShip().getType().name());
+			shipJson.put("uuid", bookingRequest.getShip().getUUID());
+
+			request.put("berth", berthJson);
+			request.put("date", date);
+			request.put("ship", shipJson);
+
+		} catch (org.json.JSONException e) {
+			log.debug("Unable to parse JSON.");
+		}
+
+		log.debug("Created JSON request '" + request + "' from " + bookingRequest);
+
+		HttpEntity<String> entity = new HttpEntity<String>(request.toString(), headers);
 		ResponseEntity<String> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, String.class);
 
 		assertEquals(response.getStatusCode(), HttpStatus.CREATED);
