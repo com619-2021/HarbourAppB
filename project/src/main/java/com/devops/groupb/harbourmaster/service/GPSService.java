@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.GPS;
 import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
 import com.devops.groupb.harbourmaster.dto.WaitingLocation;
 
 import com.devops.groupb.harbourmaster.dao.GPSDAO;
@@ -34,10 +35,10 @@ public class GPSService {
 	@Autowired
 	private OrderDAO orderDAO;
 
-	public GPS pingPresence(Ship ship) {
+	public GPS pingPresence(UUID shipUUID) {
 		/* checks to see whether the location of this ship has already
 		   been found. */
-		GPS existingGPS = GPSDao.findByShipUUID(ship.getUUID());
+		GPS existingGPS = GPSDao.findByShipUUID(shipUUID);
 		if (existingGPS != null) {
 			return existingGPS;
 		}
@@ -47,7 +48,14 @@ public class GPSService {
 		LocalDateTime time = LocalDateTime.now();
 		LocalDateTime earliestTime = time.minusHours(2L);
 
-		Order order = orderDAO.findByShipUUID(ship.getUUID());
+		Order order = orderDAO.findByShipUUID(shipUUID);
+
+		/* ships with no orders or orders that have been denied
+		   or cancelled will not come to port. */
+		if (order == null || order.getStatus() == OrderStatus.DENIED || order.getStatus() == OrderStatus.CANCELLED) {
+			return null;
+		}
+
 		LocalDateTime allocatedTime = order.getAllocatedTime();
 
 		/* checks to see whether the current time is between the time that
@@ -60,11 +68,10 @@ public class GPSService {
 			int n = rand.nextInt(3); // 1 in 3 chance.
 
 			if (n == 1) {
-				/* makes a random id to select from the waiting_location table. consider
-				   changing just in case amount of rows in table changes in the future */
-				int randomId = rand.nextInt(8);
-				WaitingLocation location = waitingLocationDAO.findById(randomId);
-				GPS GPS = new GPS(ship, location);
+				/* makes a random id to select from the waiting_location table. */
+				int randomId = rand.nextInt((int)GPSDao.getCount());
+				WaitingLocation location = waitingLocationDAO.findById((int) randomId);
+				GPS GPS = new GPS(order.getShip(), location);
 
 				return GPS;
 			} else {

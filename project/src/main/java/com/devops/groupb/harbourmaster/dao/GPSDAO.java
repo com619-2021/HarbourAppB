@@ -43,6 +43,10 @@ public class GPSDAO {
 	}
 
 	public GPS findByShipUUID(UUID uuid) {
-		return GPSRepository.findByShipUUID(uuid);
+		return GPSRepository.findOneByShipUuid(uuid);
+	}
+
+	public long getCount() {
+		return GPSRepository.count();
 	}
 }

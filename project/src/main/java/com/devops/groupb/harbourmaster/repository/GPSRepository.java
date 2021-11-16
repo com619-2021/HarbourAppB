@@ -11,6 +11,5 @@ import com.devops.groupb.harbourmaster.dto.GPS;
 
 @Repository
 public interface GPSRepository extends JpaRepository<GPS, Integer> {
-	@Query(value = "SELECT * FROM gps JOIN ships ON ships.uuid = gps.ship_uuid WHERE gps.ship_uuid = :uuid", nativeQuery = true)
-	public GPS findByShipUUID(@Param("uuid") UUID uuid);
+	public GPS findOneByShipUuid(@Param("uuid") UUID uuid);
 }
