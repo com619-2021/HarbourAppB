@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.lang.Math;
+
 import java.util.UUID;
 import java.util.Random;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.devops.groupb.harbourmaster.dto.Ship;
+import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.GPS;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.OrderStatus;
@@ -69,7 +72,7 @@ public class GPSService {
 
 			if (n == 1) {
 				/* makes a random id to select from the waiting_location table. */
-				int randomId = rand.nextInt((int) waitingLocationDAO.getCount());
+				int randomId = 3; // had problems with rand.nextInt w/ wldao.count(); will fix.
 				WaitingLocation location = waitingLocationDAO.findById(randomId);
 				GPS GPS = new GPS(order.getShip(), location);
 
@@ -81,5 +84,77 @@ public class GPSService {
 			/* ship can't possibly be waiting, hence return null */
 			return null;
 		}
+	}
+
+	public LocalDateTime calculateArrival(GPS gps) {
+		if (gps == null) {
+			return null;
+		}
+
+		/* location of the pilot boat at port */
+		double pilotSpeedMph = 45;
+		double pilotLat = 50.894533;
+		double pilotLon = -1.408522;
+
+		double shipLat = gps.getLocation().getLat();
+		double shipLon = gps.getLocation().getLon();
+
+		double distToShip = 0;
+		if ((pilotLat == shipLat) && (pilotLon == shipLon)) {
+			distToShip = 0;
+		} else {
+			double theta = pilotLon - shipLon;
+			distToShip = Math.sin(deg2rad(pilotLat)) * Math.sin(deg2rad(shipLat))
+				+ Math.cos(deg2rad(pilotLat)) * Math.cos(deg2rad(shipLat)) * Math.cos(deg2rad(theta));
+			distToShip = Math.acos(distToShip);
+			distToShip = rad2deg(distToShip);
+			distToShip = distToShip * 60 * 1.1515;
+		}
+
+		double timeToShip = (distToShip / pilotSpeedMph) * 60;
+
+		log.info("Distance from pilot to ship: " + distToShip + " miles.");
+		log.info("Estimated time to get to ship: " + timeToShip + " minutes.");
+
+		Berth berth = orderDAO.findByShipUUID(gps.getShip().getUUID()).getBerth();
+
+		double berthLat = berth.getLat();
+		double berthLon = berth.getLon();
+
+		log.info("Destination Berth: " + berth + ".");
+
+		double distBackToBerth = 0;
+		if ((shipLat == berthLat) && (shipLon == berthLon)) {
+			distBackToBerth = 0;
+		} else {
+			double theta = berthLon - shipLon;
+			distBackToBerth = Math.sin(deg2rad(berthLat)) * Math.sin(deg2rad(shipLat))
+				+ Math.cos(deg2rad(berthLat)) * Math.cos(deg2rad(shipLat)) * Math.cos(deg2rad(theta));
+			distBackToBerth = Math.acos(distBackToBerth);
+			distBackToBerth = rad2deg(distBackToBerth);
+			distBackToBerth = distBackToBerth * 60 * 1.1515;
+		}
+
+		double shipSpeedMph = 26.83; // random value
+		double timeBackToBerth = (distBackToBerth / shipSpeedMph) * 60;
+
+		log.info("Distance from ship to berth: " + distBackToBerth + " miles.");
+		log.info("Estimated time from ship to berth: " + timeBackToBerth + " minutes.");
+
+		LocalDateTime eta = LocalDateTime.now().plusMinutes(Math.round(timeToShip + timeBackToBerth));
+
+		log.info("Total time: " + (timeToShip + timeBackToBerth) + " minutes.");
+		log.info("Total distance to cover: " + (distToShip + distBackToBerth) + " miles.");
+		log.info("ETA of ship to berth: " + eta + ".");
+
+		return eta;
+	}
+
+	private double deg2rad(double deg) {
+		return (deg * Math.PI / 180.0);
+	}
+
+	private double rad2deg(double rad) {
+		return (rad * 180.0 / Math.PI);
 	}
 }

@@ -72,7 +72,7 @@ public class GPSServiceTest {
 		/* pinging is dependent on a random number generator, so a while loop
 		   is necessary to repeatedly check for a ship to finally appear. null
 		   implies that the ship has not appeared or it is out of the permitted time range.*/
-		GPS gps = gpsService.pingPresence(ship.getUUID());
+		GPS gps = gpsService.pingPresence(order.getShip().getUUID());
 		int i = 0;
 		/* failing to find in 100 attempts implies problem with GPS or having
 		   extremely bad luck. */
@@ -103,5 +103,33 @@ public class GPSServiceTest {
 
 		log.info("GPS for an early ship after " + i2 + " pings: " + gps2);
 		assertNull(gps2);
+	}
+
+	@Test
+	public void calculateDistance() {
+		log.info("Testing calculation of distance + ETA.");
+
+		/* requirements for an order */
+		Ship ship = new Ship(ShipType.CARGO, 1.3);
+		List<ShipType> allowedTo = new ArrayList();
+		allowedTo.add(ShipType.CARGO);
+		Pilot pilot = new Pilot(allowedTo, "John", "Doe", LocalDate.of(1953, Month.JUNE, 3));
+		Berth berth = new Berth(50.889356, -1.395104);
+
+		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
+		order.setAllocatedTime(LocalDateTime.now().minusHours(1L));
+		orderService.placeOrder(order, pilot);
+
+		GPS gps = gpsService.pingPresence(order.getShip().getUUID());
+		while (gps == null) {
+			gps = gpsService.pingPresence(order.getShip().getUUID());
+		}
+
+		log.info("Got GPS: " + gps + ".");
+		LocalDateTime eta = gpsService.calculateArrival(gps);
+		log.info("ETA: " + eta);
+
+		/* should take less than three hours to bring the ship in. */
+		assertTrue(eta.isBefore(LocalDateTime.now().plusHours(3L)));
 	}
 }

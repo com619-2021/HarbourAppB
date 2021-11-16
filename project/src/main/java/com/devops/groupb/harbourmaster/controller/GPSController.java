@@ -45,4 +45,14 @@ public class GPSController {
 
 		return new ResponseEntity<>(gps, HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/api/gps/sendPilot/{uuid}")
+	@ApiOperation("Sends a pilot to retrieve the ship.")
+	public ResponseEntity<Object> sendPilot(@PathVariable UUID uuid) {
+		GPS gps = gpsService.pingPresence(uuid);
+
+		LocalDateTime eta = gpsService.calculateArrival(gps);
+
+		return new ResponseEntity<>(eta, HttpStatus.OK);
+	}
 }
