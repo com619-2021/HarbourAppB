@@ -9,5 +9,5 @@ import com.devops.groupb.harbourmaster.dto.WaitingLocation;
 
 @Repository
 public interface WaitingLocationRepository extends JpaRepository<WaitingLocation, Integer> {
-
+	public long count();
 }

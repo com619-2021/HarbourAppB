@@ -11,5 +11,5 @@ import com.devops.groupb.harbourmaster.dto.GPS;
 
 @Repository
 public interface GPSRepository extends JpaRepository<GPS, Integer> {
-	public GPS findOneByShipUuid(@Param("uuid") UUID uuid);
+	public GPS findOneByShipUuid(@Param("shipUuid") UUID uuid);
 }

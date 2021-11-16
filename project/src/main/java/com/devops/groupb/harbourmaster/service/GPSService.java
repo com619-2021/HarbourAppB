@@ -69,8 +69,8 @@ public class GPSService {
 
 			if (n == 1) {
 				/* makes a random id to select from the waiting_location table. */
-				int randomId = rand.nextInt((int)GPSDao.getCount());
-				WaitingLocation location = waitingLocationDAO.findById((int) randomId);
+				int randomId = rand.nextInt((int) waitingLocationDAO.getCount());
+				WaitingLocation location = waitingLocationDAO.findById(randomId);
 				GPS GPS = new GPS(order.getShip(), location);
 
 				return GPS;

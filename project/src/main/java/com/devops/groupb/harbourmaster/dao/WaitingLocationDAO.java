@@ -41,4 +41,8 @@ public class WaitingLocationDAO {
 	public void deleteAll() {
 		waitingLocationRepository.deleteAll();
 	}
+
+	public long getCount() {
+		return waitingLocationRepository.count();
+	}
 }
