@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiOperation;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,13 +18,14 @@ import com.devops.groupb.harbourmaster.dto.PilotCall;
 import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
+import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.OrderStatus;
-
-import com.devops.groupb.harbourmaster.dao.PilotDAO;
+import com.devops.groupb.harbourmaster.dto.TimeRequest;
 
 import com.devops.groupb.harbourmaster.service.PilotService;
 import com.devops.groupb.harbourmaster.service.OrderService;
+import com.devops.groupb.harbourmaster.service.TideService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,13 +49,8 @@ public class RestAPIController {
 	@Autowired
 	OrderService orderService;
 
-	// /api/test: a simple REST endpoint for testing.
-	@GetMapping(value = "/api/test")
-	@ApiOperation("A simple REST test.")
-	public ResponseEntity<Object> getTest() {
-		log.info("/api/test: called.");
-		return new ResponseEntity<>("REST is working.", HttpStatus.OK);
-	}
+	@Autowired
+	TideService tideService;
 
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
 	@ApiOperation("Creates a booking using the given request.")
@@ -81,19 +79,37 @@ public class RestAPIController {
 		return new ResponseEntity<>(order, HttpStatus.CREATED);
 	}
 
-	/* /api/callPilot: A possible REST endpoint that is to be called when a
-	   a ship is coming into port. We believe, at this point, that the port team
-	   is to make use of this endpoint, though we still need some further
-	   clarifaction. */
 	@RequestMapping(value = "/api/callPilot", method = RequestMethod.POST)
 	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port.")
 	public ResponseEntity<Object> callPilot(@RequestBody PilotCall pilotCall) {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot for ship type '" + pilotCall.getShipType() + "' called.");
 
-		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
+		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(),
+											 pilotCall.getBerth().getLon());
 
-		return pilot != null ? new ResponseEntity<>(String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.", pilot.getUUID()), HttpStatus.OK)
+		return pilot != null
+			? new ResponseEntity<>(
+								   String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.",
+												 pilot.getUUID()),
+								   HttpStatus.OK)
 			: new ResponseEntity<>("No pilots are available to handle this ship.", HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/api/getSuitableTimes", method = RequestMethod.POST)
+	@ApiOperation("Returns a list of suitable arrival times for a given ship on a given date.")
+	public ResponseEntity<Object> getSuitableTimes(@RequestBody TimeRequest timeRequest) {
+		log.info("/api/getSuitableTimes: entered.");
+		log.info("/api/getSuitableTimes: times for date '" + timeRequest.getArrivalDate() + "' requested.");
+
+		Ship ship = timeRequest.getShip();
+		List<Tide> safeTides = tideService.getSafeTidesOnDay(timeRequest.getArrivalDate(), ship.getDraft());
+
+		ArrayList<LocalTime> suitableTimes = new ArrayList();
+
+		for (Tide t : safeTides)
+			suitableTimes.add(t.getStart());
+
+		return new ResponseEntity<>(suitableTimes, HttpStatus.OK);
 	}
 }

@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.util.List;
+
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +19,10 @@ public class TideService {
 
 	@Autowired
 	private TideDAO tideDAO;
+
+	public List<Tide> getSafeTidesOnDay(LocalDate date, double draft) {
+		return tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), draft);
+	}
 
 	public Tide getTideAt(LocalDateTime time) {
 		return tideDAO.getTideAt(time.getDayOfWeek(), time.toLocalTime());

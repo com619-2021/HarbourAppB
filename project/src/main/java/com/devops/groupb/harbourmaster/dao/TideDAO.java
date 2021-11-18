@@ -51,4 +51,9 @@ public class TideDAO {
 	public LocalTime getNextSafeTide(double draft) {
 		return tideRepository.getNextSafeTide(draft);
 	}
+
+	public List<Tide> getSafeTidesOnDay(DayOfWeek day, double draft) {
+		int dayInt = day.getValue() - 1;
+		return tideRepository.getSafeTidesOnDay(dayInt, draft);
+	}
 }
