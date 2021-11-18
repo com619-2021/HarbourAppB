@@ -63,16 +63,6 @@ public class RestAPIController {
 
 		Pilot pilot = pilotService.findSuitablePilot(pilotBookingRequest.getShip().getType());
 
-		/* Add checks to see whether the pilot is available at this time.
-		   This could be done by having a 'schedule' table where each
-		   scheduled order is saved with the timespan alongside the
-		   pilot ID. Such as pilot '1' booked from xxxx-xx-xx 03:00
-		   -> 07:00. If the date given doesn't fall into any of these
-		   ranges, then the order is succesful. This will be more
-		   difficult to implement here as tide times dictate the
-		   time of the day that a pilot is booked, and is something
-		   that we have to deal with on our end. */
-
 		Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(), pilotBookingRequest.getDate());
 		orderService.placeOrder(order, pilot);
 
@@ -88,12 +78,8 @@ public class RestAPIController {
 		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(),
 											 pilotCall.getBerth().getLon());
 
-		return pilot != null
-			? new ResponseEntity<>(
-								   String.format("Pilot '%s' has been called and is now en route. They will arrive at --:--.",
-												 pilot.getUUID()),
-								   HttpStatus.OK)
-			: new ResponseEntity<>("No pilots are available to handle this ship.", HttpStatus.BAD_REQUEST);
+		/* null response implies that no pilots are available to lead the ship out. */
+		return new ResponseEntity<>(pilot, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/api/getSuitableTimes", method = RequestMethod.POST)
@@ -106,6 +92,8 @@ public class RestAPIController {
 		List<Tide> safeTides = tideService.getSafeTidesOnDay(timeRequest.getArrivalDate(), ship.getDraft());
 
 		ArrayList<LocalTime> suitableTimes = new ArrayList();
+
+		/* schedule checks. */
 
 		for (Tide t : safeTides)
 			suitableTimes.add(t.getStart());

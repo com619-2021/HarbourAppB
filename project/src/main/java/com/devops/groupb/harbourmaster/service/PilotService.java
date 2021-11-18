@@ -36,6 +36,8 @@ public class PilotService {
 	public Pilot findSuitablePilot(ShipType shipType) {
 		List<Pilot> eligiblePilots = pilotDAO.findByAllowedTo(shipType);
 
+		/* check against the pilot's schedule here..? */
+
 		if (eligiblePilots.isEmpty()) {
 			return null;
 		}
@@ -49,12 +51,8 @@ public class PilotService {
 		return electedPilot;
 	}
 
-	/* WIP */
 	public Pilot callPilot(ShipType shipType, double lat, double lon) {
 		Pilot pilot = findSuitablePilot(shipType);
-
-		/* use GPS system to calculate the ETA of the pilot to the
-		   berth. */
 
 		return pilot;
 	}
