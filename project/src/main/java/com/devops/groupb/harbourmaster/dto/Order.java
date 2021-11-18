@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 import javax.persistence.CascadeType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="orders")
@@ -38,7 +39,10 @@ public class Order {
 	private UUID uuid;
 
 	private OrderStatus status;
+
 	private String reason;
+
+	private double fare;
 
 	@Column(name="orderDate", columnDefinition="TIMESTAMP")
 	private LocalDateTime orderDate;
@@ -58,6 +62,9 @@ public class Order {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
 
+	@Transient
+	private final double[] fares = { 311.85, 589.23, 189.32 };
+
 	// Empty default constructor needed for H2 in-memory testing DB.
 	public Order() {
 
@@ -69,6 +76,7 @@ public class Order {
 		this.berth = berth;
 		this.requestedDate = requestedDate;
 		orderDate = LocalDateTime.now();
+		fare = fares[ship.getType().ordinal()];
 	}
 
 	public int getPk() {
@@ -151,6 +159,14 @@ public class Order {
 		this.reason = reason;
 	}
 
+	public double getFare() {
+		return fare;
+	}
+
+	public void setFare(double fare) {
+		this.fare = fare;
+	}
+
 	@Override
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -163,6 +179,6 @@ public class Order {
 
 		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", pk=" + pk
 			+ ", uuid=" + uuid + ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
-			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + "]";
+			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + ", fare=" + fare + "]";
 	}
 }
