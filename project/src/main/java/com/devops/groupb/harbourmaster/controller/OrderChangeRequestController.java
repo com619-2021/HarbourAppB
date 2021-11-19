@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.devops.groupb.harbourmaster.service.OrderChangeRequestService;
 import com.devops.groupb.harbourmaster.dto.OrderChangeRequest;
 import com.devops.groupb.harbourmaster.dto.OrderChangeRequestWrapper;
-import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
+import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,9 +49,9 @@ public class OrderChangeRequestController {
 		log.info("/api/orderChangeRequest/create: entered.");
 		log.info("/api/orderChangeRequest/create: retrieved new request '" + request + "'.");
 
-		PilotBookingRequest pbr = request.getNewRequest();
+		CreateOrderWrapper newOrder = request.getNewRequest();
 
-		OrderChangeRequest ocr = new OrderChangeRequest(pbr.getShip(), pbr.getBerth(), pbr.getDate());
+		OrderChangeRequest ocr = new OrderChangeRequest(newOrder.getShip(), newOrder.getBerth(), newOrder.getDate());
 
 		return orderChangeRequestService.placeOrderChangeRequest(request.getParentUUID(), ocr, request.getReason()) != null
 			? new ResponseEntity<>(orderChangeRequestService.retrieveOrderChangeRequest(ocr.getUuid()), HttpStatus.CREATED)

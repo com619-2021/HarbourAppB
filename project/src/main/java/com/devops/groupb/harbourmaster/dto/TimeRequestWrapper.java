@@ -2,11 +2,11 @@ package com.devops.groupb.harbourmaster.dto;
 
 import java.time.LocalDate;
 
-public class TimeRequest {
+public class TimeRequestWrapper {
 	private Ship ship;
 	private LocalDate arrivalDate;
 
-	public TimeRequest(Ship ship, LocalDate arrivalDate) {
+	public TimeRequestWrapper(Ship ship, LocalDate arrivalDate) {
 		this.ship = ship;
 		this.arrivalDate = arrivalDate;
 	}
@@ -29,6 +29,6 @@ public class TimeRequest {
 
 	@Override
 	public String toString() {
-		return "TimeRequest [arrivalDate=" + arrivalDate + ", ship=" + ship + "]";
+		return this.getClass().getSimpleName() + "[arrivalDate=" + arrivalDate + ", ship=" + ship + "]";
 	}
 }

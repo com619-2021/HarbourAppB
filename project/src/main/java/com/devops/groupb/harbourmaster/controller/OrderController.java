@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.devops.groupb.harbourmaster.service.OrderService;
 import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
+import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

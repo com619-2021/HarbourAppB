@@ -6,18 +6,17 @@ import java.time.format.DateTimeFormatter;
 import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.Ship;
 
-// may be worth making this an @entity for receipts..?
-public class PilotBookingRequest {
+public class CreateOrderWrapper {
 	private LocalDate date;
 	private Ship ship;
 	private Berth berth;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
-	public PilotBookingRequest() {
+	public CreateOrderWrapper() {
 
 	}
 
-	public PilotBookingRequest(Ship ship, LocalDate date, Berth berth) {
+	public CreateOrderWrapper(Ship ship, LocalDate date, Berth berth) {
 		this.ship = ship;
 		this.date = date;
 		this.berth = berth;

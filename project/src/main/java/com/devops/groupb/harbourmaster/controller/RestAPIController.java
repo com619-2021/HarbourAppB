@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dto.PilotCall;
+import com.devops.groupb.harbourmaster.dto.CallPilotWrapper;
 import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.TimeRequest;
+import com.devops.groupb.harbourmaster.dto.TimeRequestWrapper;
 import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
+import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
 import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.service.OrderService;
 import com.devops.groupb.harbourmaster.service.PilotService;
@@ -42,16 +42,16 @@ public class RestAPIController {
 
 	@RequestMapping(value = "/api/bookPilot", method = RequestMethod.POST)
 	@ApiOperation("Creates a booking using the given request.")
-	public ResponseEntity<Object> bookPilot(@RequestBody PilotBookingRequest pilotBookingRequest) {
+	public ResponseEntity<Object> bookPilot(@RequestBody CreateOrderWrapper request) {
 		log.info("/api/bookPilot: entered.");
-		log.info("/api/bookPilot: retrieved " + pilotBookingRequest + " from request body.");
+		log.info("/api/bookPilot: retrieved " + request + " from request body.");
 
-		/* write sanity checks for pilotBookingRequest values; i.e. "lat" must
+		/* write sanity checks for request values; i.e. "lat" must
 		   be provided and "la" = auto denial. */
 
-		Pilot pilot = pilotService.findSuitablePilot(pilotBookingRequest.getShip().getType());
+		Pilot pilot = pilotService.findSuitablePilot(request.getShip().getType());
 
-		Order order = new Order(pilotBookingRequest.getShip(), pilotBookingRequest.getBerth(), pilotBookingRequest.getDate());
+		Order order = new Order(request.getShip(), request.getBerth(), request.getDate());
 		orderService.placeOrder(order, pilot);
 
 		return new ResponseEntity<>(order, HttpStatus.CREATED);
@@ -59,12 +59,11 @@ public class RestAPIController {
 
 	@RequestMapping(value = "/api/callPilot", method = RequestMethod.POST)
 	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port.")
-	public ResponseEntity<Object> callPilot(@RequestBody PilotCall pilotCall) {
+	public ResponseEntity<Object> callPilot(@RequestBody CallPilotWrapper pilotCall) {
 		log.info("/api/callPilot: entered.");
 		log.info("/api/callPilot: pilot for ship type '" + pilotCall.getShipType() + "' called.");
 
-		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(),
-											 pilotCall.getBerth().getLon());
+		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
 
 		/* null response implies that no pilots are available to lead the ship out. */
 		return new ResponseEntity<>(pilot, HttpStatus.OK);
@@ -72,12 +71,12 @@ public class RestAPIController {
 
 	@RequestMapping(value = "/api/getSuitableTimes", method = RequestMethod.POST)
 	@ApiOperation("Returns a list of suitable arrival times for a given ship on a given date.")
-	public ResponseEntity<Object> getSuitableTimes(@RequestBody TimeRequest timeRequest) {
+	public ResponseEntity<Object> getSuitableTimes(@RequestBody TimeRequestWrapper request) {
 		log.info("/api/getSuitableTimes: entered.");
-		log.info("/api/getSuitableTimes: times for date '" + timeRequest.getArrivalDate() + "' requested.");
+		log.info("/api/getSuitableTimes: times for date '" + request.getArrivalDate() + "' requested.");
 
-		Ship ship = timeRequest.getShip();
-		List<Tide> safeTides = tideService.getSafeTidesOnDay(timeRequest.getArrivalDate(), ship.getDraft());
+		Ship ship = request.getShip();
+		List<Tide> safeTides = tideService.getSafeTidesOnDay(request.getArrivalDate(), ship.getDraft());
 
 		ArrayList<LocalTime> suitableTimes = new ArrayList();
 

@@ -14,7 +14,7 @@ import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
-import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
+import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
@@ -68,7 +68,7 @@ public class RestTest {
 		LocalDate date = LocalDate.now();
 		Berth berth = new Berth(51.25, -1.53);
 
-		PilotBookingRequest bookingRequest = new PilotBookingRequest(ship, date, berth);
+		CreateOrderWrapper bookingRequest = new CreateOrderWrapper(ship, date, berth);
 
 		/* demonstration of how a request json would be made. other parties won't have the same
 		   'ship' or 'berth' objects as us, so they can't directly pass them into a 'HttpEntity'
