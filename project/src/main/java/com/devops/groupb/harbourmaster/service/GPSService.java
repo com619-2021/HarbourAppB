@@ -1,29 +1,20 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.lang.Math;
-
-import java.util.UUID;
-import java.util.Random;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Random;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.Berth;
-import com.devops.groupb.harbourmaster.dto.GPS;
-import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
-import com.devops.groupb.harbourmaster.dto.WaitingLocation;
+import java.util.Random;
+import java.util.UUID;
 
 import com.devops.groupb.harbourmaster.dao.GPSDAO;
 import com.devops.groupb.harbourmaster.dao.WaitingLocationDAO;
 import com.devops.groupb.harbourmaster.dao.OrderDAO;
+import com.devops.groupb.harbourmaster.dto.Berth;
+import com.devops.groupb.harbourmaster.dto.GPS;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
+import com.devops.groupb.harbourmaster.dto.WaitingLocation;
+import com.devops.groupb.harbourmaster.dto.Order;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class GPSService {

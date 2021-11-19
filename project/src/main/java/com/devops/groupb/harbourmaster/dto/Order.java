@@ -1,31 +1,26 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-
-import java.util.UUID;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
-import com.devops.groupb.harbourmaster.dto.Berth;
-import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
-
-import java.sql.Timestamp;
-
-import javax.persistence.Lob;
-import javax.persistence.Basic;
-import javax.persistence.Id;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
+import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.devops.groupb.harbourmaster.dto.Berth;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
+import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.Ship;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name="orders")

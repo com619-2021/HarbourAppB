@@ -1,27 +1,22 @@
 package com.devops.groupb.harbourmaster.test.repository;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.repository.PilotRepository;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.UUID;
-import java.util.List;
-import java.util.ArrayList;
-
-import java.time.Month;
-import java.time.LocalDate;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes=HarbourMaster.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

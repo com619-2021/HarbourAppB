@@ -1,16 +1,13 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.persistence.Basic;
-import javax.persistence.Id;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.CascadeType;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class GPS {

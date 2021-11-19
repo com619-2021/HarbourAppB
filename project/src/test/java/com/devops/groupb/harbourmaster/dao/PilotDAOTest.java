@@ -1,29 +1,24 @@
 package com.devops.groupb.harbourmaster.test.dao;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.devops.groupb.harbourmaster.HarbourMaster;
-import com.devops.groupb.harbourmaster.dto.ShipType;
-import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dao.PilotDAO;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
+import com.devops.groupb.harbourmaster.HarbourMaster;
+import com.devops.groupb.harbourmaster.dao.PilotDAO;
+import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.ShipType;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.LocalDateTime;
-import java.time.Month;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes = HarbourMaster.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

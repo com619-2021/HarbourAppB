@@ -1,30 +1,22 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.ArrayList;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dto.OrderChangeStatus;
-
-import java.sql.Timestamp;
-
-import javax.persistence.Lob;
-import javax.persistence.Basic;
-import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import com.devops.groupb.harbourmaster.dto.Order;
 
 @Entity
 public class OrderChangeRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private int pk;
 
 	@OneToOne
 	private Order order;
@@ -33,12 +25,12 @@ public class OrderChangeRequest {
 	private String reason;
 	private OrderChangeStatus status;
 
-	public int getId() {
-		return id;
+	public int getPk() {
+		return pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public Order getOrder() {
@@ -77,7 +69,7 @@ public class OrderChangeRequest {
 	public String toString() {
 		String dateString = requestDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-		return getClass().getSimpleName() + "[id=" + id + ", order=" + order + ", reason=" + reason + ", requestDate="
+		return getClass().getSimpleName() + "[pk=" + pk + ", order=" + order + ", reason=" + reason + ", requestDate="
 			+ dateString + ", status=" + status.name() + "]";
 	}
 }

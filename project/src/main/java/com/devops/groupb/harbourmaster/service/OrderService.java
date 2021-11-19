@@ -1,21 +1,15 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.util.UUID;
-import java.util.List;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
+import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dao.OrderDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.Berth;
-import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
-
-import com.devops.groupb.harbourmaster.dao.OrderDAO;
 
 @Service
 public class OrderService {
@@ -36,10 +30,10 @@ public class OrderService {
 			return false;
 		}
 
-		LocalDateTime allocatedTime = order.getRequestedDate().atTime(03, 00);
+		LocalDateTime allocatedTime = order.getRequestedDate().atTime(13, 00);
 		order.setPilot(pilot);
 		order.setAllocatedTime(allocatedTime);
-		order.setStatus(OrderStatus.PLACED);
+		order.setStatus(OrderStatus.CONFIRMED);
 
 		orderDAO.save(order);
 

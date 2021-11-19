@@ -1,15 +1,11 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.persistence.Lob;
-import javax.persistence.Basic;
-import javax.persistence.Id;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.Id;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class WaitingLocation {

@@ -1,21 +1,16 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.UUID;
+import com.devops.groupb.harbourmaster.dto.Berth;
+import com.devops.groupb.harbourmaster.dto.ShipType;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import io.swagger.annotations.ApiModelProperty;
-
-import com.devops.groupb.harbourmaster.dto.Berth;
-
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.OneToOne;
-import javax.persistence.GenerationType;
-import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
-import javax.persistence.CascadeType;
 
 @Entity
 public class PilotCall {

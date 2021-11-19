@@ -1,17 +1,16 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.util.List;
-
-import java.time.LocalTime;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.DayOfWeek;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.time.LocalTime;
+import java.util.List;
 
 import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.dao.TideDAO;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TideService {

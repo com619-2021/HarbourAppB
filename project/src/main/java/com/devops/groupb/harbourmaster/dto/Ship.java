@@ -1,14 +1,14 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-
 import java.util.UUID;
 
-import javax.persistence.Id;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name="ships")

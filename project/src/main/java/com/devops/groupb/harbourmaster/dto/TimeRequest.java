@@ -1,9 +1,5 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import com.devops.groupb.harbourmaster.dto.Ship;
-
-import java.util.List;
-
 import java.time.LocalDate;
 
 public class TimeRequest {

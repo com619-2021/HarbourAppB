@@ -1,29 +1,25 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import io.swagger.annotations.ApiModelProperty;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
-
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.ElementCollection;
-import javax.persistence.CollectionTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.FetchType;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.EnumType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+
+import io.swagger.annotations.ApiModelProperty;
+
 
 @Entity
 @Table(name = "pilots")

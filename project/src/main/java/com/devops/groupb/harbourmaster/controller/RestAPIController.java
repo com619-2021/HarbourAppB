@@ -1,42 +1,30 @@
 package com.devops.groupb.harbourmaster.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalTime;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.PilotCall;
-import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
 import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.ShipType;
-import com.devops.groupb.harbourmaster.dto.Tide;
-import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
 import com.devops.groupb.harbourmaster.dto.TimeRequest;
-
-import com.devops.groupb.harbourmaster.service.PilotService;
+import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.PilotBookingRequest;
+import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.service.OrderService;
+import com.devops.groupb.harbourmaster.service.PilotService;
 import com.devops.groupb.harbourmaster.service.TideService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Api(description = "Controller for the major REST endpoints.")

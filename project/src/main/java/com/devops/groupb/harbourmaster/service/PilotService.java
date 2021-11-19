@@ -1,16 +1,16 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.util.UUID;
-import java.util.Random;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
+import com.devops.groupb.harbourmaster.dao.PilotDAO;
+import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.ShipType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dao.PilotDAO;
-import com.devops.groupb.harbourmaster.dto.ShipType;
 
 @Service
 public class PilotService {
