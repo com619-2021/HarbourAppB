@@ -22,12 +22,12 @@ public class OrderService {
 		return orderDAO.findByUUID(uuid);
 	}
 
-	public Boolean placeOrder(Order order, Pilot pilot) {
+	public Order placeOrder(Order order, Pilot pilot) {
 		if (pilot == null) {
 			order.setStatus(OrderStatus.DENIED);
 			order.setReason("No pilots available.");
 			orderDAO.save(order);
-			return false;
+			return order;
 		}
 
 		LocalDateTime allocatedTime = order.getRequestedDate().atTime(13, 00);
@@ -37,7 +37,7 @@ public class OrderService {
 
 		orderDAO.save(order);
 
-		return true;
+		return order;
 	}
 
 	public Boolean cancelOrder(UUID uuid, String reason) {
@@ -53,10 +53,6 @@ public class OrderService {
 		// Free up the time from the pilot's schedule.
 
 		orderDAO.save(order);
-		return true;
-	}
-
-	public Boolean requestOrderChange(UUID uuid) {
 		return true;
 	}
 }

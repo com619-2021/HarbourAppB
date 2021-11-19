@@ -39,15 +39,6 @@ public class OrderController {
 			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 
-	@PutMapping(value = "/api/order/change")
-	@ApiOperation("Changes the properties of an order.")
-	public ResponseEntity<Object> changeOrder(@RequestParam UUID uuid, @RequestParam(required = false) PilotBookingRequest bookingRequest) {
-		log.info("/api/order/cancel: entered.");
-		log.info("/api/order/cancel: amendment of order #" + uuid + " requested.");
-
-		return new ResponseEntity<>("NOT IMPLEMENTED.", HttpStatus.NOT_FOUND);
-	}
-
 	@PutMapping(value = "/api/order/cancel")
 	@ApiOperation("Cancels an order with an optional reason.")
 	public ResponseEntity<Object> cancelOrder(@RequestParam UUID uuid, @RequestParam(required = false) String reason) {

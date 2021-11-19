@@ -3,11 +3,15 @@ package com.devops.groupb.harbourmaster.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ElementCollection;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,6 +51,9 @@ public class Order {
 
 	@Column(name="allocatedTime", columnDefinition="TIMESTAMP")
 	private LocalDateTime allocatedTime;
+
+	@ElementCollection
+	private List<UUID> changeRequests;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Ship ship;
@@ -128,6 +135,14 @@ public class Order {
 
 	public void setAllocatedTime(LocalDateTime allocatedTime) {
 		this.allocatedTime = allocatedTime;
+	}
+
+	public List<UUID> getChangeRequests() {
+		return changeRequests;
+	}
+
+	public void setChangeRequests(List<UUID> changeRequests) {
+		this.changeRequests = changeRequests;
 	}
 
 	public Berth getBerth() {

@@ -20,6 +20,17 @@ import org.springframework.stereotype.Service;
 public class GPSService {
 	private transient final org.apache.commons.logging.Log log = org.apache.commons.logging.LogFactory.getLog(this.getClass());
 
+	/* information about where the pilot waits and the speed
+	   of the boat. */
+	private final double pilotSpeedMph = 45;
+	private final double pilotLat = 50.894533;
+	private final double pilotLon = -1.408522;
+
+	/* the point at which a ship being led out is considered
+	   'out of port'. */
+	private final double exitLat = 50.703208;
+	private final double exitLon = -0.967744;
+
 	@Autowired
 	private GPSDAO GPSDao;
 
@@ -81,12 +92,6 @@ public class GPSService {
 		if (gps == null) {
 			return null;
 		}
-
-		/* location of the pilot boat at port */
-		double pilotSpeedMph = 45;
-		double pilotLat = 50.894533;
-		double pilotLon = -1.408522;
-
 		double shipLat = gps.getLocation().getLat();
 		double shipLon = gps.getLocation().getLon();
 

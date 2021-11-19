@@ -54,6 +54,8 @@ public class PilotService {
 	public Pilot callPilot(ShipType shipType, double lat, double lon) {
 		Pilot pilot = findSuitablePilot(shipType);
 
+		/* time to get to the ship should be here. */
+
 		return pilot;
 	}
 }

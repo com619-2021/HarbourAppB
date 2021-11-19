@@ -1,16 +1,22 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import java.util.UUID;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.CascadeType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.Ship;
+import com.devops.groupb.harbourmaster.dto.Berth;
+import com.devops.groupb.harbourmaster.dto.OrderChangeRequestStatus;
 
 @Entity
 public class OrderChangeRequest {
@@ -18,12 +24,31 @@ public class OrderChangeRequest {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int pk;
 
-	@OneToOne
-	private Order order;
-	@Column(name="requestDate", columnDefinition="TIMESTAMP")
-	private LocalDateTime requestDate;
+	private UUID uuid;
+
+	private UUID parentUUID;
+
+	@Column(name="changeRequestDate", columnDefinition="TIMESTAMP")
+	private LocalDateTime changeRequestDate;
+
+	@Column(name="requestedDate", columnDefinition="TIMESTAMP")
+	private LocalDate requestedDate;
 	private String reason;
-	private OrderChangeStatus status;
+	private OrderChangeRequestStatus status;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Ship ship;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Berth berth;
+
+	public OrderChangeRequest(Ship ship, Berth berth, LocalDate requestedDate) {
+		this.uuid = UUID.randomUUID();
+		this.ship = ship;
+		this.berth = berth;
+		this.requestedDate = requestedDate;
+		changeRequestDate = LocalDateTime.now();
+	}
 
 	public int getPk() {
 		return pk;
@@ -33,20 +58,12 @@ public class OrderChangeRequest {
 		this.pk = pk;
 	}
 
-	public Order getOrder() {
-		return order;
+	public LocalDate getRequestedDate() {
+		return requestedDate;
 	}
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public LocalDateTime getRequestDate() {
-		return requestDate;
-	}
-
-	public void setRequestDate(LocalDateTime requestDate) {
-		this.requestDate = requestDate;
+	public void setRequestedDate(LocalDate requestedDate) {
+		this.requestedDate = requestedDate;
 	}
 
 	public String getReason() {
@@ -57,19 +74,59 @@ public class OrderChangeRequest {
 		this.reason = reason;
 	}
 
-	public OrderChangeStatus getStatus() {
+	public OrderChangeRequestStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(OrderChangeStatus status) {
+	public void setStatus(OrderChangeRequestStatus status) {
 		this.status = status;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public UUID getParentUUID() {
+		return parentUUID;
+	}
+
+	public void setParentUUID(UUID parentUUID) {
+		this.parentUUID = parentUUID;
+	}
+
+	public LocalDateTime getChangeRequestDate() {
+		return changeRequestDate;
+	}
+
+	public void setChangeRequestDate(LocalDateTime changeRequestDate) {
+		this.changeRequestDate = changeRequestDate;
+	}
+
+	public Ship getShip() {
+		return ship;
+	}
+
+	public void setShip(Ship ship) {
+		this.ship = ship;
+	}
+
+	public Berth getBerth() {
+		return berth;
+	}
+
+	public void setBerth(Berth berth) {
+		this.berth = berth;
 	}
 
 	@Override
 	public String toString() {
-		String dateString = requestDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		String dateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-		return getClass().getSimpleName() + "[pk=" + pk + ", order=" + order + ", reason=" + reason + ", requestDate="
+		return getClass().getSimpleName() + "[pk=" + pk + ", parentUUID=" + parentUUID + ", uuid=" + uuid + ", ship=" + ship + ", berth=" + berth + ", reason=" + reason + ", requestedDate="
 			+ dateString + ", status=" + status.name() + "]";
 	}
 }
