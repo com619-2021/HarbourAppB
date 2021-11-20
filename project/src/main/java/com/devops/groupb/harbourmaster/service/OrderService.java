@@ -55,6 +55,7 @@ public class OrderService {
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 		Pilot chosenPilot = null;
 
+		/* this entire for loop feels like a major sin; rewrite + comment. */
 		for (Pilot p : pilots) {
 			LocalTime targetStart = LocalTime.of(0, 0, 0);
 			LocalTime targetEnd = targetStart.plusHours(1L);
@@ -76,17 +77,15 @@ public class OrderService {
 			Boolean spotAvailable = true;
 
 			for (TimePeriod time : occupiedOnDate) {
-				if (targetStart.isAfter(LocalTime.of(23, 0)) || targetStart.equals(LocalTime.of(23, 0))) {
-					spotAvailable = false;
-					break;
-				}
-
 				while (targetStart.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd()) || targetStart.equals(time.getStart())) {
-					spotAvailable = false;
+					if (targetStart.isAfter(LocalTime.of(23, 0)) || targetStart.equals(LocalTime.of(23, 0))) {
+						spotAvailable = false;
+						break;
+					}
+
 					targetStart = targetStart.plusHours(1L);
 					targetEnd = targetEnd.plusHours(1L);
 				}
-				spotAvailable = true;
 			}
 
 			if (spotAvailable) {
