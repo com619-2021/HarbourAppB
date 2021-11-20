@@ -56,6 +56,9 @@ public class OrderService {
 		Pilot chosenPilot = null;
 
 		for (Pilot p : pilots) {
+			LocalTime targetStart = LocalTime.of(0, 0, 0);
+			LocalTime targetEnd = targetStart.plusHours(1L);
+
 			ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
 
 			if (occupiedOnDate == null) {
@@ -69,24 +72,39 @@ public class OrderService {
 				break;
 			}
 
-			for (Tide tide : safeTides) {
-				LocalTime tempStart = tide.getStart();
-				LocalTime tempEnd = tempStart.plusHours(1L);
-				for (TimePeriod time : occupiedOnDate) {
-					if (tempStart.isBefore(time.getStart()) && tempEnd.isBefore(time.getStart()) && tempEnd.isBefore(tide.getEnd())) {
-						occupiedOnDate.add(new TimePeriod(tempStart, tempEnd));
-						p.getOccupiedTimes().put(date, occupiedOnDate);
 
-						pilotDAO.save(p);
+			Boolean spotAvailable = true;
 
-						chosenPilot = p;
-						break;
-					} else {
-						tempStart.plusHours(1L);
-						tempEnd.plusHours(1L);
-					}
+			for (TimePeriod time : occupiedOnDate) {
+				if (targetStart.isAfter(LocalTime.of(23, 0)) || targetStart.equals(LocalTime.of(23, 0))) {
+					spotAvailable = false;
+					break;
 				}
+
+				while (targetStart.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd()) || targetStart.equals(time.getStart())) {
+					spotAvailable = false;
+					targetStart = targetStart.plusHours(1L);
+					targetEnd = targetEnd.plusHours(1L);
+				}
+				spotAvailable = true;
 			}
+
+			if (spotAvailable) {
+				occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+				p.getOccupiedTimes().put(date, occupiedOnDate);
+
+				pilotDAO.save(p);
+
+				chosenPilot = p;
+				break;
+			}
+		}
+
+		if (chosenPilot == null) {
+			order.setStatus(OrderStatus.DENIED);
+			order.setReason("No pilots are available.");
+			orderDAO.save(order);
+			return order;
 		}
 
 		LocalDateTime allocatedTime = order.getRequestedDate().atTime(13, 00);
