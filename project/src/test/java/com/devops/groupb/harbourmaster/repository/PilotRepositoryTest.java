@@ -8,6 +8,8 @@ import java.time.DayOfWeek;
 import java.time.Month;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Pilot;
@@ -46,15 +48,14 @@ public class PilotRepositoryTest {
 		allowedTo.add(ShipType.PASSENGER);
 		allowedTo.add(ShipType.CARGO);
 
-		ArrayList<DayOfWeek> workingDays = new ArrayList();
-		workingDays.add(DayOfWeek.WEDNESDAY);
-		workingDays.add(DayOfWeek.FRIDAY);
-
-		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
 
 		String lastName = "Smith";
 
-		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1), workingDays, workingHours);
+		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1), workingHours);
 		log.info("Attempting to save " + pilot + " to the database using PilotRepository.");
 
 		int savedPk = pilotRepository.save(pilot).getPk();

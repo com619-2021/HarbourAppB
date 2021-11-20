@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Berth;
@@ -48,14 +50,13 @@ public class OrderRepositoryTest {
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 
-		ArrayList<DayOfWeek> workingDays = new ArrayList();
-		workingDays.add(DayOfWeek.WEDNESDAY);
-		workingDays.add(DayOfWeek.FRIDAY);
-
-		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
 
 		Ship ship = new Ship(ShipType.CARGO, 5.4);
-		Pilot pilot = new Pilot(allowedTo, "Cain", "Guy", LocalDate.of(1993, Month.JUNE, 15), workingDays, workingHours);
+		Pilot pilot = new Pilot(allowedTo, "Cain", "Guy", LocalDate.of(1993, Month.JUNE, 15), workingHours);
 		Berth berth = new Berth(54.5, -2.3);
 		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
 

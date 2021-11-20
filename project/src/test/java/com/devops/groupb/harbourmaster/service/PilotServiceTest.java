@@ -6,6 +6,9 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.Month;
+
+import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
@@ -46,13 +49,12 @@ public class PilotServiceTest {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 
-		ArrayList<DayOfWeek> workingDays = new ArrayList();
-		workingDays.add(DayOfWeek.WEDNESDAY);
-		workingDays.add(DayOfWeek.FRIDAY);
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
 
-		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
-
-		Pilot pilot = new Pilot(allowedTo, "Russell", "Tillman", LocalDate.of(1994, Month.NOVEMBER, 13), workingDays, workingHours);
+		Pilot pilot = new Pilot(allowedTo, "Russell", "Tillman", LocalDate.of(1994, Month.NOVEMBER, 13), workingHours);
 		pilotDAO.save(pilot);
 
 		assertNotNull(pilotService.findSuitablePilot(ShipType.CARGO));

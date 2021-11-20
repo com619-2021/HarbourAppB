@@ -9,6 +9,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
 import com.devops.groupb.harbourmaster.dao.OrderDAO;
@@ -63,13 +65,12 @@ public class RestTest {
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
 
-		ArrayList<DayOfWeek> workingDays = new ArrayList();
-		workingDays.add(DayOfWeek.WEDNESDAY);
-		workingDays.add(DayOfWeek.FRIDAY);
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
 
-		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
-
-		Pilot pilot = new Pilot(allowedTo, "Elbert", "Duncan", LocalDate.of(1977, Month.APRIL, 8), workingDays, workingHours);
+		Pilot pilot = new Pilot(allowedTo, "Elbert", "Duncan", LocalDate.of(1977, Month.APRIL, 8), workingHours);
 		pilotDAO.save(pilot);
 
 		log.debug("Attempting to call '" + endpoint + "'.");

@@ -23,6 +23,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
@@ -48,12 +49,16 @@ public class Pilot {
 	private String lastName;
 	private LocalDate dateOfBirth;
 
+	/* the days and which hours of the day that the pilot works. */
 	@ElementCollection
 	@Enumerated(EnumType.STRING)
-	private List<DayOfWeek> workingDays;
+	@OneToMany(cascade = {CascadeType.ALL})
+	private Map<DayOfWeek, TimePeriod> workingHours;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	private TimePeriod workingTimes;
+	/* the times of day when the pilot is occupied with an order. */
+	@ElementCollection
+	@ApiModelProperty(hidden = true)
+	private Map<DayOfWeek, TimePeriod> occupiedTimes;
 
 	/* Empty default constructor needed for Hibernate DB */
 	public Pilot() {
@@ -61,14 +66,13 @@ public class Pilot {
 	}
 
 	/* Constructor for testing. */
-	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth, List<DayOfWeek> workingDays, TimePeriod workingTimes) {
+	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth, Map<DayOfWeek, TimePeriod> workingHours) {
 		this.uuid = UUID.randomUUID();
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
-		this.workingDays = workingDays;
-		this.workingTimes = workingTimes;
+		this.workingHours = workingHours;
 	}
 
 	public int getPk() {
@@ -119,20 +123,20 @@ public class Pilot {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public List<DayOfWeek> getWorkingDays() {
-		return workingDays;
+	public Map<DayOfWeek, TimePeriod> getWorkingHours() {
+		return workingHours;
 	}
 
-	public void setWorkingDays(List<DayOfWeek> workingDays) {
-		this.workingDays = workingDays;
+	public void setWorkingHours(Map<DayOfWeek, TimePeriod> workingHours) {
+		this.workingHours = workingHours;
 	}
 
-	public TimePeriod getWorkingTimes() {
-		return workingTimes;
+	public Map<DayOfWeek, TimePeriod> getOccupiedTimes() {
+		return occupiedTimes;
 	}
 
-	public void setWorkingTimes(TimePeriod workingTimes) {
-		this.workingTimes = workingTimes;
+	public void setOccupiedTimes(Map<DayOfWeek, TimePeriod> occupiedTimes) {
+		this.occupiedTimes = occupiedTimes;
 	}
 
 	@Override
@@ -142,8 +146,7 @@ public class Pilot {
 			.map(type -> String.valueOf(type))
 			.collect(Collectors.joining(", ", "[", "]"));
 
-		return "Pilot [allowedToStr=" + allowedToStr + ", dobString=" + dobString + ", firstName=" + firstName
-			+ ", lastName=" + lastName + ", pk=" + pk + ", uuid=" + uuid + ", workingTimes=" + workingTimes
-			+ "]";
+		return this.getClass().getSimpleName() + "[allowedToStr=" + allowedToStr + ", dobString=" + dobString + ", firstName=" + firstName
+			+ ", lastName=" + lastName + ", pk=" + pk + ", uuid=" + uuid + "]";
 	}
 }

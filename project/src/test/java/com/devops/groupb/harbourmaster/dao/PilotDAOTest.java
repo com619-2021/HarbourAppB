@@ -10,6 +10,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
@@ -44,13 +46,12 @@ public class PilotDAOTest {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
 
-		ArrayList<DayOfWeek> workingDays = new ArrayList();
-		workingDays.add(DayOfWeek.WEDNESDAY);
-		workingDays.add(DayOfWeek.FRIDAY);
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
 
-		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
-
-		Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22), workingDays, workingHours);
+		Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22), workingHours);
 		log.info("Saving example pilot " + pilot + " to the database using PilotDAO.");
 
 		pilotDAO.save(pilot);
@@ -67,13 +68,12 @@ public class PilotDAOTest {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
 
-		ArrayList<DayOfWeek> workingDays = new ArrayList();
-		workingDays.add(DayOfWeek.WEDNESDAY);
-		workingDays.add(DayOfWeek.FRIDAY);
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
 
-		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
-
-		Pilot pilot = new Pilot(allowedTo, "Arthur", "Lane", LocalDate.of(1978, Month.MAY, 5), workingDays, workingHours);
+		Pilot pilot = new Pilot(allowedTo, "Arthur", "Lane", LocalDate.of(1978, Month.MAY, 5), workingHours);
 
 		pilotDAO.save(pilot);
 
