@@ -42,6 +42,11 @@ public class OrderChangeRequest {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
 
+	/* Empty default constructor needed for Hibernate DB */
+	public OrderChangeRequest() {
+
+	}
+
 	public OrderChangeRequest(Ship ship, Berth berth, LocalDate requestedDate) {
 		this.uuid = UUID.randomUUID();
 		this.ship = ship;

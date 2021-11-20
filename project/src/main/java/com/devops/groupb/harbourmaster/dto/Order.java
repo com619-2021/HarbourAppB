@@ -67,7 +67,7 @@ public class Order {
 	@Transient
 	private final double[] fares = { 311.85, 589.23, 189.32 };
 
-	// Empty default constructor needed for H2 in-memory testing DB.
+	/* Empty default constructor needed for Hibernate DB */
 	public Order() {
 
 	}

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.OrderStatus;
 import com.devops.groupb.harbourmaster.dto.OrderChangeRequest;
@@ -49,6 +48,41 @@ public class OrderChangeRequestService {
 		orderDAO.save(parentOrder);
 
 		orderChangeRequestDAO.save(ocr);
+
+		return ocr;
+	}
+
+	public OrderChangeRequest acceptOrderChangeRequest(UUID uuid) {
+		OrderChangeRequest ocr = orderChangeRequestDAO.findByUUID(uuid);
+
+		if (ocr == null) {
+			return null;
+		}
+
+		Order parentOrder = orderDAO.findByUUID(ocr.getParentUUID());
+
+		ocr.setStatus(OrderChangeRequestStatus.APPROVED);
+
+		parentOrder.setStatus(OrderStatus.CONFIRMED);
+		parentOrder.setShip(ocr.getShip());
+		parentOrder.setBerth(ocr.getBerth());
+		parentOrder.setRequestedDate(ocr.getRequestedDate());
+
+		return ocr;
+	}
+
+	public OrderChangeRequest denyOrderChangeRequest(UUID uuid) {
+		OrderChangeRequest ocr = orderChangeRequestDAO.findByUUID(uuid);
+
+		if (ocr == null) {
+			return null;
+		}
+
+		Order parentOrder = orderDAO.findByUUID(ocr.getParentUUID());
+
+		parentOrder.setStatus(OrderStatus.CONFIRMED);
+
+		ocr.setStatus(OrderChangeRequestStatus.DENIED);
 
 		return ocr;
 	}

@@ -45,7 +45,7 @@ public class OrderChangeRequestController {
 
 	@RequestMapping(value = "/api/orderChangeRequest/create", method = RequestMethod.POST)
 	@ApiOperation("Creates an order change request for a given order.")
-	public ResponseEntity<Object> createChangeOrderRequest(@RequestBody OrderChangeRequestWrapper request) {
+	public ResponseEntity<Object> createOrderChangeRequest(@RequestBody OrderChangeRequestWrapper request) {
 		log.info("/api/orderChangeRequest/create: entered.");
 		log.info("/api/orderChangeRequest/create: retrieved new request '" + request + "'.");
 
@@ -56,5 +56,31 @@ public class OrderChangeRequestController {
 		return orderChangeRequestService.placeOrderChangeRequest(request.getParentUUID(), ocr, request.getReason()) != null
 			? new ResponseEntity<>(orderChangeRequestService.retrieveOrderChangeRequest(ocr.getUuid()), HttpStatus.CREATED)
 			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", request.getParentUUID()), HttpStatus.NOT_FOUND);
+	}
+
+	@PutMapping(value = "/api/orderChangeRequest/accept/{uuid}")
+	@ApiOperation("Accepts a given order change request and amends the parent order.")
+	public ResponseEntity<Object> acceptOrderChangeRequest(@PathVariable UUID uuid) {
+		log.info("/api/orderChangeRequest/accept: entered.");
+		log.info("/api/orderChangeRequest/accept: acceptance of order '" + uuid + "' requested.");
+
+		OrderChangeRequest ocr = orderChangeRequestService.acceptOrderChangeRequest(uuid);
+
+		return ocr != null
+			? new ResponseEntity<>(orderChangeRequestService.retrieveOrderChangeRequest(ocr.getUuid()), HttpStatus.CREATED)
+			: new ResponseEntity<>(String.format("ERROR: Order change request '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
+	}
+
+	@PutMapping(value = "/api/orderChangeRequest/deny/{uuid}")
+	@ApiOperation("Denies a given order change request.")
+	public ResponseEntity<Object> denyOrderChangeRequest(@PathVariable UUID uuid) {
+		log.info("/api/orderChangeRequest/deny: entered.");
+		log.info("/api/orderChangeRequest/deny: denial of order '" + uuid + "' requested.");
+
+		OrderChangeRequest ocr = orderChangeRequestService.denyOrderChangeRequest(uuid);
+
+		return ocr != null
+			? new ResponseEntity<>(orderChangeRequestService.retrieveOrderChangeRequest(ocr.getUuid()), HttpStatus.CREATED)
+			: new ResponseEntity<>(String.format("ERROR: Order change request '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 }
