@@ -1,20 +1,17 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import java.io.Serializable;
+import java.time.LocalTime;
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.time.LocalTime;
 
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-public class TimePeriod {
+public class TimePeriod implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)

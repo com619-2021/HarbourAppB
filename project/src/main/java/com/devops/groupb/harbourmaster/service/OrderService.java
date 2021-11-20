@@ -3,7 +3,7 @@ package com.devops.groupb.harbourmaster.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -42,9 +42,9 @@ public class OrderService {
 	}
 
 	public Order placeOrder(Order order, List<Pilot> pilots) {
-		if (pilots.isEmpty()) {
+		if (pilots == null) {
 			order.setStatus(OrderStatus.DENIED);
-			order.setReason("No pilots available.");
+			order.setReason("No pilots are available.");
 			orderDAO.save(order);
 			return order;
 		}
@@ -52,39 +52,39 @@ public class OrderService {
 		LocalDate date = order.getRequestedDate();
 		Ship ship = order.getShip();
 
-		List<Tide> tides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
-
+		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 		Pilot chosenPilot = null;
+
 		for (Pilot p : pilots) {
-			List<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
+			ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
 
 			if (occupiedOnDate == null) {
-				Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes = p.getOccupiedTimes();
+				occupiedOnDate = new ArrayList<TimePeriod>();
+				occupiedOnDate.add(new TimePeriod(safeTides.get(0).getStart(), safeTides.get(0).getStart().plusHours(1L)));
+				p.getOccupiedTimes().put(date, occupiedOnDate);
 
-				ArrayList<TimePeriod> newOccupied = new ArrayList<TimePeriod>();
-				newOccupied.add(new TimePeriod(tides.get(0).getStart(), tides.get(0).getStart().plusHours(1L)));
+				pilotDAO.save(p);
 
-				occupiedTimes.put(date, newOccupied);
 				chosenPilot = p;
+				break;
 			}
 
-			/* wrong !!!!!! :(((( */
-			if (chosenPilot == null) {
-				for (TimePeriod t : occupiedOnDate) {
-					for (Tide x : tides)
-						if (!(x.getStart().isAfter(t.getStart()) && x.getStart().isBefore(t.getEnd()))) {
-							Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes = p.getOccupiedTimes();
+			for (Tide tide : safeTides) {
+				LocalTime tempStart = tide.getStart();
+				LocalTime tempEnd = tempStart.plusHours(1L);
+				for (TimePeriod time : occupiedOnDate) {
+					if (tempStart.isBefore(time.getStart()) && tempEnd.isBefore(time.getStart()) && tempEnd.isBefore(tide.getEnd())) {
+						occupiedOnDate.add(new TimePeriod(tempStart, tempEnd));
+						p.getOccupiedTimes().put(date, occupiedOnDate);
 
-							ArrayList<TimePeriod> newOccupied = new ArrayList<TimePeriod>();
-							newOccupied.add(new TimePeriod(x.getStart(), x.getStart().plusHours(1L)));
+						pilotDAO.save(p);
 
-							occupiedTimes.put(date, newOccupied);
-							chosenPilot = p;
-
-							pilotDAO.save(chosenPilot);
-
-							break;
-						}
+						chosenPilot = p;
+						break;
+					} else {
+						tempStart.plusHours(1L);
+						tempEnd.plusHours(1L);
+					}
 				}
 			}
 		}

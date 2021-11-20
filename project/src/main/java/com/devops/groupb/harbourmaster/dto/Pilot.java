@@ -24,6 +24,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
@@ -58,6 +59,7 @@ public class Pilot {
 	/* the times of day when the pilot is occupied with an order. */
 	@ElementCollection
 	@ApiModelProperty(hidden = true)
+	@Column(columnDefinition = "LONGTEXT")
 	private Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes;
 
 	/* Empty default constructor needed for Hibernate DB */
