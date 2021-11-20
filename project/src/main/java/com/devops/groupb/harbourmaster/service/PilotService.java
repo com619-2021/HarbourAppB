@@ -1,10 +1,12 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.ShipType;
@@ -33,26 +35,19 @@ public class PilotService {
 		return pilotDAO.deleteByUUID(uuid);
 	}
 
-	public Pilot findSuitablePilot(ShipType shipType) {
+	public List<Pilot> findSuitablePilots(ShipType shipType) {
 		List<Pilot> eligiblePilots = pilotDAO.findByAllowedTo(shipType);
-
-		/* check against the pilot's schedule here..? */
 
 		if (eligiblePilots.isEmpty()) {
 			return null;
 		}
 
-		log.info("Selecting random Pilot from " + Arrays.toString(eligiblePilots.toArray()) + ".");
-		Random rand = new Random();
-		Pilot electedPilot = eligiblePilots.get(rand.nextInt(eligiblePilots.size()));
-
-		log.info("Selected " + electedPilot + " to handle " + shipType.name() + ".");
-
-		return electedPilot;
+		return eligiblePilots;
 	}
 
 	public Pilot callPilot(ShipType shipType, double lat, double lon) {
-		Pilot pilot = findSuitablePilot(shipType);
+		Pilot pilot = new Pilot();
+		//		Pilot pilot = findSuitablePilots(shipType);
 
 		/* time to get to the ship should be here. */
 

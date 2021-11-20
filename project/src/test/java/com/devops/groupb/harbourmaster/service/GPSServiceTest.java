@@ -70,8 +70,10 @@ public class GPSServiceTest {
 		/* placing the order for the gpsService to find; allocatedTime manually
 		   set to ensure that the ship is in the permitted time range (2hrs before) */
 		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
+		List<Pilot> pilots = new ArrayList<Pilot>();
+		pilots.add(pilot);
 		order.setAllocatedTime(LocalDateTime.now().minusHours(1L));
-		orderService.placeOrder(order, pilot);
+		orderService.placeOrder(order, pilots);
 
 		/* pinging is dependent on a random number generator, so a while loop
 		   is necessary to repeatedly check for a ship to finally appear. null
@@ -96,7 +98,7 @@ public class GPSServiceTest {
 		Order order2 = new Order(ship2, berth, LocalDate.now());
 
 		order.setAllocatedTime(LocalDateTime.now().minusHours(2L));
-		orderService.placeOrder(order2, pilot);
+		orderService.placeOrder(order2, pilots);
 
 		GPS gps2 = gpsService.pingPresence(ship.getUUID());
 		int i2 = 0;
@@ -126,9 +128,12 @@ public class GPSServiceTest {
 		Pilot pilot = new Pilot(allowedTo, "John", "Doe", LocalDate.of(1953, Month.JUNE, 3), workingHours);
 		Berth berth = new Berth(50.889356, -1.395104);
 
+		List<Pilot> pilots = new ArrayList<Pilot>();
+		pilots.add(pilot);
+
 		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
 		order.setAllocatedTime(LocalDateTime.now().minusHours(1L));
-		orderService.placeOrder(order, pilot);
+		orderService.placeOrder(order, pilots);
 
 		GPS gps = gpsService.pingPresence(order.getShip().getUUID());
 		while (gps == null) {

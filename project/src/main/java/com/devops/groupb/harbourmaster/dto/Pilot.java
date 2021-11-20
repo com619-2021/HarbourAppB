@@ -58,7 +58,7 @@ public class Pilot {
 	/* the times of day when the pilot is occupied with an order. */
 	@ElementCollection
 	@ApiModelProperty(hidden = true)
-	private Map<DayOfWeek, TimePeriod> occupiedTimes;
+	private Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes;
 
 	/* Empty default constructor needed for Hibernate DB */
 	public Pilot() {
@@ -131,11 +131,11 @@ public class Pilot {
 		this.workingHours = workingHours;
 	}
 
-	public Map<DayOfWeek, TimePeriod> getOccupiedTimes() {
+	public Map<LocalDate, ArrayList<TimePeriod>> getOccupiedTimes() {
 		return occupiedTimes;
 	}
 
-	public void setOccupiedTimes(Map<DayOfWeek, TimePeriod> occupiedTimes) {
+	public void setOccupiedTimes(Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes) {
 		this.occupiedTimes = occupiedTimes;
 	}
 

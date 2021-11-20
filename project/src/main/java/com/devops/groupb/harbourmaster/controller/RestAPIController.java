@@ -49,10 +49,10 @@ public class RestAPIController {
 		/* write sanity checks for request values; i.e. "lat" must
 		   be provided and "la" = auto denial. */
 
-		Pilot pilot = pilotService.findSuitablePilot(request.getShip().getType());
+		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
 		Order order = new Order(request.getShip(), request.getBerth(), request.getDate());
-		orderService.placeOrder(order, pilot);
+		orderService.placeOrder(order, pilots);
 
 		return new ResponseEntity<>(order, HttpStatus.CREATED);
 	}

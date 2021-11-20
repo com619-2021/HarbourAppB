@@ -62,7 +62,10 @@ public class OrderServiceTest {
 
 		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
 
-		orderService.placeOrder(order, pilot);
+		List<Pilot> pilots = new ArrayList<Pilot>();
+		pilots.add(pilot);
+
+		orderService.placeOrder(order, pilots);
 		orderService.cancelOrder(order.getUUID(), "Test");
 
 		assertEquals(order.getStatus(), OrderStatus.CANCELLED);
