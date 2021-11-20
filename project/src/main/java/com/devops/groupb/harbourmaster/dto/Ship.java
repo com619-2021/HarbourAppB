@@ -11,7 +11,6 @@ import javax.persistence.Table;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@Table(name="ships")
 public class Ship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,20 +21,17 @@ public class Ship {
 	private ShipType type;
 	private double draft;
 
-	// Empty default constructor needed for H2 in-memory testing DB.
+	/* Empty default constructor needed for Hibernate DB */
 	public Ship() {
 
 	}
 
-	// Constructor used for testing; NOT to be called in the main program.
+	/* Constructor used for testing; NOT to be called in the main program
+	   as these attributes will be retrieved via REST. */
 	public Ship(ShipType type, double draft) {
 		this.uuid = UUID.randomUUID();
 		this.type = type;
 		this.draft = draft;
-	}
-
-	public Boolean isValid() {
-		return (pk >= 0) && (draft >= 0.0) && (type.ordinal() >= 0 && type.ordinal() < ShipType.values().length);
 	}
 
 	public UUID getUUID() {

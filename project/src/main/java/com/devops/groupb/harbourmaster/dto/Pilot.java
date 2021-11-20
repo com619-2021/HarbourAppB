@@ -1,12 +1,19 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.CollectionTable;
 import javax.persistence.EnumType;
 import javax.persistence.ElementCollection;
@@ -15,11 +22,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import io.swagger.annotations.ApiModelProperty;
-
 
 @Entity
 @Table(name = "pilots")
@@ -41,12 +48,15 @@ public class Pilot {
 	private String lastName;
 	private LocalDate dateOfBirth;
 
-	// Empty default constructor needed for H2 in-memory testing DB.
+	@OneToOne(cascade = {CascadeType.ALL})
+	private TimePeriod workingTimes;
+
+	/* Empty default constructor needed for Hibernate DB */
 	public Pilot() {
 
 	}
 
-	// Constructor for testing.
+	/* Constructor for testing. */
 	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
 		this.uuid = UUID.randomUUID();
 		this.allowedTo = allowedTo;
@@ -101,6 +111,14 @@ public class Pilot {
 
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public TimePeriod getWorkingTimes() {
+		return workingTimes;
+	}
+
+	public void setWorkingTimes(TimePeriod workingTimes) {
+		this.workingTimes = workingTimes;
 	}
 
 	@Override
