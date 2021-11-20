@@ -3,12 +3,16 @@ package com.devops.groupb.harbourmaster.test.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 import java.time.Month;
+
 import java.util.ArrayList;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.ShipType;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 import com.devops.groupb.harbourmaster.repository.PilotRepository;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -42,9 +46,15 @@ public class PilotRepositoryTest {
 		allowedTo.add(ShipType.PASSENGER);
 		allowedTo.add(ShipType.CARGO);
 
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
 		String lastName = "Smith";
 
-		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1));
+		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1), workingDays, workingHours);
 		log.info("Attempting to save " + pilot + " to the database using PilotRepository.");
 
 		int savedPk = pilotRepository.save(pilot).getPk();

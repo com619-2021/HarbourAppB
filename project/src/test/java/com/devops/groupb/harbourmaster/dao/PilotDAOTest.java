@@ -2,8 +2,11 @@ package com.devops.groupb.harbourmaster.test.dao;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.time.Month;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +15,7 @@ import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.ShipType;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,7 +44,13 @@ public class PilotDAOTest {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
 
-		Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22));
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
+		Pilot pilot = new Pilot(allowedTo, "Alex", "Walker", LocalDate.of(1994, Month.MARCH, 22), workingDays, workingHours);
 		log.info("Saving example pilot " + pilot + " to the database using PilotDAO.");
 
 		pilotDAO.save(pilot);
@@ -57,7 +67,13 @@ public class PilotDAOTest {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
 
-		Pilot pilot = new Pilot(allowedTo, "Arthur", "Lane", LocalDate.of(1978, Month.MAY, 5));
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
+		Pilot pilot = new Pilot(allowedTo, "Arthur", "Lane", LocalDate.of(1978, Month.MAY, 5), workingDays, workingHours);
 
 		pilotDAO.save(pilot);
 

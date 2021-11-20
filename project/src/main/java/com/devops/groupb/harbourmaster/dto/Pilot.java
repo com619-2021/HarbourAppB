@@ -48,6 +48,10 @@ public class Pilot {
 	private String lastName;
 	private LocalDate dateOfBirth;
 
+	@ElementCollection
+	@Enumerated(EnumType.STRING)
+	private List<DayOfWeek> workingDays;
+
 	@OneToOne(cascade = {CascadeType.ALL})
 	private TimePeriod workingTimes;
 
@@ -57,12 +61,14 @@ public class Pilot {
 	}
 
 	/* Constructor for testing. */
-	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
+	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth, List<DayOfWeek> workingDays, TimePeriod workingTimes) {
 		this.uuid = UUID.randomUUID();
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
+		this.workingDays = workingDays;
+		this.workingTimes = workingTimes;
 	}
 
 	public int getPk() {
@@ -113,6 +119,14 @@ public class Pilot {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	public List<DayOfWeek> getWorkingDays() {
+		return workingDays;
+	}
+
+	public void setWorkingDays(List<DayOfWeek> workingDays) {
+		this.workingDays = workingDays;
+	}
+
 	public TimePeriod getWorkingTimes() {
 		return workingTimes;
 	}
@@ -128,6 +142,8 @@ public class Pilot {
 			.map(type -> String.valueOf(type))
 			.collect(Collectors.joining(", ", "[", "]"));
 
-		return getClass().getSimpleName() + String.format("[pk=%d, uuid=%s, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", pk, uuid, allowedToStr, firstName, lastName, dobString);
+		return "Pilot [allowedToStr=" + allowedToStr + ", dobString=" + dobString + ", firstName=" + firstName
+			+ ", lastName=" + lastName + ", pk=" + pk + ", uuid=" + uuid + ", workingTimes=" + workingTimes
+			+ "]";
 	}
 }

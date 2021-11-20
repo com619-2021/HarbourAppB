@@ -2,6 +2,8 @@ package com.devops.groupb.harbourmaster.test.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 import com.devops.groupb.harbourmaster.repository.OrderRepository;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -45,8 +48,14 @@ public class OrderRepositoryTest {
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
 		Ship ship = new Ship(ShipType.CARGO, 5.4);
-		Pilot pilot = new Pilot(allowedTo, "Cain", "Guy", LocalDate.of(1993, Month.JUNE, 15));
+		Pilot pilot = new Pilot(allowedTo, "Cain", "Guy", LocalDate.of(1993, Month.JUNE, 15), workingDays, workingHours);
 		Berth berth = new Berth(54.5, -2.3);
 		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
 

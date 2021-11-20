@@ -2,6 +2,8 @@ package com.devops.groupb.harbourmaster.test.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import com.devops.groupb.harbourmaster.dao.PilotDAO;
 import com.devops.groupb.harbourmaster.dao.OrderDAO;
 import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
@@ -59,7 +62,14 @@ public class RestTest {
 
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.FERRY);
-		Pilot pilot = new Pilot(allowedTo, "Elbert", "Duncan", LocalDate.of(1977, Month.APRIL, 8));
+
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
+		Pilot pilot = new Pilot(allowedTo, "Elbert", "Duncan", LocalDate.of(1977, Month.APRIL, 8), workingDays, workingHours);
 		pilotDAO.save(pilot);
 
 		log.debug("Attempting to call '" + endpoint + "'.");

@@ -2,6 +2,8 @@ package com.devops.groupb.harbourmaster.test.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
 import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.service.PilotService;
 
@@ -43,7 +46,13 @@ public class PilotServiceTest {
 		ArrayList<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 
-		Pilot pilot = new Pilot(allowedTo, "Russell", "Tillman", LocalDate.of(1994, Month.NOVEMBER, 13));
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
+		Pilot pilot = new Pilot(allowedTo, "Russell", "Tillman", LocalDate.of(1994, Month.NOVEMBER, 13), workingDays, workingHours);
 		pilotDAO.save(pilot);
 
 		assertNotNull(pilotService.findSuitablePilot(ShipType.CARGO));

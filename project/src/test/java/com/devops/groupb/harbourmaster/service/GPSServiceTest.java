@@ -2,9 +2,12 @@ package com.devops.groupb.harbourmaster.test.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.DayOfWeek;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,7 @@ import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.GPS;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.ShipType;
 import com.devops.groupb.harbourmaster.service.GPSService;
@@ -52,7 +56,14 @@ public class GPSServiceTest {
 		Ship ship = new Ship(ShipType.CARGO, 1.3);
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
-		Pilot pilot = new Pilot(allowedTo, "Alex", "Wilbert", LocalDate.of(1985, Month.FEBRUARY, 15));
+
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
+		Pilot pilot = new Pilot(allowedTo, "Alex", "Wilbert", LocalDate.of(1985, Month.FEBRUARY, 15), workingDays, workingHours);
 		Berth berth = new Berth(53.25, -2.6);
 
 		/* placing the order for the gpsService to find; allocatedTime manually
@@ -105,7 +116,14 @@ public class GPSServiceTest {
 		Ship ship = new Ship(ShipType.CARGO, 1.3);
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
-		Pilot pilot = new Pilot(allowedTo, "John", "Doe", LocalDate.of(1953, Month.JUNE, 3));
+
+		ArrayList<DayOfWeek> workingDays = new ArrayList();
+		workingDays.add(DayOfWeek.WEDNESDAY);
+		workingDays.add(DayOfWeek.FRIDAY);
+
+		TimePeriod workingHours = new TimePeriod(LocalTime.of(8, 00), LocalTime.of(17, 00));
+
+		Pilot pilot = new Pilot(allowedTo, "John", "Doe", LocalDate.of(1953, Month.JUNE, 3), workingDays, workingHours);
 		Berth berth = new Berth(50.889356, -1.395104);
 
 		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));

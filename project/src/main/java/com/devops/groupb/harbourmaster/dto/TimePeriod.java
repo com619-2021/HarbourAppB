@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.dto;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -14,11 +16,23 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 public class TimePeriod {
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@ApiModelProperty(hidden = true)
 	private int pk;
 
 	private LocalTime start;
 	private LocalTime end;
+
+	/* Empty default constructor needed for Hibernate DB */
+	public TimePeriod() {
+
+	}
+
+	/* Constructor for testing. */
+	public TimePeriod(LocalTime start, LocalTime end) {
+		this.start = start;
+		this.end = end;
+	}
 
 	public int getPk() {
 		return pk;
