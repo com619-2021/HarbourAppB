@@ -47,10 +47,18 @@ public class PilotService {
 	}
 
 	public Pilot callPilot(ShipType shipType, double lat, double lon) {
-		Pilot pilot = new Pilot();
-		//		Pilot pilot = findSuitablePilots(shipType);
+		List<Pilot> pilots = findSuitablePilots(shipType);
 
-		/* time to get to the ship should be here. */
+		if (pilots == null) {
+			return null;
+		}
+
+		/* time to get to the ship should be here. may not be needed as
+		   the distance between the pilot dock would probably be a couple of
+		   minutes or so. regardless, scheduling must take place. */
+
+		Random rand = new Random();
+		Pilot pilot = pilots.get(rand.nextInt(pilots.size()));
 
 		return pilot;
 	}

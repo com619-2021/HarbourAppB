@@ -73,7 +73,6 @@ public class OrderService {
 				break;
 			}
 
-
 			Boolean spotAvailable = true;
 
 			for (TimePeriod time : occupiedOnDate) {
