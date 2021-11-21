@@ -55,16 +55,12 @@ public class OrderService {
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 		Pilot chosenPilot = null;
 
-		/* this entire for loop feels like a major sin; rewrite + comment. */
 		for (Pilot p : pilots) {
 			/* checks to see whether this pilot works on the day that the
 			   order has requested. */
 			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
 				break;
 			} else {
-				LocalTime targetStart = LocalTime.of(0, 0, 0);
-				LocalTime targetEnd = targetStart.plusHours(1L);
-
 				ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
 
 				/* if the pilot has no 'occupiedOnDate' list, they are completely
@@ -77,8 +73,8 @@ public class OrderService {
 					for (Tide tide : safeTides) {
 						Boolean possible = true;
 
-						targetStart = tide.getStart();
-						targetEnd = targetStart.plusHours(1L);
+						LocalTime targetStart = tide.getStart();
+						LocalTime targetEnd = targetStart.plusHours(1L);
 
 						log.info("TIDE: " + tide.getStart() + " -> " + tide.getEnd());
 						log.info("TARGET: " + targetStart + " -> " + targetEnd);
@@ -89,19 +85,25 @@ public class OrderService {
 							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
 							possible = false;
 						} else {
-							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))) {
+							/* whilst the targeted start time is before the end of the pilot's work shift and the targeted end time is before
+							   the end of the current tide, keep incrementing by an hour each time (the length of each booking) until a range
+							   is reached where it's after the starting time of the pilot's work day and before the end of the tide. after
+							   that point, the next tide is tested. */
+							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L)) && targetEnd.isBefore(tide.getEnd())) {
 								possible = false;
-								targetStart = targetStart.plusHours(1L);
-								targetEnd = targetEnd.plusHours(1L);
-								log.info("TARGET: " + targetStart + " -> " + targetEnd);
 
-								if (targetEnd.isBefore(tide.getEnd()) && targetStart.isAfter(workingHours.getStart())) {
+								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart()) || targetStart.equals(workingHours.getStart()))) {
 									possible = true;
 									break;
 								}
+
+								targetStart = targetStart.plusHours(1L);
+								targetEnd = targetEnd.plusHours(1L);
+								log.info("TARGET: " + targetStart + " -> " + targetEnd);
 							}
 						}
 
+						/* if a booking is possible here, add it to the pilot's (new) 'occupiedTimes' list. */
 						if (possible) {
 							log.info("POSSIBLE!");
 							occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
@@ -116,6 +118,7 @@ public class OrderService {
 				}
 			}
 
+			/* TODO: scheduling a pilot with an already-established 'occupiedTimes' list.
 			//	if (chosenPilot == null) {
 			//		for (TimePeriod time : occupiedOnDate) {
 			//			/* if the 'start' of the booking is between one of the pilot's occupied times OR
