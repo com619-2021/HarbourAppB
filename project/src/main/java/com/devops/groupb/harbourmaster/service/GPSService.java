@@ -143,6 +143,9 @@ public class GPSService {
 		log.info("Total distance to cover: " + (distToShip + distBackToBerth) + " miles.");
 		log.info("ETA of ship to berth: " + eta + ".");
 
+		Order order = orderDAO.findByShipUUID(gps.getShip().getUUID());
+		order.setStatus(OrderStatus.IN_PROGRESS);
+
 		return eta;
 	}
 

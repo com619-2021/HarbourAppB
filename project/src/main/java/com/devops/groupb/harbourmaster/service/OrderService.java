@@ -57,45 +57,96 @@ public class OrderService {
 
 		/* this entire for loop feels like a major sin; rewrite + comment. */
 		for (Pilot p : pilots) {
-			LocalTime targetStart = LocalTime.of(0, 0, 0);
-			LocalTime targetEnd = targetStart.plusHours(1L);
-
-			ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
-
-			if (occupiedOnDate == null) {
-				occupiedOnDate = new ArrayList<TimePeriod>();
-				occupiedOnDate.add(new TimePeriod(safeTides.get(0).getStart(), safeTides.get(0).getStart().plusHours(1L)));
-				p.getOccupiedTimes().put(date, occupiedOnDate);
-
-				pilotDAO.save(p);
-
-				chosenPilot = p;
+			/* checks to see whether this pilot works on the day that the
+			   order has requested. */
+			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
 				break;
-			}
+			} else {
+				LocalTime targetStart = LocalTime.of(0, 0, 0);
+				LocalTime targetEnd = targetStart.plusHours(1L);
 
-			Boolean spotAvailable = true;
+				ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
 
-			for (TimePeriod time : occupiedOnDate) {
-				while (targetStart.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd()) || targetStart.equals(time.getStart())) {
-					if (targetStart.isAfter(LocalTime.of(23, 0)) || targetStart.equals(LocalTime.of(23, 0))) {
-						spotAvailable = false;
-						break;
+				/* if the pilot has no 'occupiedOnDate' list, they are completely
+				   free for work on the given day. */
+				if (occupiedOnDate == null) {
+					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
+					occupiedOnDate = new ArrayList<TimePeriod>();
+					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
+
+					for (Tide tide : safeTides) {
+						Boolean possible = true;
+
+						targetStart = tide.getStart();
+						targetEnd = targetStart.plusHours(1L);
+
+						log.info("TIDE: " + tide.getStart() + " -> " + tide.getEnd());
+						log.info("TARGET: " + targetStart + " -> " + targetEnd);
+
+						/* tide is out of working hours range */
+						if (tide.getEnd().minusHours(1L).isBefore(workingHours.getStart())
+							|| tide.getStart().isAfter(workingHours.getEnd())) {
+							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
+							possible = false;
+						} else {
+							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))) {
+								possible = false;
+								targetStart = targetStart.plusHours(1L);
+								targetEnd = targetEnd.plusHours(1L);
+								log.info("TARGET: " + targetStart + " -> " + targetEnd);
+
+								if (targetEnd.isBefore(tide.getEnd()) && targetStart.isAfter(workingHours.getStart())) {
+									possible = true;
+									break;
+								}
+							}
+						}
+
+						if (possible) {
+							log.info("POSSIBLE!");
+							occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+							p.getOccupiedTimes().put(date, occupiedOnDate);
+
+							pilotDAO.save(p);
+
+							chosenPilot = p;
+							break;
+						}
 					}
-
-					targetStart = targetStart.plusHours(1L);
-					targetEnd = targetEnd.plusHours(1L);
 				}
 			}
 
-			if (spotAvailable) {
-				occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-				p.getOccupiedTimes().put(date, occupiedOnDate);
+			//	if (chosenPilot == null) {
+			//		for (TimePeriod time : occupiedOnDate) {
+			//			/* if the 'start' of the booking is between one of the pilot's occupied times OR
+			//			   at the same time, then this time period of the booking can't be made. */
+			//			while (targetStart.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd())
+			//				   || targetStart.equals(time.getStart())) {
+			//				/* bookings can't be made after 23:00. this is to avoid the 'roll-over' problem going
+			//				   to the next day, but it's unlikely that ships will be able to come in this late anyways
+			//				   due to low tides in the evening. */
+			//				if (targetStart.isAfter(LocalTime.of(23, 0))
+			//					|| targetStart.equals(LocalTime.of(23, 0))) {
+			//					spotAvailable = false;
+			//					break;
+			//				}
 
-				pilotDAO.save(p);
+			//				targetStart = targetStart.plusHours(1L);
+			//				targetEnd = targetEnd.plusHours(1L);
+			//			}
+			//		}
+			//	}
+			// }
 
-				chosenPilot = p;
-				break;
-			}
+			// if (spotAvailable && chosenPilot == null) {
+			//	occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+			//	p.getOccupiedTimes().put(date, occupiedOnDate);
+
+			//	pilotDAO.save(p);
+
+			//	chosenPilot = p;
+			//	break;
+			// }
 		}
 
 		if (chosenPilot == null) {
