@@ -58,6 +58,13 @@ public class OrderService {
 		for (Pilot p : pilots) {
 			/* checks to see whether this pilot works on the day that the
 			   order has requested. */
+
+			Boolean spotAvailable = false;
+
+			if (chosenPilot != null) {
+				break;
+			}
+
 			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
 				break;
 			} else {
@@ -71,13 +78,12 @@ public class OrderService {
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
 
 					for (Tide tide : safeTides) {
-						Boolean possible = true;
+						Boolean possible = false;
 
 						LocalTime targetStart = tide.getStart();
 						LocalTime targetEnd = targetStart.plusHours(1L);
 
 						log.info("TIDE: " + tide.getStart() + " -> " + tide.getEnd());
-						log.info("TARGET: " + targetStart + " -> " + targetEnd);
 
 						/* tide is out of working hours range */
 						if (tide.getEnd().minusHours(1L).isBefore(workingHours.getStart())
@@ -85,20 +91,23 @@ public class OrderService {
 							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
 							possible = false;
 						} else {
+							log.info("TARGET: " + targetStart + " -> " + targetEnd);
 							/* whilst the targeted start time is before the end of the pilot's work shift and the targeted end time is before
 							   the end of the current tide, keep incrementing by an hour each time (the length of each booking) until a range
 							   is reached where it's after the starting time of the pilot's work day and before the end of the tide. after
 							   that point, the next tide is tested. */
-							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L)) && targetEnd.isBefore(tide.getEnd())) {
+							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
+								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd())) {
 								possible = false;
 
-								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart()) || targetStart.equals(workingHours.getStart()))) {
+								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart())
+																		  || targetStart.equals(workingHours.getStart()))) {
 									possible = true;
 									break;
 								}
 
 								targetStart = targetStart.plusHours(1L);
-								targetEnd = targetEnd.plusHours(1L);
+								targetEnd = targetStart.plusHours(1L);
 								log.info("TARGET: " + targetStart + " -> " + targetEnd);
 							}
 						}
@@ -115,41 +124,70 @@ public class OrderService {
 							break;
 						}
 					}
+				} else {
+					spotAvailable = false;
+					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
+					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
+					LocalTime targetStart, targetEnd;
+
+					for (Tide tide : safeTides) {
+						targetStart = tide.getStart();
+						targetEnd = targetStart.plusHours(1L);
+
+						if (spotAvailable) {
+							break;
+						}
+
+						log.info("TIDE: " + tide.getStart() + " -> " + tide.getEnd());
+
+						/* tide is out of working hours range */
+						if (tide.getEnd().minusHours(1L).isBefore(workingHours.getStart())
+							|| tide.getStart().isAfter(workingHours.getEnd())) {
+							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
+							spotAvailable = false;
+						} else {
+							log.info("TARGET: " + targetStart + " -> " + targetEnd);
+							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
+								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd()) && !spotAvailable) {
+								spotAvailable = false;
+
+								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart())
+																		  || targetStart.equals(workingHours.getStart()))) {
+									for (TimePeriod time : occupiedOnDate) {
+										if (!((targetStart.isAfter(time.getStart()) && targetStart.isBefore(time.getEnd()))) &&
+											(targetEnd.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd()))) {
+											spotAvailable = true;
+											break;
+										}
+									}
+
+									if (spotAvailable) {
+										break;
+									}
+
+									break;
+								}
+
+								targetStart = targetStart.plusHours(1L);
+								targetEnd = targetEnd.plusHours(1L);
+							}
+						}
+
+						if (spotAvailable && chosenPilot == null) {
+							log.info("POSSIBLE!");
+							occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+							p.getOccupiedTimes().put(date, occupiedOnDate);
+
+							pilotDAO.save(p);
+
+							chosenPilot = p;
+							break;
+						}
+					}
 				}
+
 			}
 
-			/* TODO: scheduling a pilot with an already-established 'occupiedTimes' list.
-			//	if (chosenPilot == null) {
-			//		for (TimePeriod time : occupiedOnDate) {
-			//			/* if the 'start' of the booking is between one of the pilot's occupied times OR
-			//			   at the same time, then this time period of the booking can't be made. */
-			//			while (targetStart.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd())
-			//				   || targetStart.equals(time.getStart())) {
-			//				/* bookings can't be made after 23:00. this is to avoid the 'roll-over' problem going
-			//				   to the next day, but it's unlikely that ships will be able to come in this late anyways
-			//				   due to low tides in the evening. */
-			//				if (targetStart.isAfter(LocalTime.of(23, 0))
-			//					|| targetStart.equals(LocalTime.of(23, 0))) {
-			//					spotAvailable = false;
-			//					break;
-			//				}
-
-			//				targetStart = targetStart.plusHours(1L);
-			//				targetEnd = targetEnd.plusHours(1L);
-			//			}
-			//		}
-			//	}
-			// }
-
-			// if (spotAvailable && chosenPilot == null) {
-			//	occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-			//	p.getOccupiedTimes().put(date, occupiedOnDate);
-
-			//	pilotDAO.save(p);
-
-			//	chosenPilot = p;
-			//	break;
-			// }
 		}
 
 		if (chosenPilot == null) {
