@@ -56,15 +56,12 @@ public class OrderService {
 		Pilot chosenPilot = null;
 
 		for (Pilot p : pilots) {
-			/* checks to see whether this pilot works on the day that the
-			   order has requested. */
-
-			Boolean spotAvailable = false;
-
 			if (chosenPilot != null) {
 				break;
 			}
 
+			/* checks to see whether this pilot works on the day that the
+			   order has requested. */
 			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
 				break;
 			} else {
@@ -89,16 +86,21 @@ public class OrderService {
 						if (tide.getEnd().minusHours(1L).isBefore(workingHours.getStart())
 							|| tide.getStart().isAfter(workingHours.getEnd())) {
 							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
-							possible = false;
 						} else {
-							log.info("TARGET: " + targetStart + " -> " + targetEnd);
+							/* sets the targetStart and targetEnd relative to workingHours
+							   to avoid useless computation of times before. */
+							if (tide.getStart().isBefore(workingHours.getStart())) {
+								targetStart = workingHours.getStart();
+								targetEnd = targetStart.plusHours(1L);
+								log.info("TARGET: " + targetStart + " -> " + targetEnd);
+							}
+
 							/* whilst the targeted start time is before the end of the pilot's work shift and the targeted end time is before
-							   the end of the current tide, keep incrementing by an hour each time (the length of each booking) until a range
-							   is reached where it's after the starting time of the pilot's work day and before the end of the tide. after
-							   that point, the next tide is tested. */
+							   the end of the current tide (i.e. the range is between the pilot's workingHours), keep incrementing by an hour
+							   each time (the length of each booking) until a range is reached where it's after the starting time of the pilot's
+							   work day and before the end of the tide. after that point, the next tide is tested. */
 							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
 								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd())) {
-								possible = false;
 
 								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart())
 																		  || targetStart.equals(workingHours.getStart()))) {
@@ -106,6 +108,7 @@ public class OrderService {
 									break;
 								}
 
+								/* increments the booking time range by an hour (length of a booking) each iteration. */
 								targetStart = targetStart.plusHours(1L);
 								targetEnd = targetStart.plusHours(1L);
 								log.info("TARGET: " + targetStart + " -> " + targetEnd);
@@ -125,16 +128,15 @@ public class OrderService {
 						}
 					}
 				} else {
-					spotAvailable = false;
+					Boolean possible = false;
 					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
-					LocalTime targetStart, targetEnd;
 
 					for (Tide tide : safeTides) {
-						targetStart = tide.getStart();
-						targetEnd = targetStart.plusHours(1L);
+						LocalTime targetStart = tide.getStart();
+						LocalTime targetEnd = targetStart.plusHours(1L);
 
-						if (spotAvailable) {
+						if (possible) {
 							break;
 						}
 
@@ -144,9 +146,55 @@ public class OrderService {
 						if (tide.getEnd().minusHours(1L).isBefore(workingHours.getStart())
 							|| tide.getStart().isAfter(workingHours.getEnd())) {
 							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
-							spotAvailable = false;
 						} else {
+							/* sets the targetStart and targetEnd relative to workingHours
+							   to avoid useless computation of times before. */
+							if (tide.getStart().isBefore(workingHours.getStart())) {
+								targetStart = workingHours.getStart();
+								targetEnd = targetStart.plusHours(1L);
+								log.info("TARGET: " + targetStart + " -> " + targetEnd);
+							}
 
+							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
+								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd())) {
+
+								if ((targetEnd.isBefore(tide.getEnd()) || targetEnd.equals(tide.getEnd()))
+									&& (targetStart.isAfter(workingHours.getStart()) || targetStart.equals(workingHours.getStart()))) {
+
+
+									log.info("VALID TIME FOUND. CHECKING AGAINST OCCUPIED TIMES.");
+									for (TimePeriod time : occupiedOnDate) {
+										log.info("possible = " + possible);
+										possible = true;
+										log.info("OCCUPIED: " + time.getStart() + " -> " + time.getEnd());
+										log.info("TARGET: " + targetStart + " -> " + targetEnd);
+
+										/* wtf */
+										if (((targetStart.isAfter(time.getStart()) || targetStart.equals(time.getStart())) && (targetStart.isBefore(time.getEnd()) || targetStart.equals(time.getEnd())))
+											|| ((targetEnd.isAfter(time.getStart()) || targetEnd.equals(time.getStart())) && (targetEnd.isBefore(time.getEnd()) || targetEnd.equals(time.getEnd())))) {
+											possible = false;
+											break;
+										}
+									}
+								}
+
+								/* if a booking is possible here, add it to the pilot's (new) 'occupiedTimes' list. */
+								if (possible) {
+									log.info("POSSIBLE!");
+									occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+									p.getOccupiedTimes().put(date, occupiedOnDate);
+
+									pilotDAO.save(p);
+
+									chosenPilot = p;
+									break;
+								} else {
+									/* increments the booking time range by an hour (length of a booking) each iteration. */
+									targetStart = targetStart.plusHours(1L);
+									targetEnd = targetStart.plusHours(1L);
+									log.info("TARGET: " + targetStart + " -> " + targetEnd);
+								}
+							}
 						}
 					}
 				}
