@@ -1,25 +1,21 @@
 package com.devops.groupb.harbourmaster.service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.ShipType;
-import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
-import com.devops.groupb.harbourmaster.dto.Order;
-import com.devops.groupb.harbourmaster.dao.OrderDAO;
-import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.dao.TideDAO;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
+import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.TimePeriod;
-
+import com.devops.groupb.harbourmaster.dao.OrderDAO;
+import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.Tide;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +49,8 @@ public class OrderService {
 		Ship ship = order.getShip();
 
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
+
+		LocalDateTime allocatedTime = null;
 		Pilot chosenPilot = null;
 
 		for (Pilot p : pilots) {
@@ -101,7 +99,6 @@ public class OrderService {
 							   work day and before the end of the tide. after that point, the next tide is tested. */
 							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
 								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd())) {
-
 								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart())
 																		  || targetStart.equals(workingHours.getStart()))) {
 									possible = true;
@@ -120,6 +117,8 @@ public class OrderService {
 							log.info("POSSIBLE!");
 							occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
 							p.getOccupiedTimes().put(date, occupiedOnDate);
+
+							allocatedTime = LocalDateTime.of(order.getRequestedDate(), targetStart);
 
 							pilotDAO.save(p);
 
@@ -155,13 +154,11 @@ public class OrderService {
 								log.info("TARGET: " + targetStart + " -> " + targetEnd);
 							}
 
+							/* wtf */
 							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
 								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd())) {
-
 								if ((targetEnd.isBefore(tide.getEnd()) || targetEnd.equals(tide.getEnd()))
 									&& (targetStart.isAfter(workingHours.getStart()) || targetStart.equals(workingHours.getStart()))) {
-
-
 									log.info("VALID TIME FOUND. CHECKING AGAINST OCCUPIED TIMES.");
 									for (TimePeriod time : occupiedOnDate) {
 										log.info("possible = " + possible);
@@ -169,7 +166,6 @@ public class OrderService {
 										log.info("OCCUPIED: " + time.getStart() + " -> " + time.getEnd());
 										log.info("TARGET: " + targetStart + " -> " + targetEnd);
 
-										/* wtf */
 										if (((targetStart.isAfter(time.getStart()) || targetStart.equals(time.getStart())) && (targetStart.isBefore(time.getEnd()) || targetStart.equals(time.getEnd())))
 											|| ((targetEnd.isAfter(time.getStart()) || targetEnd.equals(time.getStart())) && (targetEnd.isBefore(time.getEnd()) || targetEnd.equals(time.getEnd())))) {
 											possible = false;
@@ -183,6 +179,8 @@ public class OrderService {
 									log.info("POSSIBLE!");
 									occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
 									p.getOccupiedTimes().put(date, occupiedOnDate);
+
+									allocatedTime = LocalDateTime.of(order.getRequestedDate(), targetStart);
 
 									pilotDAO.save(p);
 
@@ -208,7 +206,6 @@ public class OrderService {
 			return order;
 		}
 
-		LocalDateTime allocatedTime = order.getRequestedDate().atTime(13, 00);
 		order.setPilot(chosenPilot);
 		order.setAllocatedTime(allocatedTime);
 		order.setStatus(OrderStatus.CONFIRMED);
@@ -228,8 +225,17 @@ public class OrderService {
 		order.setStatus(OrderStatus.CANCELLED);
 		order.setReason(reason);
 
-		// Free up the time from the pilot's schedule.
+		Pilot pilot = order.getPilot();
+		ArrayList<TimePeriod> occupiedOnDate = pilot.getOccupiedTimes().get(order.getRequestedDate());
 
+		for (TimePeriod time : occupiedOnDate) {
+			if ((time.getStart().equals(order.getAllocatedTime().toLocalTime()))) {
+				occupiedOnDate.remove(time);
+				break;
+			}
+		}
+
+		pilotDAO.save(pilot);
 		orderDAO.save(order);
 		return true;
 	}
