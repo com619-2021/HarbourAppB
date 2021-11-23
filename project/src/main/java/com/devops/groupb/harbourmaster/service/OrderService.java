@@ -146,48 +146,11 @@ public class OrderService {
 							log.info("TIDE IS OUTSIDE OF WORKING HOURS.");
 							spotAvailable = false;
 						} else {
-							log.info("TARGET: " + targetStart + " -> " + targetEnd);
-							while (targetStart.isBefore(workingHours.getEnd().minusHours(1L))
-								   && targetEnd.isBefore(tide.getEnd()) && targetEnd.isBefore(workingHours.getEnd()) && !spotAvailable) {
-								spotAvailable = false;
 
-								if (targetEnd.isBefore(tide.getEnd()) && (targetStart.isAfter(workingHours.getStart())
-																		  || targetStart.equals(workingHours.getStart()))) {
-									for (TimePeriod time : occupiedOnDate) {
-										if (!((targetStart.isAfter(time.getStart()) && targetStart.isBefore(time.getEnd()))) &&
-											(targetEnd.isAfter(time.getStart()) && targetEnd.isBefore(time.getEnd()))) {
-											spotAvailable = true;
-											break;
-										}
-									}
-
-									if (spotAvailable) {
-										break;
-									}
-
-									break;
-								}
-
-								targetStart = targetStart.plusHours(1L);
-								targetEnd = targetEnd.plusHours(1L);
-							}
-						}
-
-						if (spotAvailable && chosenPilot == null) {
-							log.info("POSSIBLE!");
-							occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-							p.getOccupiedTimes().put(date, occupiedOnDate);
-
-							pilotDAO.save(p);
-
-							chosenPilot = p;
-							break;
 						}
 					}
 				}
-
 			}
-
 		}
 
 		if (chosenPilot == null) {
