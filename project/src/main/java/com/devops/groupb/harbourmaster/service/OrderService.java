@@ -63,13 +63,11 @@ public class OrderService {
 			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
 				break;
 			} else {
-				ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
-
 				/* if the pilot has no 'occupiedOnDate' list, they are completely
 				   free for work on the given day. */
-				if (occupiedOnDate == null) {
+				if (!p.getOccupiedTimes().containsKey(date)) {
 					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
-					occupiedOnDate = new ArrayList<TimePeriod>();
+					ArrayList<TimePeriod> occupiedOnDate = new ArrayList<TimePeriod>();
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
 
 					for (Tide tide : safeTides) {
@@ -127,6 +125,7 @@ public class OrderService {
 						}
 					}
 				} else {
+					ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
 					Boolean possible = false;
 					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
@@ -226,7 +225,13 @@ public class OrderService {
 		order.setReason(reason);
 
 		Pilot pilot = order.getPilot();
-		ArrayList<TimePeriod> occupiedOnDate = pilot.getOccupiedTimes().get(order.getRequestedDate());
+		ArrayList<TimePeriod> occupiedOnDate;
+
+		if (pilot.getOccupiedTimes() != null) {
+			occupiedOnDate = pilot.getOccupiedTimes().get(order.getRequestedDate());
+		} else {
+			return false;
+		}
 
 		for (TimePeriod time : occupiedOnDate) {
 			if ((time.getStart().equals(order.getAllocatedTime().toLocalTime()))) {

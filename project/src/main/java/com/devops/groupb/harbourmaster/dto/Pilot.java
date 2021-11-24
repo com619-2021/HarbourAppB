@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,6 +76,7 @@ public class Pilot {
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
 		this.workingHours = workingHours;
+		occupiedTimes = new HashMap();
 	}
 
 	public int getPk() {

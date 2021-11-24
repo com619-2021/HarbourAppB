@@ -40,7 +40,7 @@ public class PilotController {
 	}
 
 	@GetMapping(value = "/api/pilot/{uuid}")
-	@ApiOperation("Returns the pilot of the given UUID.")
+	@ApiOperation("Returns an array of all pilots registered in the system.")
 	public ResponseEntity<Object> findPilot(@PathVariable UUID uuid) {
 		log.info("(GET) /api/pilot: entered.");
 		log.info("(GET) /api/pilot: query of pilot '" + uuid + "' requested.");
@@ -49,6 +49,13 @@ public class PilotController {
 
 		return pilot != null ? new ResponseEntity<>(pilot, HttpStatus.OK)
 			: new ResponseEntity<>(String.format("Unable to find pilot '%s' in the database.", uuid), HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping(value = "/api/pilot/getAll")
+	@ApiOperation("Returns the pilot of the given UUID.")
+	public ResponseEntity<Object> getAllPilots() {
+		log.info("(GET) /api/pilot/getAll: entered.");
+		return new ResponseEntity<>(pilotService.getAllPilots(), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/pilot/{uuid}")
@@ -61,4 +68,6 @@ public class PilotController {
 		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
 			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
+
+
 }

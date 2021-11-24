@@ -32,6 +32,10 @@ public class PilotService {
 		return pilot;
 	}
 
+	public List<Pilot> getAllPilots() {
+		return pilotDAO.findAll();
+	}
+
 	public Boolean deletePilot(UUID uuid) {
 		return pilotDAO.deleteByUUID(uuid);
 	}

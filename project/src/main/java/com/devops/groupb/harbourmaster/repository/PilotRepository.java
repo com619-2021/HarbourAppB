@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 public interface PilotRepository extends JpaRepository<Pilot, Integer> {
 	public Pilot findOneByUuid(@Param("uuid") UUID uuid);
 
+	public List<Pilot> findAll();
+
 	public void deleteByUuid(@Param("uuid") UUID uuid);
 
 	@Query(value = "SELECT * FROM pilots WHERE first_name = :firstName AND last_name = :lastName", nativeQuery = true)

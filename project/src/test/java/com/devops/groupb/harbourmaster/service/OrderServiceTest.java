@@ -46,7 +46,7 @@ public class OrderServiceTest {
 	@Test
 	public void cancelOrder() {
 		log.debug("Testing cancelling an order.");
-		Ship ship = new Ship(ShipType.FERRY, 6.8);
+		Ship ship = new Ship(ShipType.FERRY, 1.2);
 		List<ShipType> allowedTo = new ArrayList();
 		allowedTo.add(ShipType.CARGO);
 
@@ -54,13 +54,12 @@ public class OrderServiceTest {
 		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
 				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
 				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
-			}
-		};
+			}};
 
 		Pilot pilot = new Pilot(allowedTo, "Brim", "Rock", LocalDate.of(1969, Month.DECEMBER, 2), workingHours);
 		Berth berth = new Berth(53.25, -2.6);
 
-		Order order = new Order(ship, berth, LocalDate.now().plusDays(1L));
+		Order order = new Order(ship, berth, LocalDate.of(2021, 11, 22));
 
 		List<Pilot> pilots = new ArrayList<Pilot>();
 		pilots.add(pilot);
