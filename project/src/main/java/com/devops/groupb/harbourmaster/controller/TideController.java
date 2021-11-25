@@ -25,7 +25,7 @@ public class TideController {
 	@Autowired
 	TideService tideService;
 
-	@GetMapping(value = "/api/tide/{datetime}")
+	@GetMapping(value = "/api/tide/{datetime}", produces = "application/json")
 	@ApiOperation("Returns the tide at the given LocalDateTime (yyyy-MM-dd HH:mm:ss).")
 	public ResponseEntity<Object> findTideAt(@PathVariable String datetime) {
 		log.info("(GET) /api/tide: entered.");

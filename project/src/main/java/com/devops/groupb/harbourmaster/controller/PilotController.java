@@ -28,7 +28,7 @@ public class PilotController {
 	@Autowired
 	PilotService pilotService;
 
-	@RequestMapping(value = "/api/pilot/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/pilot/create", method = RequestMethod.POST, produces = "application/json")
 	@ApiOperation("Creates a pilot using the given pilot object.")
 	public ResponseEntity<Object> createPilot(@RequestBody Pilot pilot) {
 		log.info("/api/pilot/create: entered.");
@@ -39,7 +39,7 @@ public class PilotController {
 		return new ResponseEntity<>(pilot, HttpStatus.CREATED);
 	}
 
-	@GetMapping(value = "/api/pilot/{uuid}")
+	@GetMapping(value = "/api/pilot/{uuid}", produces = "application/json")
 	@ApiOperation("Returns the pilot of the given UUID.")
 	public ResponseEntity<Object> findPilot(@PathVariable UUID uuid) {
 		log.info("(GET) /api/pilot: entered.");
@@ -68,6 +68,4 @@ public class PilotController {
 		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
 			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
-
-
 }

@@ -26,7 +26,7 @@ public class OrderController {
 	@Autowired
 	OrderService orderService;
 
-	@GetMapping(value = "/api/order/{uuid}")
+	@GetMapping(value = "/api/order/{uuid}", produces = "application/json")
 	@ApiOperation("Returns an order by its UUID.")
 	public ResponseEntity<Object> findOrder(@PathVariable UUID uuid) {
 		log.info("(GET) /api/order: entered.");

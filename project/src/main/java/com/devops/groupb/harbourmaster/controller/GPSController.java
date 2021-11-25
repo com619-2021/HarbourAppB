@@ -24,7 +24,7 @@ public class GPSController {
 	@Autowired
 	GPSService gpsService;
 
-	@GetMapping(value = "/api/gps/{uuid}")
+	@GetMapping(value = "/api/gps/{uuid}", produces = "application/json")
 	@ApiOperation("Pings for the presence of a given ship by its UUID.")
 	public ResponseEntity<Object> findOrder(@PathVariable UUID uuid) {
 		GPS gps = gpsService.pingPresence(uuid);
@@ -32,7 +32,7 @@ public class GPSController {
 		return new ResponseEntity<>(gps, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/api/gps/sendPilot/{uuid}")
+	@GetMapping(value = "/api/gps/sendPilot/{uuid}", produces = "application/json")
 	@ApiOperation("Sends a pilot to retrieve the ship.")
 	public ResponseEntity<Object> sendPilot(@PathVariable UUID uuid) {
 		GPS gps = gpsService.pingPresence(uuid);

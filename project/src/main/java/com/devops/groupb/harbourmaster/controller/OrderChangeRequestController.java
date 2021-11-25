@@ -30,7 +30,7 @@ public class OrderChangeRequestController {
 	@Autowired
 	OrderChangeRequestService orderChangeRequestService;
 
-	@GetMapping(value = "/api/orderChangeRequest/{uuid}")
+	@GetMapping(value = "/api/orderChangeRequest/{uuid}", produces = "application/json")
 	@ApiOperation("Returns an order change request by its UUID.")
 	public ResponseEntity<Object> findOrder(@PathVariable UUID uuid) {
 		log.info("(GET) /api/orderChangeRequest: entered.");
@@ -43,7 +43,7 @@ public class OrderChangeRequestController {
 			: new ResponseEntity<>(String.format("ERROR: Order change request '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 
-	@RequestMapping(value = "/api/orderChangeRequest/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/orderChangeRequest/create", method = RequestMethod.POST, produces = "application/json")
 	@ApiOperation("Creates an order change request for a given order.")
 	public ResponseEntity<Object> createOrderChangeRequest(@RequestBody OrderChangeRequestWrapper request) {
 		log.info("/api/orderChangeRequest/create: entered.");
@@ -58,7 +58,7 @@ public class OrderChangeRequestController {
 			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", request.getParentUUID()), HttpStatus.NOT_FOUND);
 	}
 
-	@PutMapping(value = "/api/orderChangeRequest/accept/{uuid}")
+	@PutMapping(value = "/api/orderChangeRequest/accept/{uuid}", produces = "application/json")
 	@ApiOperation("Accepts a given order change request and amends the parent order.")
 	public ResponseEntity<Object> acceptOrderChangeRequest(@PathVariable UUID uuid) {
 		log.info("/api/orderChangeRequest/accept: entered.");
@@ -71,7 +71,7 @@ public class OrderChangeRequestController {
 			: new ResponseEntity<>(String.format("ERROR: Order change request '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
 
-	@PutMapping(value = "/api/orderChangeRequest/deny/{uuid}")
+	@PutMapping(value = "/api/orderChangeRequest/deny/{uuid}", produces = "application/json")
 	@ApiOperation("Denies a given order change request.")
 	public ResponseEntity<Object> denyOrderChangeRequest(@PathVariable UUID uuid) {
 		log.info("/api/orderChangeRequest/deny: entered.");
