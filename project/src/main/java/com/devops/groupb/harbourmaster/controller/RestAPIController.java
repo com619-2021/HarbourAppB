@@ -80,7 +80,7 @@ public class RestAPIController {
 		List<Tide> safeTides = tideService.getSafeTidesOnDay(request.getArrivalDate(), request.getShip().getDraft());
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
-		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null);
+		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null, request.getArrivalDate());
 
 		Boolean possible = pilot != null;
 		JSONObject response = new JSONObject();

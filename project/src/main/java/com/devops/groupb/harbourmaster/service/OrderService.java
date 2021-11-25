@@ -1,8 +1,10 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +52,7 @@ public class OrderService {
 
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 
-		Pilot chosenPilot = schedulePilot(pilots, safeTides, order);
+		Pilot chosenPilot = schedulePilot(pilots, safeTides, order, order.getRequestedDate());
 
 		if (chosenPilot == null) {
 			order.setStatus(OrderStatus.DENIED);
@@ -94,7 +96,7 @@ public class OrderService {
 		return true;
 	}
 
-	public Pilot schedulePilot(List<Pilot> pilots, List<Tide> safeTides, Order order) {
+	public Pilot schedulePilot(List<Pilot> pilots, List<Tide> safeTides, Order order, LocalDate date) {
 		if (pilots == null) {
 			return null;
 		}
@@ -102,13 +104,13 @@ public class OrderService {
 		for (Pilot p : pilots) {
 			/* checks to see whether this pilot works on the day that the
 			   order has requested. */
-			if (p.getWorkingHours().get(order.getRequestedDate().getDayOfWeek()) == null) {
+			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
 				break;
 			} else {
 				/* if the pilot has no 'occupiedOnDate' list, they are completely
 				   free for work on the given day. */
-				if (!p.getOccupiedTimes().containsKey(order.getRequestedDate())) {
-					TimePeriod workingHours = p.getWorkingHours().get(order.getRequestedDate().getDayOfWeek());
+				if (!p.getOccupiedTimes().containsKey(date)) {
+					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
 					ArrayList<TimePeriod> occupiedOnDate = new ArrayList<TimePeriod>();
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
 
@@ -158,10 +160,10 @@ public class OrderService {
 
 							if (order != null) {
 								occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-								p.getOccupiedTimes().put(order.getRequestedDate(), occupiedOnDate);
+								p.getOccupiedTimes().put(date, occupiedOnDate);
 
-								LocalDateTime allocatedStart = LocalDateTime.of(order.getRequestedDate(), targetStart);
-								LocalDateTime allocatedEnd = LocalDateTime.of(order.getRequestedDate(), targetEnd);
+								LocalDateTime allocatedStart = LocalDateTime.of(date, targetStart);
+								LocalDateTime allocatedEnd = LocalDateTime.of(date, targetEnd);
 
 								order.setPilot(p);
 								order.setAllocatedStart(allocatedStart);
@@ -177,9 +179,9 @@ public class OrderService {
 						}
 					}
 				} else {
-					ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(order.getRequestedDate());
+					ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
 					Boolean possible = false;
-					TimePeriod workingHours = p.getWorkingHours().get(order.getRequestedDate().getDayOfWeek());
+					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
 
 					for (Tide tide : safeTides) {
@@ -231,10 +233,10 @@ public class OrderService {
 
 									if (order != null) {
 										occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-										p.getOccupiedTimes().put(order.getRequestedDate(), occupiedOnDate);
+										p.getOccupiedTimes().put(date, occupiedOnDate);
 
-										LocalDateTime allocatedStart = LocalDateTime.of(order.getRequestedDate(), targetStart);
-										LocalDateTime allocatedEnd = LocalDateTime.of(order.getRequestedDate(), targetEnd);
+										LocalDateTime allocatedStart = LocalDateTime.of(date, targetStart);
+										LocalDateTime allocatedEnd = LocalDateTime.of(date, targetEnd);
 
 										order.setPilot(p);
 										order.setAllocatedStart(allocatedStart);
