@@ -49,8 +49,11 @@ public class Order {
 	@Column(name="requestedDate", columnDefinition="TIMESTAMP")
 	private LocalDate requestedDate;
 
-	@Column(name="allocatedTime", columnDefinition="TIMESTAMP")
-	private LocalDateTime allocatedTime;
+	@Column(name="allocatedStart", columnDefinition="TIMESTAMP")
+	private LocalDateTime allocatedStart;
+
+	@Column(name="allocatedEnd", columnDefinition="TIMESTAMP")
+	private LocalDateTime allocatedEnd;
 
 	@ElementCollection
 	private List<UUID> changeRequests;
@@ -129,12 +132,20 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	public LocalDateTime getAllocatedTime() {
-		return allocatedTime;
+	public LocalDateTime getAllocatedStart() {
+		return allocatedStart;
 	}
 
-	public void setAllocatedTime(LocalDateTime allocatedTime) {
-		this.allocatedTime = allocatedTime;
+	public void setAllocatedStart(LocalDateTime allocatedStart) {
+		this.allocatedStart = allocatedStart;
+	}
+
+	public LocalDateTime getAllocatedEnd() {
+		return allocatedEnd;
+	}
+
+	public void setAllocatedEnd(LocalDateTime allocatedEnd) {
+		this.allocatedEnd = allocatedEnd;
 	}
 
 	public List<UUID> getChangeRequests() {
@@ -181,13 +192,16 @@ public class Order {
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		String requestedDateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		String allocatedTimeString = "";
 
-		if (allocatedTime != null) {
-			allocatedTimeString = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		String allocatedStartString = "";
+		String allocatedEndString = "";
+
+		if (allocatedStart != null && allocatedEndString != null) {
+			allocatedStartString = allocatedStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			allocatedEndString = allocatedEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		}
 
-		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", pk=" + pk
+		return "Order [allocatedStart=" + allocatedStartString + ", allocatedEnd=" + allocatedEndString + ", berth=" + berth + ", pk=" + pk
 			+ ", uuid=" + uuid + ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
 			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + ", fare=" + fare + "]";
 	}

@@ -50,23 +50,65 @@ public class OrderService {
 
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 
-		LocalDateTime allocatedTime = null;
-		Pilot chosenPilot = null;
+		Pilot chosenPilot = schedulePilot(pilots, safeTides, order);
 
-		for (Pilot p : pilots) {
-			if (chosenPilot != null) {
+		if (chosenPilot == null) {
+			order.setStatus(OrderStatus.DENIED);
+			order.setReason("No pilots are available.");
+			orderDAO.save(order);
+			return order;
+		}
+
+
+		return order;
+	}
+
+	public Boolean cancelOrder(UUID uuid, String reason) {
+		Order order = orderDAO.findByUUID(uuid);
+		if (order == null) {
+			return false;
+		}
+
+		log.info("Found matching order: " + order + ".");
+		order.setStatus(OrderStatus.CANCELLED);
+		order.setReason(reason);
+
+		Pilot pilot = order.getPilot();
+		ArrayList<TimePeriod> occupiedOnDate;
+
+		if (pilot.getOccupiedTimes() != null) {
+			occupiedOnDate = pilot.getOccupiedTimes().get(order.getRequestedDate());
+		} else {
+			return false;
+		}
+
+		for (TimePeriod time : occupiedOnDate) {
+			if ((time.getStart().equals(order.getAllocatedStart().toLocalTime()))) {
+				occupiedOnDate.remove(time);
 				break;
 			}
+		}
 
+		pilotDAO.save(pilot);
+		orderDAO.save(order);
+		return true;
+	}
+
+	public Pilot schedulePilot(List<Pilot> pilots, List<Tide> safeTides, Order order) {
+		if (pilots == null) {
+			return null;
+		}
+
+		for (Pilot p : pilots) {
 			/* checks to see whether this pilot works on the day that the
 			   order has requested. */
-			if (p.getWorkingHours().get(date.getDayOfWeek()) == null) {
+			if (p.getWorkingHours().get(order.getRequestedDate().getDayOfWeek()) == null) {
 				break;
 			} else {
 				/* if the pilot has no 'occupiedOnDate' list, they are completely
 				   free for work on the given day. */
-				if (!p.getOccupiedTimes().containsKey(date)) {
-					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
+				if (!p.getOccupiedTimes().containsKey(order.getRequestedDate())) {
+					TimePeriod workingHours = p.getWorkingHours().get(order.getRequestedDate().getDayOfWeek());
 					ArrayList<TimePeriod> occupiedOnDate = new ArrayList<TimePeriod>();
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
 
@@ -113,21 +155,31 @@ public class OrderService {
 						/* if a booking is possible here, add it to the pilot's (new) 'occupiedTimes' list. */
 						if (possible) {
 							log.info("POSSIBLE!");
-							occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-							p.getOccupiedTimes().put(date, occupiedOnDate);
 
-							allocatedTime = LocalDateTime.of(order.getRequestedDate(), targetStart);
+							if (order != null) {
+								occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+								p.getOccupiedTimes().put(order.getRequestedDate(), occupiedOnDate);
 
-							pilotDAO.save(p);
+								LocalDateTime allocatedStart = LocalDateTime.of(order.getRequestedDate(), targetStart);
+								LocalDateTime allocatedEnd = LocalDateTime.of(order.getRequestedDate(), targetEnd);
 
-							chosenPilot = p;
-							break;
+								order.setPilot(p);
+								order.setAllocatedStart(allocatedStart);
+								order.setAllocatedEnd(allocatedEnd);
+								order.setStatus(OrderStatus.CONFIRMED);
+
+								orderDAO.save(order);
+
+								pilotDAO.save(p);
+							}
+
+							return p;
 						}
 					}
 				} else {
-					ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(date);
+					ArrayList<TimePeriod> occupiedOnDate = p.getOccupiedTimes().get(order.getRequestedDate());
 					Boolean possible = false;
-					TimePeriod workingHours = p.getWorkingHours().get(date.getDayOfWeek());
+					TimePeriod workingHours = p.getWorkingHours().get(order.getRequestedDate().getDayOfWeek());
 					log.info("WORKING HOURS: " + workingHours.getStart() + " -> " + workingHours.getEnd());
 
 					for (Tide tide : safeTides) {
@@ -176,15 +228,25 @@ public class OrderService {
 								/* if a booking is possible here, add it to the pilot's (new) 'occupiedTimes' list. */
 								if (possible) {
 									log.info("POSSIBLE!");
-									occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
-									p.getOccupiedTimes().put(date, occupiedOnDate);
 
-									allocatedTime = LocalDateTime.of(order.getRequestedDate(), targetStart);
+									if (order != null) {
+										occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
+										p.getOccupiedTimes().put(order.getRequestedDate(), occupiedOnDate);
 
-									pilotDAO.save(p);
+										LocalDateTime allocatedStart = LocalDateTime.of(order.getRequestedDate(), targetStart);
+										LocalDateTime allocatedEnd = LocalDateTime.of(order.getRequestedDate(), targetEnd);
 
-									chosenPilot = p;
-									break;
+										order.setPilot(p);
+										order.setAllocatedStart(allocatedStart);
+										order.setAllocatedEnd(allocatedEnd);
+										order.setStatus(OrderStatus.CONFIRMED);
+
+										orderDAO.save(order);
+
+										pilotDAO.save(p);
+									}
+
+									return p;
 								} else {
 									/* increments the booking time range by an hour (length of a booking) each iteration. */
 									targetStart = targetStart.plusHours(1L);
@@ -197,51 +259,6 @@ public class OrderService {
 				}
 			}
 		}
-
-		if (chosenPilot == null) {
-			order.setStatus(OrderStatus.DENIED);
-			order.setReason("No pilots are available.");
-			orderDAO.save(order);
-			return order;
-		}
-
-		order.setPilot(chosenPilot);
-		order.setAllocatedTime(allocatedTime);
-		order.setStatus(OrderStatus.CONFIRMED);
-
-		orderDAO.save(order);
-
-		return order;
-	}
-
-	public Boolean cancelOrder(UUID uuid, String reason) {
-		Order order = orderDAO.findByUUID(uuid);
-		if (order == null) {
-			return false;
-		}
-
-		log.info("Found matching order: " + order + ".");
-		order.setStatus(OrderStatus.CANCELLED);
-		order.setReason(reason);
-
-		Pilot pilot = order.getPilot();
-		ArrayList<TimePeriod> occupiedOnDate;
-
-		if (pilot.getOccupiedTimes() != null) {
-			occupiedOnDate = pilot.getOccupiedTimes().get(order.getRequestedDate());
-		} else {
-			return false;
-		}
-
-		for (TimePeriod time : occupiedOnDate) {
-			if ((time.getStart().equals(order.getAllocatedTime().toLocalTime()))) {
-				occupiedOnDate.remove(time);
-				break;
-			}
-		}
-
-		pilotDAO.save(pilot);
-		orderDAO.save(order);
-		return true;
+		return null;
 	}
 }

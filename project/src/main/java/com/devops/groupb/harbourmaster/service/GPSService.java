@@ -61,12 +61,12 @@ public class GPSService {
 			return null;
 		}
 
-		LocalDateTime allocatedTime = order.getAllocatedTime();
+		LocalDateTime allocatedStart = order.getAllocatedStart();
 
 		/* checks to see whether the current time is between the time that
 		   the order has been allocated and the absolute earliest that they
 		   may be waiting. */
-		if (allocatedTime.isAfter(time) && earliestTime.isBefore(time)) {
+		if (allocatedStart.isAfter(time) && earliestTime.isBefore(time)) {
 			/* randomises the chance of a ship appearing. not every ping
 			   means a ship will be waiting, adding some variance. */
 			Random rand = new Random();
