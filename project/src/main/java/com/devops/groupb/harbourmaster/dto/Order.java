@@ -1,40 +1,47 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.devops.groupb.harbourmaster.dto.Berth;
-import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.OrderStatus;
+import java.util.List;
+import java.util.UUID;
 
-import java.sql.Timestamp;
-
-import javax.persistence.Lob;
-import javax.persistence.Basic;
-import javax.persistence.Id;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ElementCollection;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.devops.groupb.harbourmaster.dto.Berth;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
+import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.Ship;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name="orders")
 public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@ApiModelProperty(hidden = true)
+	private int pk;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	private Ship ship;
+	@GeneratedValue(generator = "UUID")
+	private UUID uuid;
 
-	@OneToOne(cascade = {CascadeType.ALL})
-	private Pilot pilot;
+	private OrderStatus status;
+
+	private String reason;
+
+	private double fare;
 
 	@Column(name="orderDate", columnDefinition="TIMESTAMP")
 	private LocalDateTime orderDate;
@@ -42,44 +49,55 @@ public class Order {
 	@Column(name="requestedDate", columnDefinition="TIMESTAMP")
 	private LocalDate requestedDate;
 
-	@Column(name="allocatedTime", columnDefinition="TIMESTAMP")
-	private LocalDateTime allocatedTime;
+	@Column(name="allocatedStart", columnDefinition="TIMESTAMP")
+	private LocalDateTime allocatedStart;
+
+	@Column(name="allocatedEnd", columnDefinition="TIMESTAMP")
+	private LocalDateTime allocatedEnd;
+
+	@ElementCollection
+	private List<UUID> changeRequests;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Ship ship;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Pilot pilot;
 
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Berth berth;
-	private OrderStatus status;
-	private String reason;
 
-	// Empty default constructor needed for H2 in-memory testing DB.
+	@Transient
+	private final double[] fares = { 311.85, 589.23, 189.32 };
+
+	/* Empty default constructor needed for Hibernate DB */
 	public Order() {
 
 	}
 
-	// Constructor for order requests with no available pilots.
-	public Order(Ship ship, Berth berth, LocalDate requestedDate, OrderStatus status, String reason) {
+	public Order(Ship ship, Berth berth, LocalDate requestedDate) {
+		this.uuid = UUID.randomUUID();
 		this.ship = ship;
 		this.berth = berth;
 		this.requestedDate = requestedDate;
-		this.status = status;
-		this.reason = reason;
 		orderDate = LocalDateTime.now();
+		fare = fares[ship.getType().ordinal()];
 	}
 
-	public Order(Ship ship, Pilot pilot, Berth berth, LocalDate requestedDate, LocalDateTime allocatedTime) {
-		this.ship = ship;
-		this.pilot = pilot;
-		this.berth = berth;
-		this.requestedDate = requestedDate;
-		this.allocatedTime = allocatedTime;
-		orderDate = LocalDateTime.now();
+	public int getPk() {
+		return pk;
 	}
 
-	public int getId() {
-		return id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public Ship getShip() {
@@ -114,12 +132,28 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	public LocalDateTime getAllocatedTime() {
-		return allocatedTime;
+	public LocalDateTime getAllocatedStart() {
+		return allocatedStart;
 	}
 
-	public void setAllocatedTime(LocalDateTime allocatedTime) {
-		this.allocatedTime = allocatedTime;
+	public void setAllocatedStart(LocalDateTime allocatedStart) {
+		this.allocatedStart = allocatedStart;
+	}
+
+	public LocalDateTime getAllocatedEnd() {
+		return allocatedEnd;
+	}
+
+	public void setAllocatedEnd(LocalDateTime allocatedEnd) {
+		this.allocatedEnd = allocatedEnd;
+	}
+
+	public List<UUID> getChangeRequests() {
+		return changeRequests;
+	}
+
+	public void setChangeRequests(List<UUID> changeRequests) {
+		this.changeRequests = changeRequests;
 	}
 
 	public Berth getBerth() {
@@ -146,14 +180,29 @@ public class Order {
 		this.reason = reason;
 	}
 
+	public double getFare() {
+		return fare;
+	}
+
+	public void setFare(double fare) {
+		this.fare = fare;
+	}
+
 	@Override
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 		String requestedDateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		String allocatedTimeString = allocatedTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-		return "Order [allocatedTime=" + allocatedTimeString + ", berth=" + berth + ", id=" + id
-			+ ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
-			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + "]";
+		String allocatedStartString = "";
+		String allocatedEndString = "";
+
+		if (allocatedStart != null && allocatedEndString != null) {
+			allocatedStartString = allocatedStart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+			allocatedEndString = allocatedEnd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		}
+
+		return "Order [allocatedStart=" + allocatedStartString + ", allocatedEnd=" + allocatedEndString + ", berth=" + berth + ", pk=" + pk
+			+ ", uuid=" + uuid + ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
+			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + ", fare=" + fare + "]";
 	}
 }

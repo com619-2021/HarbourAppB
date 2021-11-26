@@ -1,27 +1,17 @@
 package com.devops.groupb.harbourmaster.test.repository;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.repository.TideRepository;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.LocalDateTime;
-import java.time.Month;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes=HarbourMaster.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -59,10 +49,10 @@ public class TideRepositoryTest {
 
 		/* DELETE */
 		log.debug("Testing DELETE of an example tide.");
-		int updatedTideId = updatedTide.getId();
+		int updatedTidePk = updatedTide.getPk();
 
-		tideRepository.deleteById(updatedTideId);
+		tideRepository.deleteById(updatedTidePk);
 
-		assertFalse(tideRepository.existsById(updatedTideId));
+		assertFalse(tideRepository.existsById(updatedTidePk));
 	}
 }

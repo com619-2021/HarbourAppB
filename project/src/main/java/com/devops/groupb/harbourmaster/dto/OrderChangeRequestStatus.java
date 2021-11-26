@@ -1,6 +1,6 @@
 package com.devops.groupb.harbourmaster.dto;
 
-public enum OrderChangeStatus {
+public enum OrderChangeRequestStatus {
 	REQUESTED,
 	APPROVED,
 	DENIED

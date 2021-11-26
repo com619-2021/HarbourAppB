@@ -1,34 +1,22 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import com.devops.groupb.harbourmaster.dto.Ship;
-import com.devops.groupb.harbourmaster.dto.Berth;
-
-import io.swagger.annotations.ApiModelProperty;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.GenerationType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import com.devops.groupb.harbourmaster.dto.Berth;
+import com.devops.groupb.harbourmaster.dto.Ship;
 
-public class PilotBookingRequest {
-	private Ship ship;
+public class CreateOrderWrapper {
 	private LocalDate date;
+	private Ship ship;
 	private Berth berth;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
-	public PilotBookingRequest() {
+	public CreateOrderWrapper() {
 
 	}
 
-	public PilotBookingRequest(Ship ship, LocalDate date, Berth berth) {
+	public CreateOrderWrapper(Ship ship, LocalDate date, Berth berth) {
 		this.ship = ship;
 		this.date = date;
 		this.berth = berth;

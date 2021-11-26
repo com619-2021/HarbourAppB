@@ -1,26 +1,28 @@
 package com.devops.groupb.harbourmaster.test.repository;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
+import java.time.Month;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.devops.groupb.harbourmaster.HarbourMaster;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.ShipType;
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
 import com.devops.groupb.harbourmaster.repository.PilotRepository;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import java.time.Month;
-import java.time.LocalDate;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(classes=HarbourMaster.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -46,16 +48,21 @@ public class PilotRepositoryTest {
 		allowedTo.add(ShipType.PASSENGER);
 		allowedTo.add(ShipType.CARGO);
 
+		Map<DayOfWeek, TimePeriod> workingHours = new HashMap<DayOfWeek, TimePeriod>() {{
+				put(DayOfWeek.MONDAY, new TimePeriod(LocalTime.of(9, 00), LocalTime.of(18, 00)));
+				put(DayOfWeek.WEDNESDAY, new TimePeriod(LocalTime.of(14, 00), LocalTime.of(23, 00)));
+			}};
+
 		String lastName = "Smith";
 
-		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1));
+		Pilot pilot = new Pilot(allowedTo, "John", lastName, LocalDate.of(1970, Month.JANUARY, 1), workingHours);
 		log.info("Attempting to save " + pilot + " to the database using PilotRepository.");
 
-		int savedId = pilotRepository.save(pilot).getId();
+		int savedPk = pilotRepository.save(pilot).getPk();
 
 		/* READ */
 		log.debug("Testing READ of an example pilot.");
-		Pilot storedPilot = pilotRepository.findById(savedId).get();
+		Pilot storedPilot = pilotRepository.findById(savedPk).get();
 
 		assertEquals(pilot.getFirstName() + pilot.getLastName(), storedPilot.getFirstName() + storedPilot.getLastName());
 
@@ -69,8 +76,8 @@ public class PilotRepositoryTest {
 
 		/* DELETE */
 		log.debug("Testing DELETE of an example pilot.");
-		pilotRepository.deleteById(savedId);
+		pilotRepository.deleteById(savedPk);
 
-		assertFalse(pilotRepository.existsById(savedId));
+		assertFalse(pilotRepository.existsById(savedPk));
 	}
 }

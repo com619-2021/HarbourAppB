@@ -1,47 +1,53 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import javax.persistence.Id;
+import java.util.UUID;
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
-@Table(name="ships")
 public class Ship {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@ApiModelProperty(hidden = true)
+	private int pk;
+
+	private UUID uuid = null;
 	private ShipType type;
 	private double draft;
 
-	// Empty default constructor needed for H2 in-memory testing DB.
+	/* Empty default constructor needed for Hibernate DB */
 	public Ship() {
 
 	}
 
-	// Constructor for saving a Ship without giving an explicit ID.
+	/* Constructor used for testing; NOT to be called in the main program
+	   as these attributes will be retrieved via REST. */
 	public Ship(ShipType type, double draft) {
+		this.uuid = UUID.randomUUID();
 		this.type = type;
 		this.draft = draft;
 	}
 
-	public Ship(int id, ShipType type, double draft) {
-		this.id = id;
-		this.type = type;
-		this.draft = draft;
+	public UUID getUUID() {
+		return uuid;
 	}
 
-	public Boolean isValid() {
-		return (id >= 0) && (draft >= 0.0) && (type.ordinal() >= 0 && type.ordinal() < ShipType.values().length);
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
-	public int getId() {
-		return id;
+	public int getPk() {
+		return pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public ShipType getType() {
@@ -61,6 +67,6 @@ public class Ship {
 	}
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + String.format("[id=%d, type=%s, draft=%f]", id, type, draft);
+		return getClass().getSimpleName() + String.format("[pk=%d, uuid=%s, type=%s, draft=%f]", pk, uuid, type, draft);
 	}
 }

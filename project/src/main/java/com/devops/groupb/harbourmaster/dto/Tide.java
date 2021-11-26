@@ -1,29 +1,23 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.ArrayList;
-import java.time.LocalTime;
 import java.time.DayOfWeek;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 
-import java.sql.Timestamp;
-
-import javax.persistence.Lob;
-import javax.persistence.Basic;
-import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
 
 @Entity
 @Table(name = "tides")
 public class Tide {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private int pk;
 	private double height;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -47,20 +41,12 @@ public class Tide {
 		this.end = end;
 	}
 
-	public Tide(int id, DayOfWeek day, double height, LocalTime start, LocalTime end) {
-		this.id = id;
-		this.day = day;
-		this.height = height;
-		this.start = start;
-		this.end = end;
+	public int getPk() {
+		return pk;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
 	public double getHeight() {
@@ -97,6 +83,6 @@ public class Tide {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + String.format("[id=%d, height=%f, day=%s, start=%s, end=%s]", id, height, day.name(), start.toString(), end.toString());
+		return getClass().getSimpleName() + String.format("[pk=%d, height=%f, day=%s, start=%s, end=%s]", pk, height, day.name(), start.toString(), end.toString());
 	}
 }

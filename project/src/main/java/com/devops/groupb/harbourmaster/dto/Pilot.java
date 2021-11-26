@@ -1,71 +1,98 @@
 package com.devops.groupb.harbourmaster.dto;
 
-import java.util.List;
-
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.stream.Stream;
-import java.util.stream.Collectors;
-
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.ElementCollection;
-import javax.persistence.CollectionTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.FetchType;
-
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import com.devops.groupb.harbourmaster.dto.TimePeriod;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.CollectionTable;
+import javax.persistence.EnumType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "pilots")
 public class Pilot {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	@ApiModelProperty(hidden = true)
+	private int pk;
+
+	@GeneratedValue(generator = "UUID")
+	@ApiModelProperty(hidden = true)
+	private UUID uuid = UUID.randomUUID();
 
 	@ElementCollection
-	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "id"))
+	@CollectionTable(name = "allowedTo", joinColumns = @JoinColumn(name = "pk"))
 	@Enumerated(EnumType.STRING)
 	private List<ShipType> allowedTo = new ArrayList();
 	private String firstName;
 	private String lastName;
 	private LocalDate dateOfBirth;
 
-	// Empty default constructor needed for H2 in-memory testing DB.
+	/* the days and which hours of the day that the pilot works. */
+	@ElementCollection
+	@Enumerated(EnumType.STRING)
+	@OneToMany(cascade = {CascadeType.ALL})
+	private Map<DayOfWeek, TimePeriod> workingHours;
+
+	/* the times of day when the pilot is occupied with an order. */
+	@ElementCollection
+	@ApiModelProperty(hidden = true)
+	@Column(columnDefinition = "LONGTEXT")
+	private Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes;
+
+	/* Empty default constructor needed for Hibernate DB */
 	public Pilot() {
 
 	}
 
-	// Constructor for saving a Pilot without giving an explicit ID.
-	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
+	/* Constructor for testing. */
+	public Pilot(List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth, Map<DayOfWeek, TimePeriod> workingHours) {
+		this.uuid = UUID.randomUUID();
 		this.allowedTo = allowedTo;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
+		this.workingHours = workingHours;
+		occupiedTimes = new HashMap();
 	}
 
-	public Pilot(int id, List<ShipType> allowedTo, String firstName, String lastName, LocalDate dateOfBirth) {
-		this.id = id;
-		this.allowedTo = allowedTo;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.dateOfBirth = dateOfBirth;
+	public int getPk() {
+		return pk;
 	}
 
-	public int getId() {
-		return id;
+	public void setPk(int pk) {
+		this.pk = pk;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public List<ShipType> getAllowedTo() {
@@ -100,6 +127,22 @@ public class Pilot {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	public Map<DayOfWeek, TimePeriod> getWorkingHours() {
+		return workingHours;
+	}
+
+	public void setWorkingHours(Map<DayOfWeek, TimePeriod> workingHours) {
+		this.workingHours = workingHours;
+	}
+
+	public Map<LocalDate, ArrayList<TimePeriod>> getOccupiedTimes() {
+		return occupiedTimes;
+	}
+
+	public void setOccupiedTimes(Map<LocalDate, ArrayList<TimePeriod>> occupiedTimes) {
+		this.occupiedTimes = occupiedTimes;
+	}
+
 	@Override
 	public String toString() {
 		String dobString = dateOfBirth.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -107,6 +150,7 @@ public class Pilot {
 			.map(type -> String.valueOf(type))
 			.collect(Collectors.joining(", ", "[", "]"));
 
-		return getClass().getSimpleName() + String.format("[id=%d, allowedTo=%s, firstName=%s, lastName=%s, dateOfBirth=%s]", id, allowedToStr, firstName, lastName, dobString);
+		return this.getClass().getSimpleName() + "[allowedToStr=" + allowedToStr + ", dobString=" + dobString + ", firstName=" + firstName
+			+ ", lastName=" + lastName + ", pk=" + pk + ", uuid=" + uuid + "]";
 	}
 }
