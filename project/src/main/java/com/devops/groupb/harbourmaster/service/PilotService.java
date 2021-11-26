@@ -1,5 +1,7 @@
 package com.devops.groupb.harbourmaster.service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 
@@ -8,9 +10,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import com.devops.groupb.harbourmaster.dao.TideDAO;
+import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.dao.PilotDAO;
 import com.devops.groupb.harbourmaster.dto.Pilot;
+import com.devops.groupb.harbourmaster.dto.Ship;
+import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.ShipType;
+
+import com.devops.groupb.harbourmaster.service.OrderService;
+import com.devops.groupb.harbourmaster.service.GPSService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +30,15 @@ public class PilotService {
 
 	@Autowired
 	private PilotDAO pilotDAO;
+
+	@Autowired
+	private TideDAO tideDAO;
+
+	@Autowired
+	private OrderService orderService;
+
+	@Autowired
+	private GPSService gpsService;
 
 	public Boolean createNewPilot(Pilot pilot) {
 		pilotDAO.save(pilot);
@@ -50,20 +68,25 @@ public class PilotService {
 		return eligiblePilots;
 	}
 
-	public Pilot callPilot(ShipType shipType, double lat, double lon) {
-		List<Pilot> pilots = findSuitablePilots(shipType);
+	public LocalDateTime callPilot(Ship ship, Berth berth) {
+		List<Pilot> pilots = findSuitablePilots(ship.getType());
 
 		if (pilots == null) {
 			return null;
 		}
 
-		/* time to get to the ship should be here. may not be needed as
-		   the distance between the pilot dock would probably be a couple of
-		   minutes or so. regardless, scheduling must take place. */
+		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(LocalDate.now().getDayOfWeek(), ship.getDraft());
 
-		Random rand = new Random();
-		Pilot pilot = pilots.get(rand.nextInt(pilots.size()));
+		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null, LocalDate.now(), true);
 
-		return pilot;
+		if (pilot == null) {
+			return null;
+		}
+
+		LocalDateTime exit = gpsService.calculateExit(berth.getLat(), berth.getLon());
+
+		log.info("Estimated exit time: " + exit);
+
+		return exit;
 	}
 }

@@ -53,7 +53,7 @@ public class GPSService {
 		LocalDateTime time = LocalDateTime.now();
 		LocalDateTime earliestTime = time.minusHours(2L);
 
-		Order order = orderDAO.findByShipUUID(shipUUID);
+		Order order = orderDAO.findConfirmedByShipUUID(shipUUID);
 
 		/* ships with no orders or orders that have been denied
 		   or cancelled will not come to port. */
@@ -92,6 +92,7 @@ public class GPSService {
 		if (gps == null) {
 			return null;
 		}
+
 		double shipLat = gps.getLocation().getLat();
 		double shipLon = gps.getLocation().getLon();
 
@@ -112,7 +113,7 @@ public class GPSService {
 		log.info("Distance from pilot to ship: " + distToShip + " miles.");
 		log.info("Estimated time to get to ship: " + timeToShip + " minutes.");
 
-		Berth berth = orderDAO.findByShipUUID(gps.getShip().getUUID()).getBerth();
+		Berth berth = orderDAO.findConfirmedByShipUUID(gps.getShip().getUUID()).getBerth();
 
 		double berthLat = berth.getLat();
 		double berthLon = berth.getLon();
@@ -143,7 +144,7 @@ public class GPSService {
 		log.info("Total distance to cover: " + (distToShip + distBackToBerth) + " miles.");
 		log.info("ETA of ship to berth: " + eta + ".");
 
-		Order order = orderDAO.findByShipUUID(gps.getShip().getUUID());
+		Order order = orderDAO.findConfirmedByShipUUID(gps.getShip().getUUID());
 		order.setStatus(OrderStatus.IN_PROGRESS);
 
 		return eta;
@@ -155,5 +156,29 @@ public class GPSService {
 
 	private double rad2deg(double rad) {
 		return (rad * 180.0 / Math.PI);
+	}
+
+	public LocalDateTime calculateExit(double berthLat, double berthLon) {
+		double exitLat = 50.730717;
+		double exitLon = -0.995627;
+
+		double distToExit = 0;
+		if ((berthLat == exitLat) && (berthLon == exitLon)) {
+			distToExit = 0;
+		} else {
+			double theta = berthLon - exitLon;
+			distToExit = Math.sin(deg2rad(berthLat)) * Math.sin(deg2rad(exitLat))
+				+ Math.cos(deg2rad(berthLat)) * Math.cos(deg2rad(exitLat)) * Math.cos(deg2rad(theta));
+			distToExit = Math.acos(distToExit);
+			distToExit = rad2deg(distToExit);
+			distToExit = distToExit * 60 * 1.1515;
+		}
+
+		double shipSpeedMph = 31.2;
+		double timeToExit = (distToExit / shipSpeedMph) * 60;
+
+		LocalDateTime eta = LocalDateTime.now().plusMinutes((long)timeToExit);
+
+		return eta;
 	}
 }

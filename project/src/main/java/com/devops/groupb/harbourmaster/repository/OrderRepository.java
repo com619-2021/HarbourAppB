@@ -13,5 +13,5 @@ import com.devops.groupb.harbourmaster.dto.Order;
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 	public Order findOneByUuid(@Param("uuid") UUID uuid);
 
-	public Order findOneByShipUuid(@Param("uuid") UUID uuid);
+	public List<Order> findByShipUuid(@Param("uuid") UUID uuid);
 }

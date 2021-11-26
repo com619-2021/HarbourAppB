@@ -1,12 +1,14 @@
 package com.devops.groupb.harbourmaster.controller;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.devops.groupb.harbourmaster.dto.Pilot;
-import com.devops.groupb.harbourmaster.dto.CallPilotWrapper;
 import com.devops.groupb.harbourmaster.dto.Ship;
+import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.TimeRequestWrapper;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,16 +63,26 @@ public class RestAPIController {
 		return new ResponseEntity<>(order, HttpStatus.CREATED);
 	}
 
-	@RequestMapping(value = "/api/callPilot", method = RequestMethod.POST, produces = "application/json")
-	@ApiOperation("Calls a pilot to lead the ship at a given berth out of port.")
-	public ResponseEntity<Object> callPilot(@RequestBody CallPilotWrapper pilotCall) {
+	@GetMapping(value = "/api/callPilot/{shipUUID}", produces = "application/json")
+	@ApiOperation("Calls a pilot to lead the ship out of port.")
+	public ResponseEntity<Object> callPilot(@PathVariable UUID shipUUID) {
 		log.info("/api/callPilot: entered.");
-		log.info("/api/callPilot: pilot for ship type '" + pilotCall.getShipType() + "' called.");
+		log.info("/api/callPilot: pilot for ship '" + shipUUID + "' called.");
 
-		Pilot pilot = pilotService.callPilot(pilotCall.getShipType(), pilotCall.getBerth().getLat(), pilotCall.getBerth().getLon());
+		Order order = orderService.findConfirmedByShipUUID(shipUUID);
+
+		if (order == null) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
+
+		Ship ship = order.getShip();
+		Berth berth = order.getBerth();
+		log.info("/api/callPilot: retrieved ship '" + ship + "' and berth '" + berth + "'.");
+
+		LocalDateTime eta = pilotService.callPilot(ship, berth);
 
 		/* null response implies that no pilots are available to lead the ship out. */
-		return new ResponseEntity<>(pilot, HttpStatus.OK);
+		return new ResponseEntity<>(eta, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/api/checkBookingPossible", method = RequestMethod.POST, produces = "application/json")
@@ -80,7 +94,7 @@ public class RestAPIController {
 		List<Tide> safeTides = tideService.getSafeTidesOnDay(request.getArrivalDate(), request.getShip().getDraft());
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
-		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null, request.getArrivalDate());
+		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null, request.getArrivalDate(), true);
 
 		Boolean possible = pilot != null;
 		JSONObject response = new JSONObject();

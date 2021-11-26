@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
+
 import com.devops.groupb.harbourmaster.repository.OrderRepository;
 
 @Repository
@@ -46,7 +48,18 @@ public class OrderDAO {
 		return orderRepository.findOneByUuid(uuid);
 	}
 
-	public Order findByShipUUID(UUID uuid) {
-		return orderRepository.findOneByShipUuid(uuid);
+	public Order findConfirmedByShipUUID(UUID uuid) {
+		List<Order> orders = orderRepository.findByShipUuid(uuid);
+
+		if (orders == null) {
+			return null;
+		} else {
+			for (Order o : orders) {
+				if (o.getStatus() == OrderStatus.CONFIRMED) {
+					return o;
+				}
+			}
+		}
+		return null;
 	}
 }

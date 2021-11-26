@@ -39,6 +39,14 @@ public class OrderService {
 		return orderDAO.findByUUID(uuid);
 	}
 
+	public Order findConfirmedByShipUUID(UUID uuid) {
+		return orderDAO.findConfirmedByShipUUID(uuid);
+	}
+
+	public List<Order> findAll() {
+		return orderDAO.findAll();
+	}
+
 	public Order placeOrder(Order order, List<Pilot> pilots) {
 		if (pilots == null) {
 			order.setStatus(OrderStatus.DENIED);
@@ -52,7 +60,7 @@ public class OrderService {
 
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 
-		Pilot chosenPilot = schedulePilot(pilots, safeTides, order, order.getRequestedDate());
+		Pilot chosenPilot = schedulePilot(pilots, safeTides, order, order.getRequestedDate(), true);
 
 		if (chosenPilot == null) {
 			order.setStatus(OrderStatus.DENIED);
@@ -96,7 +104,7 @@ public class OrderService {
 		return true;
 	}
 
-	public Pilot schedulePilot(List<Pilot> pilots, List<Tide> safeTides, Order order, LocalDate date) {
+	public Pilot schedulePilot(List<Pilot> pilots, List<Tide> safeTides, Order order, LocalDate date, Boolean writeToSchedule) {
 		if (pilots == null) {
 			return null;
 		}
@@ -158,10 +166,12 @@ public class OrderService {
 						if (possible) {
 							log.info("POSSIBLE!");
 
-							if (order != null) {
+							if (writeToSchedule) {
 								occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
 								p.getOccupiedTimes().put(date, occupiedOnDate);
+							}
 
+							if (order != null) {
 								LocalDateTime allocatedStart = LocalDateTime.of(date, targetStart);
 								LocalDateTime allocatedEnd = LocalDateTime.of(date, targetEnd);
 
@@ -231,10 +241,12 @@ public class OrderService {
 								if (possible) {
 									log.info("POSSIBLE!");
 
-									if (order != null) {
+									if (writeToSchedule) {
 										occupiedOnDate.add(new TimePeriod(targetStart, targetEnd));
 										p.getOccupiedTimes().put(date, occupiedOnDate);
+									}
 
+									if (order != null) {
 										LocalDateTime allocatedStart = LocalDateTime.of(date, targetStart);
 										LocalDateTime allocatedEnd = LocalDateTime.of(date, targetEnd);
 
