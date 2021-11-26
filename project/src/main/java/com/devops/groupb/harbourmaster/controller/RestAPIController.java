@@ -6,11 +6,13 @@ import java.util.UUID;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.devops.groupb.harbourmaster.dto.Receipt;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.TimeRequestWrapper;
 import com.devops.groupb.harbourmaster.dto.Order;
+import com.devops.groupb.harbourmaster.dto.OrderStatus;
 import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
 import com.devops.groupb.harbourmaster.dto.Tide;
 import com.devops.groupb.harbourmaster.service.OrderService;
@@ -53,14 +55,26 @@ public class RestAPIController {
 		log.info("/api/bookPilot: retrieved " + request + " from request body.");
 
 		/* write sanity checks for request values; i.e. "lat" must
-		   be provided and "la" = auto denial. */
+		   be provided and "la" = auto denial. a draft of 0 = impossible. */
 
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
 		Order order = new Order(request.getShip(), request.getBerth(), request.getDate());
 		orderService.placeOrder(order, pilots);
 
-		return new ResponseEntity<>(order, HttpStatus.CREATED);
+		Receipt receipt;
+		if (order.getStatus() == OrderStatus.CONFIRMED) {
+			receipt = new Receipt(order.getStatus(), order.getOrderDate(), order.getAllocatedStart(),
+								  order.getAllocatedEnd(), order.getFare(), order.getUUID(), order.getShip().getUUID(),
+								  order.getBerth().getUUID(), order.getPilot().getUUID(), order.getPilot().getFirstName(),
+								  order.getPilot().getLastName());
+		} else {
+			receipt = new Receipt(order.getStatus(), order.getOrderDate(), order.getAllocatedStart(),
+								  order.getAllocatedEnd(), order.getFare(), order.getUUID(), order.getShip().getUUID(),
+								  order.getBerth().getUUID(), null, null, null);
+		}
+
+		return new ResponseEntity<>(receipt, HttpStatus.CREATED);
 	}
 
 	@GetMapping(value = "/api/callPilot/{shipUUID}", produces = "application/json")

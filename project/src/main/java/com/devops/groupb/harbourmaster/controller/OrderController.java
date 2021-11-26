@@ -1,6 +1,7 @@
 package com.devops.groupb.harbourmaster.controller;
 
 import java.util.UUID;
+import java.util.List;
 
 import com.devops.groupb.harbourmaster.service.OrderService;
 import com.devops.groupb.harbourmaster.dto.Order;
@@ -47,6 +48,18 @@ public class OrderController {
 
 		return orderService.cancelOrder(uuid, reason)
 			? new ResponseEntity<>(orderService.retrieveOrder(uuid), HttpStatus.CREATED)
-			: new ResponseEntity<>(String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
+			: new ResponseEntity<>(
+								   String.format("ERROR: Order '%s' not found. This order may not exist in the database.", uuid),
+								   HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping(value = "/api/order/getAll")
+	@ApiOperation("Returns all orders on the system, regardless of state.")
+	public ResponseEntity<Object> getAllOrders() {
+		log.info("/api/order/getAll: entered.");
+
+		List<Order> orders = orderService.findAll();
+
+		return new ResponseEntity(orders, HttpStatus.OK);
 	}
 }

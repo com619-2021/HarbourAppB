@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.LocalDate;
 import java.time.DayOfWeek;
 
+import java.util.Collections;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -58,12 +59,18 @@ public class PilotService {
 		return pilotDAO.deleteByUUID(uuid);
 	}
 
+	public void deleteAllPilots() {
+		pilotDAO.deleteAll();
+	}
+
 	public List<Pilot> findSuitablePilots(ShipType shipType) {
 		List<Pilot> eligiblePilots = pilotDAO.findByAllowedTo(shipType);
 
 		if (eligiblePilots.isEmpty()) {
 			return null;
 		}
+
+		Collections.shuffle(eligiblePilots);
 
 		return eligiblePilots;
 	}

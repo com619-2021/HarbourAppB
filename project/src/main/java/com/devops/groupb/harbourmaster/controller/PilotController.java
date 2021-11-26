@@ -68,4 +68,15 @@ public class PilotController {
 		return pilotService.deletePilot(uuid) ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
 			: new ResponseEntity<>(String.format("Unable to delete pilot '%s'. They may not exist in the database.", uuid), HttpStatus.NOT_FOUND);
 	}
+
+	@DeleteMapping(value = "/api/pilot/deleteAll")
+	@Transactional
+	@ApiOperation("DEBUG: Deletes all pilots.")
+	public ResponseEntity<Object> deleteAllPilots() {
+		log.info("(DELETE) /api/pilot: entered.");
+
+		pilotService.deleteAllPilots();
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }
