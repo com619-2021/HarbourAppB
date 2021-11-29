@@ -89,8 +89,8 @@ public class RestTest {
 		JSONObject shipJson = new JSONObject();
 
 		try {
-			berthJson.put("lat", bookingRequest.getBerth().getLatitude());
-			berthJson.put("lon", bookingRequest.getBerth().getLongitude());
+			berthJson.put("latitude", bookingRequest.getBerth().getLatitude());
+			berthJson.put("longitude", bookingRequest.getBerth().getLongitude());
 			berthJson.put("uuid", bookingRequest.getBerth().getUUID());
 
 			shipJson.put("draft", bookingRequest.getShip().getDraft());
@@ -98,7 +98,7 @@ public class RestTest {
 			shipJson.put("uuid", bookingRequest.getShip().getUUID());
 
 			request.put("berth", berthJson);
-			request.put("date", date);
+			request.put("dayOfArrival", date);
 			request.put("ship", shipJson);
 
 		} catch (org.json.JSONException e) {
