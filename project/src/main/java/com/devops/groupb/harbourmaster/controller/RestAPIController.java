@@ -62,17 +62,7 @@ public class RestAPIController {
 		Order order = new Order(request.getShip(), request.getBerth(), request.getDate());
 		orderService.placeOrder(order, pilots);
 
-		Receipt receipt;
-		if (order.getStatus() == OrderStatus.CONFIRMED) {
-			receipt = new Receipt(order.getStatus(), order.getOrderDate(), order.getAllocatedStart(),
-								  order.getAllocatedEnd(), order.getFare(), order.getUUID(), order.getShip().getUUID(),
-								  order.getBerth().getUUID(), order.getPilot().getUUID(), order.getPilot().getFirstName(),
-								  order.getPilot().getLastName());
-		} else {
-			receipt = new Receipt(order.getStatus(), order.getOrderDate(), order.getAllocatedStart(),
-								  order.getAllocatedEnd(), order.getFare(), order.getUUID(), order.getShip().getUUID(),
-								  order.getBerth().getUUID(), null, null, null);
-		}
+		Receipt receipt = new Receipt(order.getFare(), order.getUUID());
 
 		return new ResponseEntity<>(receipt, HttpStatus.CREATED);
 	}
