@@ -7,7 +7,7 @@ import com.devops.groupb.harbourmaster.dto.Berth;
 import com.devops.groupb.harbourmaster.dto.Ship;
 
 public class CreateOrderWrapper {
-	private LocalDate date;
+	private LocalDate dayOfArrival;
 	private Ship ship;
 	private Berth berth;
 
@@ -16,9 +16,9 @@ public class CreateOrderWrapper {
 
 	}
 
-	public CreateOrderWrapper(Ship ship, LocalDate date, Berth berth) {
+	public CreateOrderWrapper(Ship ship, LocalDate dayOfArrival, Berth berth) {
 		this.ship = ship;
-		this.date = date;
+		this.dayOfArrival = dayOfArrival;
 		this.berth = berth;
 	}
 
@@ -30,12 +30,12 @@ public class CreateOrderWrapper {
 		this.ship = ship;
 	}
 
-	public LocalDate getDate() {
-		return date;
+	public LocalDate getDayOfArrival() {
+		return dayOfArrival;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
+	public void setDayOfArrival(LocalDate dayOfArrival) {
+		this.dayOfArrival = dayOfArrival;
 	}
 
 	public Berth getBerth() {
@@ -48,8 +48,8 @@ public class CreateOrderWrapper {
 
 	@Override
 	public String toString() {
-		String dateString = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String dayOfArrivalString = dayOfArrival.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-		return getClass().getSimpleName() + "[date=" + dateString + ", ship=" + ship + "]";
+		return getClass().getSimpleName() + "[dayOfArrival=" + dayOfArrivalString + ", ship=" + ship + "]";
 	}
 }

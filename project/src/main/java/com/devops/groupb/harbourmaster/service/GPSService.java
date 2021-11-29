@@ -115,8 +115,8 @@ public class GPSService {
 
 		Berth berth = orderDAO.findConfirmedByShipUUID(gps.getShip().getUUID()).getBerth();
 
-		double berthLat = berth.getLat();
-		double berthLon = berth.getLon();
+		double berthLat = berth.getLatitude();
+		double berthLon = berth.getLongitude();
 
 		log.info("Destination Berth: " + berth + ".");
 

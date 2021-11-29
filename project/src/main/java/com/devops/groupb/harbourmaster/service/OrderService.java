@@ -55,12 +55,12 @@ public class OrderService {
 			return order;
 		}
 
-		LocalDate date = order.getRequestedDate();
+		LocalDate date = order.getDayOfArrival();
 		Ship ship = order.getShip();
 
 		List<Tide> safeTides = tideDAO.getSafeTidesOnDay(date.getDayOfWeek(), ship.getDraft());
 
-		Pilot chosenPilot = schedulePilot(pilots, safeTides, order, order.getRequestedDate(), true);
+		Pilot chosenPilot = schedulePilot(pilots, safeTides, order, order.getDayOfArrival(), true);
 
 		if (chosenPilot == null) {
 			order.setStatus(OrderStatus.DENIED);
@@ -87,7 +87,7 @@ public class OrderService {
 		ArrayList<TimePeriod> occupiedOnDate;
 
 		if (pilot.getOccupiedTimes() != null) {
-			occupiedOnDate = pilot.getOccupiedTimes().get(order.getRequestedDate());
+			occupiedOnDate = pilot.getOccupiedTimes().get(order.getDayOfArrival());
 		} else {
 			return false;
 		}

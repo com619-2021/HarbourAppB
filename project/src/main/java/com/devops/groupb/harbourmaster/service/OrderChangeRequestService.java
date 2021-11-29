@@ -66,7 +66,7 @@ public class OrderChangeRequestService {
 		parentOrder.setStatus(OrderStatus.CONFIRMED);
 		parentOrder.setShip(ocr.getShip());
 		parentOrder.setBerth(ocr.getBerth());
-		parentOrder.setRequestedDate(ocr.getRequestedDate());
+		parentOrder.setDayOfArrival(ocr.getDayOfArrival());
 
 		return ocr;
 	}

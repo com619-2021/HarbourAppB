@@ -31,8 +31,8 @@ public class OrderChangeRequest {
 	@Column(name="changeRequestDate", columnDefinition="TIMESTAMP")
 	private LocalDateTime changeRequestDate;
 
-	@Column(name="requestedDate", columnDefinition="TIMESTAMP")
-	private LocalDate requestedDate;
+	@Column(name="dayOfArrival", columnDefinition="TIMESTAMP")
+	private LocalDate dayOfArrival;
 	private String reason;
 	private OrderChangeRequestStatus status;
 
@@ -47,11 +47,11 @@ public class OrderChangeRequest {
 
 	}
 
-	public OrderChangeRequest(Ship ship, Berth berth, LocalDate requestedDate) {
+	public OrderChangeRequest(Ship ship, Berth berth, LocalDate dayOfArrival) {
 		this.uuid = UUID.randomUUID();
 		this.ship = ship;
 		this.berth = berth;
-		this.requestedDate = requestedDate;
+		this.dayOfArrival = dayOfArrival;
 		changeRequestDate = LocalDateTime.now();
 	}
 
@@ -63,12 +63,12 @@ public class OrderChangeRequest {
 		this.pk = pk;
 	}
 
-	public LocalDate getRequestedDate() {
-		return requestedDate;
+	public LocalDate getDayOfArrival() {
+		return dayOfArrival;
 	}
 
-	public void setRequestedDate(LocalDate requestedDate) {
-		this.requestedDate = requestedDate;
+	public void setDayOfArrival(LocalDate dayOfArrival) {
+		this.dayOfArrival = dayOfArrival;
 	}
 
 	public String getReason() {
@@ -129,9 +129,9 @@ public class OrderChangeRequest {
 
 	@Override
 	public String toString() {
-		String dateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+		String dateString = dayOfArrival.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
-		return getClass().getSimpleName() + "[pk=" + pk + ", parentUUID=" + parentUUID + ", uuid=" + uuid + ", ship=" + ship + ", berth=" + berth + ", reason=" + reason + ", requestedDate="
+		return getClass().getSimpleName() + "[pk=" + pk + ", parentUUID=" + parentUUID + ", uuid=" + uuid + ", ship=" + ship + ", berth=" + berth + ", reason=" + reason + ", dayOfArrival="
 			+ dateString + ", status=" + status.name() + "]";
 	}
 }

@@ -90,7 +90,7 @@ public class PilotService {
 			return null;
 		}
 
-		LocalDateTime exit = gpsService.calculateExit(berth.getLat(), berth.getLon());
+		LocalDateTime exit = gpsService.calculateExit(berth.getLatitude(), berth.getLongitude());
 
 		log.info("Estimated exit time: " + exit);
 

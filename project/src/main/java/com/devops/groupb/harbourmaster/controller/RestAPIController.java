@@ -10,7 +10,7 @@ import com.devops.groupb.harbourmaster.dto.Receipt;
 import com.devops.groupb.harbourmaster.dto.Pilot;
 import com.devops.groupb.harbourmaster.dto.Ship;
 import com.devops.groupb.harbourmaster.dto.Berth;
-import com.devops.groupb.harbourmaster.dto.TimeRequestWrapper;
+import com.devops.groupb.harbourmaster.dto.PossibleRequestWrapper;
 import com.devops.groupb.harbourmaster.dto.Order;
 import com.devops.groupb.harbourmaster.dto.OrderStatus;
 import com.devops.groupb.harbourmaster.dto.CreateOrderWrapper;
@@ -59,20 +59,10 @@ public class RestAPIController {
 
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
-		Order order = new Order(request.getShip(), request.getBerth(), request.getDate());
+		Order order = new Order(request.getShip(), request.getBerth(), request.getDayOfArrival());
 		orderService.placeOrder(order, pilots);
 
-		Receipt receipt;
-		if (order.getStatus() == OrderStatus.CONFIRMED) {
-			receipt = new Receipt(order.getStatus(), order.getOrderDate(), order.getAllocatedStart(),
-								  order.getAllocatedEnd(), order.getFare(), order.getUUID(), order.getShip().getUUID(),
-								  order.getBerth().getUUID(), order.getPilot().getUUID(), order.getPilot().getFirstName(),
-								  order.getPilot().getLastName());
-		} else {
-			receipt = new Receipt(order.getStatus(), order.getOrderDate(), order.getAllocatedStart(),
-								  order.getAllocatedEnd(), order.getFare(), order.getUUID(), order.getShip().getUUID(),
-								  order.getBerth().getUUID(), null, null, null);
-		}
+		Receipt receipt = new Receipt(order.getFare(), order.getUUID());
 
 		return new ResponseEntity<>(receipt, HttpStatus.CREATED);
 	}
@@ -101,14 +91,14 @@ public class RestAPIController {
 
 	@RequestMapping(value = "/api/checkBookingPossible", method = RequestMethod.POST, produces = "application/json")
 	@ApiOperation("Returns a boolean regarding whether or not a booking is possible on a given day.")
-	public ResponseEntity<Object> checkBookingPossible(@RequestBody TimeRequestWrapper request) {
+	public ResponseEntity<Object> checkBookingPossible(@RequestBody PossibleRequestWrapper request) {
 		log.info("/api/checkBookingPossible: entered.");
 		log.info("/api/checkBookingPossible: possibility for booking '" + request + "' requested.");
 
-		List<Tide> safeTides = tideService.getSafeTidesOnDay(request.getArrivalDate(), request.getShip().getDraft());
+		List<Tide> safeTides = tideService.getSafeTidesOnDay(request.getDayOfArrival(), request.getShip().getDraft());
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
-		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null, request.getArrivalDate(), true);
+		Pilot pilot = orderService.schedulePilot(pilots, safeTides, null, request.getDayOfArrival(), true);
 
 		Boolean possible = pilot != null;
 		JSONObject response = new JSONObject();

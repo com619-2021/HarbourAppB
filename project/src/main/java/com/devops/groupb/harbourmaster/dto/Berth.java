@@ -19,8 +19,8 @@ public class Berth {
 	private int pk;
 
 	private UUID uuid = null;
-	private double lat;
-	private double lon;
+	private double latitude;
+	private double longitude;
 
 	// Empty default constructor needed for H2 in-memory testing DB.
 	public Berth() {
@@ -28,10 +28,10 @@ public class Berth {
 	}
 
 	// Constructor used for testing; NOT to be called in the main program.
-	public Berth(double lat, double lon) {
+	public Berth(double latitude, double longitude) {
 		this.uuid = UUID.randomUUID();
-		this.lat = lat;
-		this.lon = lon;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	public int getPk() {
@@ -50,24 +50,24 @@ public class Berth {
 		this.uuid = uuid;
 	}
 
-	public double getLat() {
-		return lat;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setLat(double lat) {
-		this.lat = lat;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
-	public double getLon() {
-		return lon;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setLon(double lon) {
-		this.lon = lon;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + "[pk=" + pk + ", uuid=" + uuid + ", lat=" + lat + ", lon=" + lon + "]";
+		return getClass().getSimpleName() + "[pk=" + pk + ", uuid=" + uuid + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 }
