@@ -46,8 +46,8 @@ public class Order {
 	@Column(name="orderDate", columnDefinition="TIMESTAMP")
 	private LocalDateTime orderDate;
 
-	@Column(name="requestedDate", columnDefinition="TIMESTAMP")
-	private LocalDate requestedDate;
+	@Column(name="dayOfArrival", columnDefinition="TIMESTAMP")
+	private LocalDate dayOfArrival;
 
 	@Column(name="allocatedStart", columnDefinition="TIMESTAMP")
 	private LocalDateTime allocatedStart;
@@ -75,11 +75,11 @@ public class Order {
 
 	}
 
-	public Order(Ship ship, Berth berth, LocalDate requestedDate) {
+	public Order(Ship ship, Berth berth, LocalDate dayOfArrival) {
 		this.uuid = UUID.randomUUID();
 		this.ship = ship;
 		this.berth = berth;
-		this.requestedDate = requestedDate;
+		this.dayOfArrival = dayOfArrival;
 		orderDate = LocalDateTime.now();
 		fare = fares[ship.getType().ordinal()];
 	}
@@ -116,12 +116,12 @@ public class Order {
 		this.pilot = pilot;
 	}
 
-	public LocalDate getRequestedDate() {
-		return requestedDate;
+	public LocalDate getDayOfArrival() {
+		return dayOfArrival;
 	}
 
-	public void setRequestedDate(LocalDate requestedDate) {
-		this.requestedDate = requestedDate;
+	public void setDayOfArrival(LocalDate dayOfArrival) {
+		this.dayOfArrival = dayOfArrival;
 	}
 
 	public LocalDateTime getOrderDate() {
@@ -191,7 +191,7 @@ public class Order {
 	@Override
 	public String toString() {
 		String orderDateString = orderDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-		String requestedDateString = requestedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		String dayOfArrivalString = dayOfArrival.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 		String allocatedStartString = "";
 		String allocatedEndString = "";
@@ -202,7 +202,7 @@ public class Order {
 		}
 
 		return "Order [allocatedStart=" + allocatedStartString + ", allocatedEnd=" + allocatedEndString + ", berth=" + berth + ", pk=" + pk
-			+ ", uuid=" + uuid + ", orderDate=" + orderDateString + ", pilot=" + pilot + ", requestedDate=" + requestedDateString
+			+ ", uuid=" + uuid + ", orderDate=" + orderDateString + ", pilot=" + pilot + ", dayOfArrival=" + dayOfArrivalString
 			+ ", ship=" + ship + ", status=" + status.name() + ", reason=" + reason + ", fare=" + fare + "]";
 	}
 }

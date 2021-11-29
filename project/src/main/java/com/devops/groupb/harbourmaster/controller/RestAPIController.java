@@ -59,7 +59,7 @@ public class RestAPIController {
 
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
-		Order order = new Order(request.getShip(), request.getBerth(), request.getDate());
+		Order order = new Order(request.getShip(), request.getBerth(), request.getDayOfArrival());
 		orderService.placeOrder(order, pilots);
 
 		Receipt receipt = new Receipt(order.getFare(), order.getUUID());

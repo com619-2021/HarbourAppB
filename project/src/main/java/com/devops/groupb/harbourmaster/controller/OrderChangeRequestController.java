@@ -51,7 +51,7 @@ public class OrderChangeRequestController {
 
 		CreateOrderWrapper newOrder = request.getNewRequest();
 
-		OrderChangeRequest ocr = new OrderChangeRequest(newOrder.getShip(), newOrder.getBerth(), newOrder.getDate());
+		OrderChangeRequest ocr = new OrderChangeRequest(newOrder.getShip(), newOrder.getBerth(), newOrder.getDayOfArrival());
 
 		return orderChangeRequestService.placeOrderChangeRequest(request.getParentUUID(), ocr, request.getReason()) != null
 			? new ResponseEntity<>(orderChangeRequestService.retrieveOrderChangeRequest(ocr.getUuid()), HttpStatus.CREATED)
