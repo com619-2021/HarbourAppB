@@ -53,9 +53,10 @@ public class RestAPIController {
 	public ResponseEntity<Object> bookPilot(@RequestBody CreateOrderWrapper request) {
 		log.info("/api/bookPilot: entered.");
 		log.info("/api/bookPilot: retrieved " + request + " from request body.");
-
-		/* write sanity checks for request values; i.e. "lat" must
-		   be provided and "la" = auto denial. a draft of 0 = impossible. */
+                
+                if (request.getShip().getDraft() <= 0) {
+                    return new ResponseEntity<>(String.format("Invalid ship draft '%s'. Draft must be > 0. ", request.getShip().getDraft()), HttpStatus.BAD_REQUEST);
+                }
 
 		List<Pilot> pilots = pilotService.findSuitablePilots(request.getShip().getType());
 
