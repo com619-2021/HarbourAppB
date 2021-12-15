@@ -150,6 +150,12 @@
             <artifactId>jquery</artifactId>
             <version>3.3.1-2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.webjars/webjars-locator -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>0.42</version>
+        </dependency>
         
     </dependencies>
 
