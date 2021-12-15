@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+    th:replace="~{fragments/layout :: layout (~{::body},'orders','Order List')}">
+
+<body>
+
+    <!-- Page Content -->
+    <div class="row align-items-center justify-content-center" style="margin-top: 50px">
+
+        <div th:fragment="listOrders">
+
+            <table id="orders" class="table text-center">
+
+                <thead class="thead-dark">
+
+                    <tr>
+                        <th> Order UUID </th>
+                        <th> Order Date </th>
+                        <th> Ship UUID </th>
+                        <th> Ship Type </th>
+                        <th> Ship Draft </th>
+                        <th> Berth UUID </th>
+                        <th> Berth Lat </th>
+                        <th> Berth Long </th>
+                        <th> Assigned Pilot </th>
+                        <th> Day of Arrival </th>
+                        <th> Allocated Start </th>
+                        <th> Allocated End </th>
+                        <th> Fare </th>
+                        <th> Status </th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr th:if="${orders == null}">
+                        <td colspan="2"> No Orders Available</td>
+                    </tr>
+
+                    <tr th:each="order : ${orders}">
+                        <td><span th:text="${order.getUUID}"> Order UUID </span></td>
+                        <td><span th:text="${order.getOrderDate}"> Order Date </span></td>
+                        <td><span th:text="${order.ship.getUUID}"> Ship UUID </span></td>
+                        <td><span th:text="${order.ship.type}"> Ship Type </span></td>
+                        <td><span th:text="${order.ship.draft}"> Ship Draft </span></td>
+                        <td><span th:text="${order.berth.getUUID}"> Berth UUID </span></td>
+                        <td><span th:text="${order.berth.latitude}"> Berth Lat </span></td>
+                        <td><span th:text="${order.berth.longitude}"> Berth Long </span></td>
+                        <td><span th:text="${order.getPilot.firstName}"> Assigned Pilot </span></td>
+                        <td><span th:text="${order.dayOfArrival}"> Day of Arrival </span></td>
+                        <td><span th:text="${order.getAllocatedStart}"> Allocated Start </span></td>
+                        <td><span th:text="${order.getAllocatedEnd}"> Allocated End </span></td>
+                        <td><span th:text="${order.getFare}"> Fare </span></td>
+                        <td><span th:text="${order.getStatus}"> Status </span></td>
+                    </tr>
+
+                </tbody>
+
+                <tfoot class="text-primary">
+
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</body>
+
+
+</html>

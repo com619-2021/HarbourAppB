@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+    th:replace="~{fragments/layout :: layout (~{::body},'pilots','Pilot List')}">
+
+<body>
+
+    <!-- Page Content -->
+    <div class="row align-items-center justify-content-center" style="margin-top: 50px">
+
+        <div th:fragment="listPilots">
+
+            <table id="pilots" class="table text-center">
+
+                <thead class="thead-dark">
+
+                    <tr>
+                        <th> UUID </th>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                        <th> Date of Birth </th>
+                        <th> Competencies </th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr th:if="${pilots == null}">
+                        <td colspan="2"> No Pilots Available</td>
+                    </tr>
+
+                    <tr th:each="pilot : ${pilots}">
+                        <td><span th:text="${pilot.getUUID}"> UUID </span></td>
+                        <td><span th:text="${pilot.firstName}"> First Name </span></td>
+                        <td><span th:text="${pilot.lastName}"> Last Name </span></td>
+                        <td><span th:text="${pilot.dateOfBirth}"> Date of Birth </span></td>
+                        <td><span th:text="${pilot.allowedTo}"> Competencies </span></td>
+                    </tr>
+
+                </tbody>
+
+                <tfoot class="text-primary">
+
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</body>
+
+
+</html>

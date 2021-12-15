@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html th:fragment="layout (content, activeLink, pageTitle)" xmlns:th="http://www.w3.org/1999/html">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="${pageTitle}">Page title</title>
+
+    <!-- Appointment Chat CSS -->
+    <link rel="stylesheet" th:href="@{/css/vendor/chat.css}" />
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <!-- Fullcalendar CSS -->
+    <link rel="stylesheet" th:href="@{/css/vendor/fullcalendar.css}" />
+    <!-- Site CSS -->
+    <link rel="stylesheet" th:href="@{../}" />
+    <!--DataTables CSS-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+    <!--font awesome-->
+    <script src="https://kit.fontawesome.com/56438f342e.js"></script>
+    <!--jQuery-->
+    <script src="/webjars/jquery/3.3.1-2/jquery.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--Moment-->
+    <script type="text/javascript" th:src="@{/js/vendor/moment.js}"></script>
+    <!--FullCalendar-->
+    <script type="text/javascript" th:src="@{/js/vendor/fullcalendar.js}"></script>
+    <!--DataTables-->
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <div>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+
+            <div class="container">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- menu for admin-->
+                <div th:replace="fragments/admin-nav.html :: navlinks(${activeLink})"></div>
+
+            </div>
+
+        </nav>
+
+    </div>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <th:block th:include="${content}" />
+
+        <div class="row align-items-center justify-content-center" style="margin-top: 50px">
+
+            <p>HarbourMasterB</p>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
